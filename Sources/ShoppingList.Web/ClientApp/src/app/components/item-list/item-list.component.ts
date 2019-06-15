@@ -8,8 +8,8 @@ import { ListItem } from '../../models/list-item.model';
 })
 export class ItemListComponent implements OnInit {
 
-  @Input() public title: string;
-  @Input() public items: ListItem[];
+  @Input() public title!: string;
+  @Input() public items!: ListItem[];
 
   constructor() { }
 

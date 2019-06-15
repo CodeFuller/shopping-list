@@ -9,7 +9,7 @@ import { ShoppingListModel } from 'src/app/models/shopping-list.model';
 })
 export class ShoppingListComponent implements OnInit {
 
-  public listData: ShoppingListModel;
+  public listData: ShoppingListModel | undefined;
   shoppingListService: ShoppingListService;
 
   constructor(shoppingListService: ShoppingListService) {
