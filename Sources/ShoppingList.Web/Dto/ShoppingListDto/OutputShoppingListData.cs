@@ -8,6 +8,8 @@ namespace ShoppingList.Web.Dto.ShoppingListDto
 	[DataContract]
 	public class OutputShoppingListData : BasicShoppingListData, IOutputDto
 	{
+		private readonly List<LinkDto> links = new List<LinkDto>();
+
 		[Required]
 		[DataMember(Name = "title")]
 		public string Title { get; set; }
@@ -19,6 +21,6 @@ namespace ShoppingList.Web.Dto.ShoppingListDto
 		public ICollection<ShoppingItemDto> Items { get; set; }
 
 		[DataMember(Name = "links")]
-		public ICollection<LinkDto> Links { get; set; }
+		public IReadOnlyCollection<LinkDto> Links => links;
 	}
 }

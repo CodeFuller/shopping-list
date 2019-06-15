@@ -6,6 +6,6 @@ namespace ShoppingList.Web.Dto
 	public interface IOutputDto
 	{
 		[DataMember(Name = "links")]
-		ICollection<LinkDto> Links { get; set; }
+		IReadOnlyCollection<LinkDto> Links { get; }
 	}
 }
