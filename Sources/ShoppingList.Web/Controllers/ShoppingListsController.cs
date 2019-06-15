@@ -13,13 +13,11 @@ namespace ShoppingList.Web.Controllers
 	public class ShoppingListsController : ControllerBase
 	{
 		[HttpGet("{listId:int}")]
-		public async Task<ActionResult<OutputShoppingListData>> GetShoppingList(int listId, CancellationToken cancellationToken)
+		public ActionResult<OutputShoppingListData> GetShoppingList(int listId)
 		{
-			await Task.CompletedTask;
-
 			var data = new OutputShoppingListData
 			{
-				Title = "Test List #1",
+				Title = $"Test List #{listId}",
 				ShoppingDate = new DateTimeOffset(2019, 06, 15, 10, 13, 12, TimeSpan.Zero),
 				Items = new List<ShoppingItemDto>
 				{
@@ -33,8 +31,8 @@ namespace ShoppingList.Web.Controllers
 					{
 						Title = "Cucumbers",
 						Quantity = 3,
-					}
-				}
+					},
+				},
 			};
 
 			return Ok(data);
