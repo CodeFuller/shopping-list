@@ -9,7 +9,7 @@ namespace ShoppingList.Abstractions.Interfaces
 	{
 		Task<string> CreateTemplate(ListTemplate listTemplate, CancellationToken cancellationToken);
 
-		Task<ICollection<ListTemplate>> GetTemplates(CancellationToken cancellationToken);
+		Task<IEnumerable<ListTemplate>> GetTemplates(CancellationToken cancellationToken);
 
 		Task<ListTemplate> GetTemplate(string templateId, CancellationToken cancellationToken);
 

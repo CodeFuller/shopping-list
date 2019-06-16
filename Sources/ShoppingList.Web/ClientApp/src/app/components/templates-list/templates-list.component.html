@@ -1,0 +1,5 @@
+<ul class="template-list">
+  <li class="template-item" *ngFor="let template of templates">
+      <a [routerLink]="['/templates', template.id]">{{template.title}}</a>
+  </li>
+</ul>

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using ShoppingList.Abstractions.Exceptions;
 using ShoppingList.Abstractions.Interfaces;
 using ShoppingList.Abstractions.Objects;
 using ShoppingList.Dal.MogoDb.Documents;
@@ -48,14 +51,42 @@ namespace ShoppingList.Dal.MogoDb.Repositories
 			return id.ToString();
 		}
 
-		public Task<ICollection<ListTemplate>> GetTemplates(CancellationToken cancellationToken)
+		public async Task<IEnumerable<ListTemplate>> GetTemplates(CancellationToken cancellationToken)
 		{
-			throw new NotImplementedException();
+			var cursor = await templatesCollection
+				.FindAsync(FilterDefinition<TemplateDocument>.Empty, cancellationToken: cancellationToken)
+				.ConfigureAwait(false);
+
+			using (cursor)
+			{
+				return (await cursor.ToListAsync(cancellationToken).ConfigureAwait(false))
+					.Select(x => x.ToObject());
+			}
 		}
 
-		public Task<ListTemplate> GetTemplate(string templateId, CancellationToken cancellationToken)
+		public async Task<ListTemplate> GetTemplate(string templateId, CancellationToken cancellationToken)
 		{
-			throw new NotImplementedException();
+			var id = ObjectId.Parse(templateId);
+
+			var filter = new FilterDefinitionBuilder<TemplateDocument>()
+				.Where(d => d.Id == id);
+
+			var options = new FindOptions<TemplateDocument>
+			{
+				Limit = 1,
+			};
+
+			var cursor = await templatesCollection.FindAsync(filter, options, cancellationToken).ConfigureAwait(false);
+			using (cursor)
+			{
+				var templateDoc = await cursor.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+				if (templateDoc == null)
+				{
+					throw new NotFoundException($"The template with id of {templateId} was not found");
+				}
+
+				return templateDoc.ToObject();
+			}
 		}
 
 		public Task UpdateTemplate(ListTemplate listTemplate, CancellationToken cancellationToken)

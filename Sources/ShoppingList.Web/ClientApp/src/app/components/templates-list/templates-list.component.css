@@ -1,0 +1,18 @@
+.template-list {
+    list-style-type: none;
+    margin: auto;
+    padding: 0;
+    max-width: 300px;
+}
+
+.template-item {
+    margin: 0.5em 0 0.5em 0;
+    padding: 0.5em 1em 0.5em 1em;
+    font-size: 1.5em;
+}
+
+.template-item:hover {
+    background-color: lightgray;
+    border-radius: 1em;
+    cursor: pointer;
+}

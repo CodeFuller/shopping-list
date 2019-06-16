@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using ShoppingList.Abstractions.Exceptions;
 using ShoppingList.Abstractions.Interfaces;
 using ShoppingList.Abstractions.Objects;
-using ShoppingList.Web.Dto;
 using ShoppingList.Web.Dto.TemplateDto;
 
 namespace ShoppingList.Web.Controllers

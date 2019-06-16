@@ -1,9 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { TemplatesListComponent } from './components/templates-list/templates-list.component';
+import { EditTemplateComponent } from './components/edit-template/edit-template.component';
 import { ShoppingListComponent } from './components/shopping-list/shopping-list.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'list', pathMatch: 'full' },
+  { path: '', redirectTo: 'templates', pathMatch: 'full' },
+  { path: 'templates', component: TemplatesListComponent },
+  { path: 'templates/:id', component: EditTemplateComponent },
   { path: 'list', component: ShoppingListComponent },
 ];
 

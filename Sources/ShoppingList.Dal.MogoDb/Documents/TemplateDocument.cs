@@ -20,5 +20,14 @@ namespace ShoppingList.Dal.MogoDb.Documents
 
 			Title = listTemplate.Title;
 		}
+
+		public ListTemplate ToObject()
+		{
+			return new ListTemplate
+			{
+				Id = Id.ToString(),
+				Title = Title,
+			};
+		}
 	}
 }
