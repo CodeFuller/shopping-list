@@ -14,7 +14,7 @@ using ShoppingList.Dal.MogoDb.Documents;
 
 namespace ShoppingList.Dal.MogoDb.Repositories
 {
-	public class TemplatesRepository : ITemplatesRepository
+	public class TemplatesRepository : ITemplatesRepository, ITemplateItemsRepository
 	{
 		private const string TemplatesCollectionName = "templates";
 
@@ -66,10 +66,161 @@ namespace ShoppingList.Dal.MogoDb.Repositories
 
 		public async Task<ListTemplate> GetTemplate(string templateId, CancellationToken cancellationToken)
 		{
+			var templateDoc = await FindTemplate(templateId, cancellationToken).ConfigureAwait(false);
+			return templateDoc.ToObject();
+		}
+
+		public Task UpdateTemplate(ListTemplate listTemplate, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task DeleteTemplate(string templateId, CancellationToken cancellationToken)
+		{
+			throw new NotImplementedException();
+		}
+
+		public async Task<string> CreateItem(string templateId, TemplateItem item, CancellationToken cancellationToken)
+		{
+			var newItemId = ObjectId.GenerateNewId();
+
+			var newItem = new TemplateItemDocument(item)
+			{
+				Id = newItemId,
+			};
+
+			var filter = GetTemplateFilter(templateId);
+			var update = Builders<TemplateDocument>.Update
+				.Push(e => e.Items, newItem);
+
+			var updateResult = await templatesCollection.UpdateOneAsync(filter, update, cancellationToken: cancellationToken)
+				.ConfigureAwait(false);
+
+			if (updateResult.MatchedCount < 1)
+			{
+				throw new NotFoundException($"The template with id of {templateId} was not found");
+			}
+
+			if (updateResult.MatchedCount > 1)
+			{
+				logger.LogError("Multiple ({MatchedCount}) template items are matched for {TemplateId}", updateResult.MatchedCount, templateId);
+			}
+
+			return newItemId.ToString();
+		}
+
+		public async Task<IEnumerable<TemplateItem>> GetItems(string templateId, CancellationToken cancellationToken)
+		{
+			var templateDoc = await FindTemplate(templateId, cancellationToken).ConfigureAwait(false);
+
+			return templateDoc.Items.Select(x => x.ToObject());
+		}
+
+		public async Task<TemplateItem> GetItem(string templateId, string itemId, CancellationToken cancellationToken)
+		{
+			var templateDoc = await FindTemplate(templateId, cancellationToken).ConfigureAwait(false);
+			var matchedItems = templateDoc.Items.Where(x => x.Id == ObjectId.Parse(itemId)).ToList();
+
+			if (matchedItems.Count < 1)
+			{
+				throw new NotFoundException($"The item with id of {itemId} was not found in template {templateId}");
+			}
+
+			if (matchedItems.Count > 1)
+			{
+				logger.LogError("Multiple ({MatchedCount}) template items are matched for {TemplateId} {TemplateItemId}", matchedItems.Count, templateId, itemId);
+			}
+
+			return matchedItems.First().ToObject();
+		}
+
+		public async Task UpdateItem(string templateId, TemplateItem item, CancellationToken cancellationToken)
+		{
+			var newItem = new TemplateItemDocument(item);
+
+			var templateItemFilter = GetTemplateItemFilter(templateId, item.Id);
+			var itemUpdate = Builders<TemplateDocument>.Update.Set(doc => doc.Items[-1], newItem);
+
+			var updateResult = await templatesCollection.UpdateOneAsync(templateItemFilter, itemUpdate, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+			if (updateResult.MatchedCount < 1)
+			{
+				throw new NotFoundException($"The template with id of {templateId} was not found");
+			}
+
+			if (updateResult.MatchedCount > 1)
+			{
+				logger.LogError("Multiple ({MatchedCount}) template items are matched for {TemplateId} {TemplateItemId}", updateResult.MatchedCount, templateId, item.Id);
+			}
+		}
+
+		public async Task ReorderItems(string templateId, IReadOnlyCollection<string> newItemsOrder, CancellationToken cancellationToken)
+		{
+			var templateDoc = await FindTemplate(templateId, cancellationToken).ConfigureAwait(false);
+
+			var reorderedItems = GetReorderedTemplateItems(templateDoc, newItemsOrder);
+			var itemsUpdate = Builders<TemplateDocument>.Update.Set(doc => doc.Items, reorderedItems.ToList());
+
+			var templateFilter = GetTemplateFilter(templateId);
+			var updateResult = await templatesCollection.UpdateOneAsync(templateFilter, itemsUpdate, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+			if (updateResult.MatchedCount < 1)
+			{
+				throw new NotFoundException($"The template with id of {templateId} was not found");
+			}
+
+			if (updateResult.MatchedCount > 1)
+			{
+				logger.LogError("Multiple ({MatchedCount}) templates are matched for {TemplateId}", updateResult.MatchedCount, templateId);
+			}
+		}
+
+		private static IEnumerable<TemplateItemDocument> GetReorderedTemplateItems(TemplateDocument templateDoc, IReadOnlyCollection<string> orderedItemIds)
+		{
+			var existingIds = templateDoc.Items.Select(x => x.Id)
+				.Select(id => id.ToString())
+				.ToList();
+
+			var missingIds = existingIds.Except(orderedItemIds).ToList();
+			var unknownIds = orderedItemIds.Except(existingIds).ToList();
+
+			if (missingIds.Any())
+			{
+				throw new DataConflictException($"Missing item id(s) in re-order list: {String.Join(", ", missingIds)}");
+			}
+
+			if (unknownIds.Any())
+			{
+				throw new DataConflictException($"Unknown item id(s) in re-order list: {String.Join(", ", unknownIds)}");
+			}
+
+			var itemsOrder = orderedItemIds
+				.Select((id, i) => new { Id = ObjectId.Parse(id), Index = i })
+				.ToDictionary(x => x.Id, x => x.Index);
+
+			return templateDoc.Items.OrderBy(x => itemsOrder[x.Id]);
+		}
+
+		private static FilterDefinition<TemplateDocument> GetTemplateFilter(string templateId)
+		{
 			var id = ObjectId.Parse(templateId);
 
-			var filter = new FilterDefinitionBuilder<TemplateDocument>()
+			return Builders<TemplateDocument>.Filter
 				.Where(d => d.Id == id);
+		}
+
+		private static FilterDefinition<TemplateDocument> GetTemplateItemFilter(string templateId, string itemId)
+		{
+			var id = ObjectId.Parse(itemId);
+
+			var templateFilter = GetTemplateFilter(templateId);
+			var itemFilter = Builders<TemplateDocument>.Filter.ElemMatch(x => x.Items, x => x.Id == id);
+			return Builders<TemplateDocument>.Filter.And(templateFilter, itemFilter);
+		}
+
+		private async Task<TemplateDocument> FindTemplate(string templateId, CancellationToken cancellationToken)
+		{
+			var filter = GetTemplateFilter(templateId);
 
 			var options = new FindOptions<TemplateDocument>
 			{
@@ -85,18 +236,8 @@ namespace ShoppingList.Dal.MogoDb.Repositories
 					throw new NotFoundException($"The template with id of {templateId} was not found");
 				}
 
-				return templateDoc.ToObject();
+				return templateDoc;
 			}
-		}
-
-		public Task UpdateTemplate(ListTemplate listTemplate, CancellationToken cancellationToken)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Task DeleteTemplate(string templateId, CancellationToken cancellationToken)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }

@@ -1,5 +1,12 @@
-<ul class="template-list">
-  <li class="template-item" *ngFor="let template of templates">
+<div class="templates-container">
+  <ul class="templates-list">
+    <li class="templates-list-item" *ngFor="let template of templates">
       <a [routerLink]="['/templates', template.id]">{{template.title}}</a>
-  </li>
-</ul>
+    </li>
+  </ul>
+
+  <form class="new-template-form" (ngSubmit)="onAddTemplate()" #newTemplateForm="ngForm">
+    <input type="text" name="title" required [(ngModel)]="newTemplateTitle">
+    <button type="submit" [disabled]="!newTemplateForm.form.valid">Add</button>
+  </form>
+</div>

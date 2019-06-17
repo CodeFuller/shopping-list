@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using System.Collections.Generic;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using ShoppingList.Abstractions.Objects;
 
@@ -10,6 +11,9 @@ namespace ShoppingList.Dal.MogoDb.Documents
 
 		[BsonElement("title")]
 		public string Title { get; set; }
+
+		[BsonElement("items")]
+		public IList<TemplateItemDocument> Items { get; set; }
 
 		public TemplateDocument(ListTemplate listTemplate)
 		{

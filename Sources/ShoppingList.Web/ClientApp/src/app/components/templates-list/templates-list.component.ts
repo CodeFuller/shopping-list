@@ -12,12 +12,33 @@ export class TemplatesListComponent implements OnInit {
     public templates: TemplateModel[] | undefined;
     templateService: TemplateService;
 
+    public newTemplateTitle: string | null = null;
+
     constructor(templateService: TemplateService) {
-      this.templateService = templateService;
+        this.templateService = templateService;
     }
 
     ngOnInit() {
-      this.templateService.getTemplates()
-        .subscribe((data: TemplateModel[]) => this.templates = data);
+        this.loadTemplates();
+    }
+
+    onAddTemplate() {
+      if (!this.newTemplateTitle) {
+        return;
+      }
+
+      const newTemplate = new TemplateModel();
+      newTemplate.title = this.newTemplateTitle;
+
+      this.templateService.createTemplate(newTemplate)
+        .subscribe(() => {
+          this.newTemplateTitle = null;
+          this.loadTemplates();
+        });
+    }
+
+    private loadTemplates() {
+        this.templateService.getTemplates()
+          .subscribe((data: TemplateModel[]) => this.templates = data);
     }
 }

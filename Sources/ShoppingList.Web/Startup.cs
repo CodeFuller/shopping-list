@@ -37,6 +37,7 @@ namespace ShoppingList.Web
 			services.AddSingleton<IMongoClient>(sp => new MongoClient(dbSettings.ConnectionString));
 
 			services.AddTransient<ITemplatesRepository, TemplatesRepository>();
+			services.AddTransient<ITemplateItemsRepository, TemplatesRepository>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

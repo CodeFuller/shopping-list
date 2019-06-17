@@ -1,3 +1,38 @@
-<p>
-  This is a template '{{templateData.title}}'
-</p>
+<h1>Template title goes here</h1>
+<table class="template-items">
+  <tr>
+    <th>Title</th>
+    <th>Quantity</th>
+    <th>Comment</th>
+  </tr>
+  <ng-container *ngFor="let item of items">
+    <tr *ngIf="!isItemUnderEdit(item)">
+      <td class="template-item-property template-item-title">{{item.title}}</td>
+      <td class="template-item-property template-item-quantity">{{item.quantity}}</td>
+      <td class="template-item-property template-item-comment">{{item.comment}}</td>
+      <td><button class="template-item-edit-button" type="button" (click)="onEditItem(item)">Edit</button></td>
+      <td><button class="template-item-edit-button" type="button">Delete</button></td>
+      <td><button class="template-item-edit-button" type="button" (click)="onInsertItem(item)">Insert</button></td>
+    </tr>
+    <tr *ngIf="isItemUnderEdit(item)">
+      <td class="template-item-property template-item-title"><input class="template-item-edit" type="text" name="newTitle" required [(ngModel)]="itemUnderEdit.title"></td>
+      <td class="template-item-property template-item-quantity"><input class="template-item-edit" type="text" name="newQuantity" [(ngModel)]="itemUnderEdit.quantity"></td>
+      <td class="template-item-property template-item-comment"><input class="template-item-edit" type="text" name="newComment" [(ngModel)]="itemUnderEdit.comment"></td>
+      <td><button class="template-item-edit-button" type="button" (click)="onSaveItemChanges()">Save</button></td>
+      <td><button class="template-item-edit-button" type="button" (click)="onCancelItemChanges()">Cancel</button></td>
+    </tr>
+  </ng-container>
+</table>
+
+<form (ngSubmit)="onSave()" #editTemplateForm="ngForm">
+  <table>
+    <tr>
+      <th>Title</th>
+      <th>Quantity</th>
+      <th>Comment</th>
+    </tr>
+    <tr *ngFor="let item of items">
+    </tr>
+  </table>
+  <button type="submit" [disabled]="!editTemplateForm.form.dirty || !editTemplateForm.form.valid">Save</button>
+</form>

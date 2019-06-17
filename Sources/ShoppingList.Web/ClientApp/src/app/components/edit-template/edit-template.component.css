@@ -1,0 +1,35 @@
+.template-items {
+    border-collapse: collapse;
+}
+
+.template-item-property {
+    padding: 0;
+}
+
+.template-item-title {
+    width: 300px;
+}
+
+.template-item-quantity {
+    width: 100px;
+}
+
+.template-item-comment {
+    width: 300px;
+}
+
+.template-item-property {
+    border: 1px solid black;
+}
+
+.template-item-edit-button {
+    width: 60px;
+}
+
+.template-item-edit {
+    width: 100%;
+    padding: 0;
+    border: 0;
+
+    font: inherit;
+}

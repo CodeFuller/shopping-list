@@ -50,9 +50,9 @@ namespace ShoppingList.Web.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult> CreateTemplate([FromBody] InputTemplateData templateDto, CancellationToken cancellationToken)
+		public async Task<ActionResult> CreateTemplate([FromBody] InputTemplateData templateData, CancellationToken cancellationToken)
 		{
-			var template = templateDto.ToObject();
+			var template = templateData.ToObject();
 			var newTemplateId = await repository.CreateTemplate(template, cancellationToken).ConfigureAwait(false);
 
 			return Created(GetTemplateUri(newTemplateId), null);
