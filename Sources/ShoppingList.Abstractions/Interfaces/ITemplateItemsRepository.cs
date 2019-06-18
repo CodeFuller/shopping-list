@@ -16,5 +16,7 @@ namespace ShoppingList.Abstractions.Interfaces
 		Task UpdateItem(string templateId, TemplateItem item, CancellationToken cancellationToken);
 
 		Task ReorderItems(string templateId, IReadOnlyCollection<string> newItemsOrder, CancellationToken cancellationToken);
+
+		Task DeleteItem(string templateId, string itemId, CancellationToken cancellationToken);
 	}
 }

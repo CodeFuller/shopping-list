@@ -59,4 +59,8 @@ export class TemplateService {
     reorderTemplateItems(templateId: string, newItemsOrder: string[]): Observable<object> {
         return this.http.patch(`/api/templates/${templateId}/items`, newItemsOrder);
     }
+
+    deleteTemplateItem(templateId: string, itemId: string): Observable<object> {
+        return this.http.delete(`/api/templates/${templateId}/items/${itemId}`);
+    }
 }

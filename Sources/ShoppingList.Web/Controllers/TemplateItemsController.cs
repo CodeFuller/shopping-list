@@ -114,6 +114,22 @@ namespace ShoppingList.Web.Controllers
 			return NoContent();
 		}
 
+		[HttpDelete("{itemId}")]
+		public async Task<ActionResult> DeleteTemplateItem(string templateId, string itemId, CancellationToken cancellationToken)
+		{
+			try
+			{
+				await repository.DeleteItem(templateId, itemId, cancellationToken).ConfigureAwait(false);
+			}
+			catch (NotFoundException e)
+			{
+				logger.LogWarning(e, "Failed to reorder items for template {TemplateId}", templateId);
+				return NotFound();
+			}
+
+			return NoContent();
+		}
+
 		private OutputTemplateItemData CreateTemplateItemDto(string templateId, TemplateItem item)
 		{
 			return new OutputTemplateItemData(item, GetTemplateItemUri(templateId, item.Id));

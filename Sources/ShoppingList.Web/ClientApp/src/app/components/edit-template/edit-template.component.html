@@ -11,7 +11,7 @@
       <td class="template-item-property template-item-quantity">{{item.quantity}}</td>
       <td class="template-item-property template-item-comment">{{item.comment}}</td>
       <td><button class="template-item-edit-button" type="button" (click)="onEditItem(item)">Edit</button></td>
-      <td><button class="template-item-edit-button" type="button">Delete</button></td>
+      <td><button class="template-item-edit-button" type="button" (click)="onDeleteItem(item)">Delete</button></td>
       <td><button class="template-item-edit-button" type="button" (click)="onInsertItem(item)">Insert</button></td>
     </tr>
     <tr *ngIf="isItemUnderEdit(item)">

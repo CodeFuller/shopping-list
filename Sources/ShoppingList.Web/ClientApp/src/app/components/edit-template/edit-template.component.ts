@@ -30,7 +30,6 @@ export class EditTemplateComponent implements OnInit {
     }
 
     onInsertItem(itemWithChosenPosition: TemplateItemModel) {
-
         const newItemIndex = this.items.findIndex(x => x === itemWithChosenPosition);
         if (newItemIndex === -1) {
             console.error('Failed to find item position');
@@ -41,6 +40,17 @@ export class EditTemplateComponent implements OnInit {
         this.items.splice(newItemIndex, 0, newItem);
 
         this.itemUnderEdit = newItem;
+    }
+
+    onDeleteItem(item: TemplateItemModel) {
+        if (!this.templateId || !item.id) {
+          console.error('Can not delete item without id');
+          return;
+        }
+
+        this.templateService.deleteTemplateItem(this.templateId, item.id).subscribe(() => {
+          this.loadTemplateItems();
+        });
     }
 
     onSaveItemChanges() {
