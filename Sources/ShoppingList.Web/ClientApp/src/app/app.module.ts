@@ -11,22 +11,22 @@ import { ShoppingListComponent } from './components/shopping-list/shopping-list.
 import { ItemListComponent } from './components/item-list/item-list.component';
 
 @NgModule({
-   declarations: [
-      AppComponent,
-      TemplatesListComponent,
-      EditTemplateComponent,
-      ShoppingListComponent,
-      ItemListComponent
-   ],
-   imports: [
-      BrowserModule,
-      AppRoutingModule,
-      HttpClientModule,
-      FormsModule
-   ],
-   providers: [],
-   bootstrap: [
-      AppComponent
-   ]
+      declarations: [
+            AppComponent,
+            TemplatesListComponent,
+            EditTemplateComponent,
+            ShoppingListComponent,
+            ItemListComponent
+      ],
+      imports: [
+            BrowserModule,
+            AppRoutingModule,
+            HttpClientModule,
+            FormsModule
+      ],
+      providers: [],
+      bootstrap: [
+            AppComponent
+      ]
 })
 export class AppModule { }

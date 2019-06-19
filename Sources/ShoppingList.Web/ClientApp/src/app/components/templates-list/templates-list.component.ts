@@ -24,21 +24,21 @@ export class TemplatesListComponent implements OnInit {
 
     onAddTemplate() {
       if (!this.newTemplateTitle) {
-        return;
+          return;
       }
 
       const newTemplate = new TemplateModel();
       newTemplate.title = this.newTemplateTitle;
 
       this.templateService.createTemplate(newTemplate)
-        .subscribe(() => {
-          this.newTemplateTitle = null;
-          this.loadTemplates();
-        });
+          .subscribe(() => {
+              this.newTemplateTitle = null;
+              this.loadTemplates();
+          });
     }
 
     private loadTemplates() {
         this.templateService.getTemplates()
-          .subscribe((data: TemplateModel[]) => this.templates = data);
+            .subscribe((data: TemplateModel[]) => this.templates = data);
     }
 }

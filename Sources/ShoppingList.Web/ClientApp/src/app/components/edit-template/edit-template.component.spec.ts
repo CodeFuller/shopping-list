@@ -6,23 +6,23 @@ import { DebugElement } from '@angular/core';
 import { EditTemplateComponent } from './edit-template.component';
 
 describe('EditTemplateComponent', () => {
-  let component: EditTemplateComponent;
-  let fixture: ComponentFixture<EditTemplateComponent>;
+    let component: EditTemplateComponent;
+    let fixture: ComponentFixture<EditTemplateComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ EditTemplateComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [ EditTemplateComponent ]
+        })
+        .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(EditTemplateComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(EditTemplateComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

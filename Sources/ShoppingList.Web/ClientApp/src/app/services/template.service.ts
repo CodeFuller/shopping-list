@@ -34,7 +34,7 @@ export class TemplateService {
             .pipe(map(response => {
                 const location = response.headers.get('Location');
                 if (!location) {
-                    throw Error('Response for template item creation does not contain location header')
+                    throw Error('Response for template item creation does not contain location header');
                 }
 
                 const re = new RegExp('/([^/]+)$');

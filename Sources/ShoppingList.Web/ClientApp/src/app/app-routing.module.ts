@@ -5,14 +5,14 @@ import { EditTemplateComponent } from './components/edit-template/edit-template.
 import { ShoppingListComponent } from './components/shopping-list/shopping-list.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'templates', pathMatch: 'full' },
-  { path: 'templates', component: TemplatesListComponent },
-  { path: 'templates/:id', component: EditTemplateComponent },
-  { path: 'list', component: ShoppingListComponent },
+    { path: '', redirectTo: 'templates', pathMatch: 'full' },
+    { path: 'templates', component: TemplatesListComponent },
+    { path: 'templates/:id', component: EditTemplateComponent },
+    { path: 'list', component: ShoppingListComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
 })
 export class AppRoutingModule { }
