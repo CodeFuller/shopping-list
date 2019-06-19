@@ -13,6 +13,7 @@ export class EditTemplateComponent implements OnInit {
     public templateId: string | undefined;
     public items: TemplateItemModel[] = [];
 
+    public newItemTitle = '';
     public itemUnderEdit: TemplateItemModel | undefined;
 
     constructor(private templateService: TemplateService, private route: ActivatedRoute) {
@@ -21,6 +22,16 @@ export class EditTemplateComponent implements OnInit {
     ngOnInit() {
         this.route.paramMap.subscribe((params: ParamMap) => {
             this.templateId = params.get('id') || undefined;
+            this.loadTemplateItems();
+        });
+    }
+
+    onAddItem() {
+        const newItem = new TemplateItemModel();
+        newItem.title = this.newItemTitle;
+
+        this.templateService.createTemplateItem(this.templateId, newItem).subscribe(() => {
+            this.newItemTitle = '';
             this.loadTemplateItems();
         });
     }
