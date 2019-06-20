@@ -27,6 +27,11 @@ export class EditTemplateComponent implements OnInit {
     }
 
     onAddItem() {
+        if (!this.templateId) {
+            console.error('Template id is undefined');
+            return;
+        }
+
         const newItem = new TemplateItemModel();
         newItem.title = this.newItemTitle;
 
@@ -65,6 +70,10 @@ export class EditTemplateComponent implements OnInit {
     }
 
     onSaveItemChanges() {
+        this.saveItemChanges();
+    }
+
+    private saveItemChanges() {
         if (!this.templateId || !this.itemUnderEdit) {
             console.error('Can not save changes because no item is under edit');
             return;
@@ -104,6 +113,12 @@ export class EditTemplateComponent implements OnInit {
         }
 
         this.itemUnderEdit = undefined;
+    }
+
+    onEditKeyDown(event: KeyboardEvent) {
+        if (event.key === 'Enter') {
+            this.saveItemChanges();
+        }
     }
 
     private loadTemplateItems() {
