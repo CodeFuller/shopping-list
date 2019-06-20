@@ -18,8 +18,16 @@
     width: 300px;
 }
 
-.template-item-property {
+.template-item-property, .template-item-property-edit {
     border: 1px solid black;
+}
+
+.template-item-property-edit, .template-item-edit {
+    background-color: lightblue;
+}
+
+.template-item-property-edit {
+    box-sizing: border-box;
 }
 
 .template-item-edit-button {
