@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { TemplateService } from 'src/app/services/template.service';
 import { TemplateItemModel } from 'src/app/models/template-item.model';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
     selector: 'app-edit-template',
@@ -16,7 +17,9 @@ export class EditTemplateComponent implements OnInit {
     public newItemTitle = '';
     public itemUnderEdit: TemplateItemModel | undefined;
 
-    constructor(private templateService: TemplateService, private route: ActivatedRoute) {
+    public editItemFormGroup: FormGroup | undefined;
+
+    constructor(private templateService: TemplateService, private route: ActivatedRoute, private formBuilder: FormBuilder) {
     }
 
     ngOnInit() {
@@ -42,7 +45,8 @@ export class EditTemplateComponent implements OnInit {
     }
 
     onEditItem(item: TemplateItemModel) {
-        this.itemUnderEdit = item.clone();
+        this.itemUnderEdit = item;
+        this.createItemEditForm(item);
     }
 
     onInsertItem(itemWithChosenPosition: TemplateItemModel) {
@@ -52,20 +56,20 @@ export class EditTemplateComponent implements OnInit {
             return;
         }
 
-        const newItem = new TemplateItemModel();
-        this.items.splice(newItemIndex, 0, newItem);
+        this.itemUnderEdit = new TemplateItemModel();
+        this.items.splice(newItemIndex, 0, this.itemUnderEdit);
 
-        this.itemUnderEdit = newItem;
+        this.createItemEditForm();
     }
 
     onDeleteItem(item: TemplateItemModel) {
         if (!this.templateId || !item.id) {
-          console.error('Can not delete item without id');
-          return;
+            console.error('Can not delete item without id');
+            return;
         }
 
         this.templateService.deleteTemplateItem(this.templateId, item.id).subscribe(() => {
-          this.loadTemplateItems();
+            this.loadTemplateItems();
         });
     }
 
@@ -78,6 +82,16 @@ export class EditTemplateComponent implements OnInit {
             console.error('Can not save changes because no item is under edit');
             return;
         }
+
+        const title = this.getFormValue('title');
+        if (!title) {
+            console.error('Item title is not set');
+            return;
+        }
+
+        this.itemUnderEdit.title = title;
+        this.itemUnderEdit.quantity = this.getNumberFormValue('quantity');
+        this.itemUnderEdit.comment = this.getFormValue('comment');
 
         if (this.itemUnderEdit.id) {
             this.templateService.updateTemplateItem(this.templateId, this.itemUnderEdit).subscribe(() => {
@@ -106,7 +120,7 @@ export class EditTemplateComponent implements OnInit {
         if (!this.itemUnderEdit.id) {
             const newItemIndex = this.items.findIndex(x => x === this.itemUnderEdit);
             if (newItemIndex !== -1) {
-              this.items.splice(newItemIndex, 1);
+                this.items.splice(newItemIndex, 1);
             } else {
                 console.error('Failed to find item position');
             }
@@ -130,6 +144,33 @@ export class EditTemplateComponent implements OnInit {
         // TBD: Avoid nested subscriptions
         this.templateService.getTemplateItems(this.templateId)
             .subscribe((data: TemplateItemModel[]) => this.items = data);
+    }
+
+    private createItemEditForm(item?: TemplateItemModel) {
+        this.editItemFormGroup = this.formBuilder.group({
+            title: [item ? item.title : null, Validators.required],
+            quantity: [item ? item.quantity : null, Validators.pattern(/^\d*$/)],
+            comment: [item ? item.comment : null],
+        });
+    }
+
+    private getFormValue(name: string): string | null {
+        if (!this.editItemFormGroup) {
+            console.error('Item edit form is not set');
+            return null;
+        }
+
+        const control = this.editItemFormGroup.get(name);
+        return control ? control.value : null;
+    }
+
+    private getNumberFormValue(name: string): number | null {
+        const value = this.getFormValue(name);
+        if (!value) {
+            return null;
+        }
+
+        return parseInt(value, 10);
     }
 
     isItemUnderEdit(item: TemplateItemModel): boolean {

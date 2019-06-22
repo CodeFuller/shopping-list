@@ -14,11 +14,17 @@
       <td><button class="template-item-edit-button" type="button" (click)="onDeleteItem(item)">Delete</button></td>
       <td><button class="template-item-edit-button" type="button" (click)="onInsertItem(item)">Insert</button></td>
     </tr>
-    <tr *ngIf="isItemUnderEdit(item)">
-      <td class="template-item-property-edit template-item-title"><input class="template-item-edit" type="text" name="newTitle" required (keydown)="onEditKeyDown($event)" [(ngModel)]="itemUnderEdit.title"></td>
-      <td class="template-item-property-edit template-item-quantity"><input class="template-item-edit" type="text" name="newQuantity" (keydown)="onEditKeyDown($event)" [(ngModel)]="itemUnderEdit.quantity"></td>
-      <td class="template-item-property-edit template-item-comment"><input class="template-item-edit" type="text" name="newComment" (keydown)="onEditKeyDown($event)" [(ngModel)]="itemUnderEdit.comment"></td>
-      <td><button class="template-item-edit-button" type="button" (click)="onSaveItemChanges()">Save</button></td>
+    <tr *ngIf="isItemUnderEdit(item)" [formGroup]="editItemFormGroup">
+      <td id="templateitemtitle" class="template-item-property-edit template-item-title">
+        <input class="template-item-edit" type="text" required (keydown)="onEditKeyDown($event)" formControlName="title">
+      </td>
+      <td class="template-item-property-edit template-item-quantity">
+        <input class="template-item-edit" type="text" (keydown)="onEditKeyDown($event)" formControlName="quantity">
+      </td>
+      <td class="template-item-property-edit template-item-comment">
+        <input class="template-item-edit" type="text" (keydown)="onEditKeyDown($event)" formControlName="comment">
+      </td>
+      <td><button class="template-item-edit-button" type="button" [disabled]="!editItemFormGroup.valid" (click)="onSaveItemChanges()">Save</button></td>
       <td><button class="template-item-edit-button" type="button" (click)="onCancelItemChanges()">Cancel</button></td>
     </tr>
   </ng-container>
