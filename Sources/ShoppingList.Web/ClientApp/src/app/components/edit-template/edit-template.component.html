@@ -1,20 +1,21 @@
 <!-- TBD: Fill template title -->
 <h1>Template title goes here</h1>
-<table class="template-items" cdkDropList (cdkDropListDropped)="drop($event)">
+<table cdkDropList class="template-items" (cdkDropListDropped)="drop($event)">
   <tr>
     <th>Title</th>
     <th>Quantity</th>
     <th>Comment</th>
   </tr>
   <ng-container *ngFor="let item of items">
-    <tr *ngIf="!isItemUnderEdit(item)" class="template-item" cdkDrag>
+    <tr *ngIf="!isItemUnderEdit(item)" cdkDrag class="template-item">
       <td class="template-item-property template-item-title">{{item.title}}</td>
       <td class="template-item-property template-item-quantity">{{item.quantity}}</td>
       <td class="template-item-property template-item-comment">{{item.comment}}</td>
+      <td><span cdkDragHandle class="template-item-holder-icon"></span></td>
       <td><button class="template-item-edit-button" type="button" (click)="onEditItem(item)">Edit</button></td>
       <td><button class="template-item-edit-button" type="button" (click)="onDeleteItem(item)">Delete</button></td>
     </tr>
-    <tr *ngIf="isItemUnderEdit(item)" class="template-item" [formGroup]="editItemFormGroup" cdkDrag>
+    <tr *ngIf="isItemUnderEdit(item)" cdkDrag class="template-item" [formGroup]="editItemFormGroup">
       <td class="template-item-property-edit template-item-title">
         <input class="template-item-edit" type="text" required (keydown)="onEditKeyDown($event)" formControlName="title">
       </td>
@@ -38,6 +39,7 @@
     <td class="template-item-property-add template-item-comment">
       <input class="template-item-add" type="text" (keydown)="onAddKeyDown($event)" formControlName="comment">
     </td>
+    <td></td>
     <td><button class="template-item-edit-button" type="button" [disabled]="!addItemFormGroup.valid" (click)="onAddItem()">Add</button></td>
     <td><button class="template-item-edit-button" type="button" (click)="onCancelItemAdd()">Cancel</button></td>
   </tr>
