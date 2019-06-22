@@ -23,7 +23,7 @@
     width: 300px;
 }
 
-.template-item-property, .template-item-property-edit {
+.template-item-property, .template-item-property-edit, .template-item-property-add {
     border: 1px solid black;
 }
 
@@ -31,7 +31,7 @@
     background-color: lightblue;
 }
 
-.template-item-property-edit {
+.template-item-property-edit, .template-item-property-add {
     box-sizing: border-box;
 }
 
@@ -39,7 +39,7 @@
     width: 60px;
 }
 
-.template-item-edit {
+.template-item-edit, .template-item-add {
     width: 100%;
     padding: 0;
     border: 0;

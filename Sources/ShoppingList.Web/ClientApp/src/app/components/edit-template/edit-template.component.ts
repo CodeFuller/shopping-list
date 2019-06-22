@@ -15,55 +15,55 @@ export class EditTemplateComponent implements OnInit {
     public templateId: string | undefined;
     public items: TemplateItemModel[] = [];
 
-    public newItemTitle = '';
     public itemUnderEdit: TemplateItemModel | undefined;
 
+    public addItemFormGroup: FormGroup;
     public editItemFormGroup: FormGroup | undefined;
 
     constructor(private templateService: TemplateService, private route: ActivatedRoute, private formBuilder: FormBuilder) {
+        this.addItemFormGroup = this.createItemEditForm();
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.route.paramMap.subscribe((params: ParamMap) => {
             this.templateId = params.get('id') || undefined;
             this.loadTemplateItems();
         });
     }
 
-    onAddItem() {
+    public onAddItem() {
         if (!this.templateId) {
             console.error('Template id is undefined');
             return;
         }
 
         const newItem = new TemplateItemModel();
-        newItem.title = this.newItemTitle;
+        this.fillItemData(newItem, this.addItemFormGroup);
 
         this.templateService.createTemplateItem(this.templateId, newItem).subscribe(() => {
-            this.newItemTitle = '';
+            this.addItemFormGroup = this.createItemEditForm();
             this.loadTemplateItems();
         });
     }
 
-    onEditItem(item: TemplateItemModel) {
-        this.itemUnderEdit = item;
-        this.createItemEditForm(item);
-    }
-
-    onInsertItem(itemWithChosenPosition: TemplateItemModel) {
-        const newItemIndex = this.items.findIndex(x => x === itemWithChosenPosition);
-        if (newItemIndex === -1) {
-            console.error('Failed to find item position');
+    private fillItemData(item: TemplateItemModel, form: FormGroup) {
+        const title = this.getFormValue(form, 'title');
+        if (!title) {
+            console.error('Item title is not set');
             return;
         }
 
-        this.itemUnderEdit = new TemplateItemModel();
-        this.items.splice(newItemIndex, 0, this.itemUnderEdit);
-
-        this.createItemEditForm();
+        item.title = title;
+        item.quantity = this.getNumberFormValue(form, 'quantity');
+        item.comment = this.getFormValue(form, 'comment');
     }
 
-    onDeleteItem(item: TemplateItemModel) {
+    public onEditItem(item: TemplateItemModel) {
+        this.itemUnderEdit = item;
+        this.editItemFormGroup = this.createItemEditForm(item);
+    }
+
+    public onDeleteItem(item: TemplateItemModel) {
         if (!this.templateId || !item.id) {
             console.error('Can not delete item without id');
             return;
@@ -74,39 +74,18 @@ export class EditTemplateComponent implements OnInit {
         });
     }
 
-    onSaveItemChanges() {
-        this.saveItemChanges();
-    }
-
-    private saveItemChanges() {
-        if (!this.templateId || !this.itemUnderEdit) {
+    public onSaveItemChanges() {
+        if (!this.templateId || !this.itemUnderEdit || !this.editItemFormGroup) {
             console.error('Can not save changes because no item is under edit');
             return;
         }
 
-        const title = this.getFormValue('title');
-        if (!title) {
-            console.error('Item title is not set');
-            return;
-        }
+        this.fillItemData(this.itemUnderEdit, this.editItemFormGroup);
 
-        this.itemUnderEdit.title = title;
-        this.itemUnderEdit.quantity = this.getNumberFormValue('quantity');
-        this.itemUnderEdit.comment = this.getFormValue('comment');
-
-        if (this.itemUnderEdit.id) {
-            this.templateService.updateTemplateItem(this.templateId, this.itemUnderEdit).subscribe(() => {
-                this.itemUnderEdit = undefined;
-                this.loadTemplateItems();
-            });
-        } else {
-            this.templateService.createTemplateItem(this.templateId, this.itemUnderEdit).subscribe((newItemId: string) => {
-                // Setting id of item in items array for correct re-ordering.
-                this.itemUnderEdit!.id = newItemId;
-                this.itemUnderEdit = undefined;
-                this.updateItemsOrder();
-            });
-        }
+        this.templateService.updateTemplateItem(this.templateId, this.itemUnderEdit).subscribe(() => {
+            this.itemUnderEdit = undefined;
+            this.loadTemplateItems();
+        });
     }
 
     private updateItemsOrder() {
@@ -115,28 +94,30 @@ export class EditTemplateComponent implements OnInit {
             .subscribe(() => this.loadTemplateItems());
     }
 
-    onCancelItemChanges() {
+    public onCancelItemEdit() {
         if (!this.itemUnderEdit) {
             console.error('Can not cancel changes because no item is under edit');
             return;
         }
 
-        // If it was new item, we should remove it from the list.
-        if (!this.itemUnderEdit.id) {
-            const newItemIndex = this.items.findIndex(x => x === this.itemUnderEdit);
-            if (newItemIndex !== -1) {
-                this.items.splice(newItemIndex, 1);
-            } else {
-                console.error('Failed to find item position');
-            }
-        }
-
         this.itemUnderEdit = undefined;
     }
 
-    onEditKeyDown(event: KeyboardEvent) {
+    public onCancelItemAdd() {
+        this.addItemFormGroup = this.createItemEditForm();
+    }
+
+    public onEditKeyDown(event: KeyboardEvent) {
+        this.executeOnEnter(event, () => this.onSaveItemChanges());
+    }
+
+    public onAddKeyDown(event: KeyboardEvent) {
+        this.executeOnEnter(event, () => this.onAddItem());
+    }
+
+    private executeOnEnter(event: KeyboardEvent, action: () => void) {
         if (event.key === 'Enter') {
-            this.saveItemChanges();
+            action();
         }
     }
 
@@ -151,26 +132,21 @@ export class EditTemplateComponent implements OnInit {
             .subscribe((data: TemplateItemModel[]) => this.items = data);
     }
 
-    private createItemEditForm(item?: TemplateItemModel) {
-        this.editItemFormGroup = this.formBuilder.group({
+    private createItemEditForm(item?: TemplateItemModel): FormGroup {
+        return this.formBuilder.group({
             title: [item ? item.title : null, Validators.required],
             quantity: [item ? item.quantity : null, Validators.pattern(/^\d*$/)],
             comment: [item ? item.comment : null],
         });
     }
 
-    private getFormValue(name: string): string | null {
-        if (!this.editItemFormGroup) {
-            console.error('Item edit form is not set');
-            return null;
-        }
-
-        const control = this.editItemFormGroup.get(name);
+    private getFormValue(form: FormGroup, name: string): string | null {
+        const control = form.get(name);
         return control ? control.value : null;
     }
 
-    private getNumberFormValue(name: string): number | null {
-        const value = this.getFormValue(name);
+    private getNumberFormValue(form: FormGroup, name: string): number | null {
+        const value = this.getFormValue(form, name);
         if (!value) {
             return null;
         }
@@ -178,7 +154,7 @@ export class EditTemplateComponent implements OnInit {
         return parseInt(value, 10);
     }
 
-    isItemUnderEdit(item: TemplateItemModel): boolean {
+    public isItemUnderEdit(item: TemplateItemModel): boolean {
         return this.itemUnderEdit !== undefined && item.id === this.itemUnderEdit.id;
     }
 

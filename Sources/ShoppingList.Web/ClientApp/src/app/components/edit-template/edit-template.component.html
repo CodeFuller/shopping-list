@@ -1,3 +1,4 @@
+<!-- TBD: Fill template title -->
 <h1>Template title goes here</h1>
 <table class="template-items" cdkDropList (cdkDropListDropped)="drop($event)">
   <tr>
@@ -12,10 +13,9 @@
       <td class="template-item-property template-item-comment">{{item.comment}}</td>
       <td><button class="template-item-edit-button" type="button" (click)="onEditItem(item)">Edit</button></td>
       <td><button class="template-item-edit-button" type="button" (click)="onDeleteItem(item)">Delete</button></td>
-      <td><button class="template-item-edit-button" type="button" (click)="onInsertItem(item)">Insert</button></td>
     </tr>
     <tr *ngIf="isItemUnderEdit(item)" class="template-item" [formGroup]="editItemFormGroup" cdkDrag>
-      <td id="templateitemtitle" class="template-item-property-edit template-item-title">
+      <td class="template-item-property-edit template-item-title">
         <input class="template-item-edit" type="text" required (keydown)="onEditKeyDown($event)" formControlName="title">
       </td>
       <td class="template-item-property-edit template-item-quantity">
@@ -25,12 +25,20 @@
         <input class="template-item-edit" type="text" (keydown)="onEditKeyDown($event)" formControlName="comment">
       </td>
       <td><button class="template-item-edit-button" type="button" [disabled]="!editItemFormGroup.valid" (click)="onSaveItemChanges()">Save</button></td>
-      <td><button class="template-item-edit-button" type="button" (click)="onCancelItemChanges()">Cancel</button></td>
+      <td><button class="template-item-edit-button" type="button" (click)="onCancelItemEdit()">Cancel</button></td>
     </tr>
   </ng-container>
+  <tr class="template-item" [formGroup]="addItemFormGroup">
+    <td class="template-item-property-add template-item-title">
+      <input class="template-item-add" type="text" required (keydown)="onAddKeyDown($event)" formControlName="title">
+    </td>
+    <td class="template-item-property-add template-item-quantity">
+      <input class="template-item-add" type="text" (keydown)="onAddKeyDown($event)" formControlName="quantity">
+    </td>
+    <td class="template-item-property-add template-item-comment">
+      <input class="template-item-add" type="text" (keydown)="onAddKeyDown($event)" formControlName="comment">
+    </td>
+    <td><button class="template-item-edit-button" type="button" [disabled]="!addItemFormGroup.valid" (click)="onAddItem()">Add</button></td>
+    <td><button class="template-item-edit-button" type="button" (click)="onCancelItemAdd()">Cancel</button></td>
+  </tr>
 </table>
-
-<form class="new-template-item-form" (ngSubmit)="onAddItem()" #newTemplateItemForm="ngForm">
-  <input id="new-template-item-title" type="text" name="title" required [(ngModel)]="newItemTitle">
-  <button type="submit" [disabled]="!newTemplateItemForm.form.valid">Add</button>
-</form>
