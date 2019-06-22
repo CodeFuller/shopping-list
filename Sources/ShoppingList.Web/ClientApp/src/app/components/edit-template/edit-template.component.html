@@ -8,23 +8,23 @@
   </tr>
   <ng-container *ngFor="let item of items">
     <tr *ngIf="!isItemUnderEdit(item)" cdkDrag class="template-item">
-      <td class="template-item-property template-item-title">{{item.title}}</td>
-      <td class="template-item-property template-item-quantity">{{item.quantity}}</td>
-      <td class="template-item-property template-item-comment">{{item.comment}}</td>
+      <td class="template-item-property template-item-title" (click)="onEditItem(item, 'title')">{{item.title}}</td>
+      <td class="template-item-property template-item-quantity" (click)="onEditItem(item, 'quantity')">{{item.quantity}}</td>
+      <td class="template-item-property template-item-comment" (click)="onEditItem(item, 'comment')">{{item.comment}}</td>
       <td><span cdkDragHandle class="template-item-holder-icon"></span></td>
-      <td><button class="template-item-edit-button" type="button" (click)="onEditItem(item)">Edit</button></td>
       <td><button class="template-item-edit-button" type="button" (click)="onDeleteItem(item)">Delete</button></td>
     </tr>
     <tr *ngIf="isItemUnderEdit(item)" cdkDrag class="template-item" [formGroup]="editItemFormGroup">
       <td class="template-item-property-edit template-item-title">
-        <input class="template-item-edit" type="text" required (keydown)="onEditKeyDown($event)" formControlName="title">
+        <input class="template-item-edit" type="text" required #newItemTitle (keydown)="onEditKeyDown($event)" formControlName="title">
       </td>
       <td class="template-item-property-edit template-item-quantity">
-        <input class="template-item-edit" type="text" (keydown)="onEditKeyDown($event)" formControlName="quantity">
+        <input class="template-item-edit" type="text" #newItemQuantity (keydown)="onEditKeyDown($event)" formControlName="quantity">
       </td>
       <td class="template-item-property-edit template-item-comment">
-        <input class="template-item-edit" type="text" (keydown)="onEditKeyDown($event)" formControlName="comment">
+        <input class="template-item-edit" type="text" #newItemComment (keydown)="onEditKeyDown($event)" formControlName="comment">
       </td>
+      <td><span cdkDragHandle class="template-item-holder-icon"></span></td>
       <td><button class="template-item-edit-button" type="button" [disabled]="!editItemFormGroup.valid" (click)="onSaveItemChanges()">Save</button></td>
       <td><button class="template-item-edit-button" type="button" (click)="onCancelItemEdit()">Cancel</button></td>
     </tr>

@@ -4,6 +4,7 @@
 
 .template-item {
     background: white;
+    cursor: text;
 }
 
 .template-item-property {

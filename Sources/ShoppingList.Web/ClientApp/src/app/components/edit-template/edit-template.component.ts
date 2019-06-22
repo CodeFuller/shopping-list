@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { TemplateService } from 'src/app/services/template.service';
 import { TemplateItemModel } from 'src/app/models/template-item.model';
@@ -19,6 +19,11 @@ export class EditTemplateComponent implements OnInit {
 
     public addItemFormGroup: FormGroup;
     public editItemFormGroup: FormGroup | undefined;
+
+    // https://stackoverflow.com/a/44803306/5740031
+    @ViewChild('newItemTitle') newItemTitleRef: ElementRef | undefined;
+    @ViewChild('newItemQuantity') newItemQuantityRef: ElementRef | undefined;
+    @ViewChild('newItemComment') newItemCommentRef: ElementRef | undefined;
 
     constructor(private templateService: TemplateService, private route: ActivatedRoute, private formBuilder: FormBuilder) {
         this.addItemFormGroup = this.createItemEditForm();
@@ -58,9 +63,35 @@ export class EditTemplateComponent implements OnInit {
         item.comment = this.getFormValue(form, 'comment');
     }
 
-    public onEditItem(item: TemplateItemModel) {
+    public onEditItem(item: TemplateItemModel, clickedElement: string) {
         this.itemUnderEdit = item;
         this.editItemFormGroup = this.createItemEditForm(item);
+
+        // Setting the focus on clicked edit.
+        // https://stackoverflow.com/a/50014475/5740031
+        // Element has not been rendered yet at this point of time.
+        setTimeout(() => {
+            const element = this.getElement(clickedElement);
+            if (!element) {
+                console.error(`Element ${clickedElement} does not exist`);
+                return;
+            }
+            element.nativeElement.focus();
+        }, 0);
+    }
+
+    private getElement(clickedElement: string): ElementRef | undefined {
+        switch (clickedElement) {
+            case 'title':
+                return this.newItemTitleRef;
+            case 'quantity':
+                return this.newItemQuantityRef;
+            case 'comment':
+                return this.newItemCommentRef;
+            default:
+                console.error(`Unknown element clicked: ${clickedElement}`);
+                return undefined;
+        }
     }
 
     public onDeleteItem(item: TemplateItemModel) {
