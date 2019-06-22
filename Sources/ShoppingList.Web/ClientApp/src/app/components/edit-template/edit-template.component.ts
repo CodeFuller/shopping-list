@@ -3,6 +3,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { TemplateService } from 'src/app/services/template.service';
 import { TemplateItemModel } from 'src/app/models/template-item.model';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
     selector: 'app-edit-template',
@@ -103,11 +104,15 @@ export class EditTemplateComponent implements OnInit {
                 // Setting id of item in items array for correct re-ordering.
                 this.itemUnderEdit!.id = newItemId;
                 this.itemUnderEdit = undefined;
-                const itemsOrder: string[] = this.items.map(item => item.id!);
-                this.templateService.reorderTemplateItems(this.templateId!, itemsOrder)
-                    .subscribe(() => this.loadTemplateItems());
+                this.updateItemsOrder();
             });
         }
+    }
+
+    private updateItemsOrder() {
+        const itemsOrder: string[] = this.items.map(item => item.id!);
+        this.templateService.reorderTemplateItems(this.templateId!, itemsOrder)
+            .subscribe(() => this.loadTemplateItems());
     }
 
     onCancelItemChanges() {
@@ -175,5 +180,10 @@ export class EditTemplateComponent implements OnInit {
 
     isItemUnderEdit(item: TemplateItemModel): boolean {
         return this.itemUnderEdit !== undefined && item.id === this.itemUnderEdit.id;
+    }
+
+    public drop(event: CdkDragDrop<TemplateItemModel[]>) {
+        moveItemInArray(this.items, event.previousIndex, event.currentIndex);
+        this.updateItemsOrder();
     }
 }

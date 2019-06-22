@@ -9,6 +9,7 @@ import { TemplatesListComponent } from './components/templates-list/templates-li
 import { EditTemplateComponent } from './components/edit-template/edit-template.component';
 import { ShoppingListComponent } from './components/shopping-list/shopping-list.component';
 import { ItemListComponent } from './components/item-list/item-list.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
       declarations: [
@@ -23,7 +24,8 @@ import { ItemListComponent } from './components/item-list/item-list.component';
             AppRoutingModule,
             HttpClientModule,
             FormsModule,
-            ReactiveFormsModule
+            ReactiveFormsModule,
+            DragDropModule
       ],
       providers: [],
       bootstrap: [
