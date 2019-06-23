@@ -7,6 +7,16 @@
     cursor: text;
 }
 
+.template-item-edit-button {
+    /* Is shown only on hover of parent item */
+    display: none;
+}
+
+/* Display buttons for hover and item under edit */
+.template-item:hover .template-item-edit-button, .template-item:focus-within .template-item-edit-button {
+    display: initial;
+}
+
 .template-item-property {
     padding: 0;
 }
@@ -45,6 +55,10 @@
     border: 0;
 
     font: inherit;
+}
+
+.template-item-property-add, .template-item-add {
+    background-color: lightgray;
 }
 
 .cdk-drag-preview {

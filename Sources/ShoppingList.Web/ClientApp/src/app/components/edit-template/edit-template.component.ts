@@ -25,6 +25,9 @@ export class EditTemplateComponent implements OnInit {
     public editItemFormGroup: FormGroup | undefined;
 
     // https://stackoverflow.com/a/44803306/5740031
+    @ViewChild('editedItemTitle') editedItemTitleRef: ElementRef | undefined;
+    @ViewChild('editedItemQuantity') editedItemQuantityRef: ElementRef | undefined;
+    @ViewChild('editedItemComment') editedItemCommentRef: ElementRef | undefined;
     @ViewChild('newItemTitle') newItemTitleRef: ElementRef | undefined;
     @ViewChild('newItemQuantity') newItemQuantityRef: ElementRef | undefined;
     @ViewChild('newItemComment') newItemCommentRef: ElementRef | undefined;
@@ -87,11 +90,11 @@ export class EditTemplateComponent implements OnInit {
     private getElement(clickedElement: string): ElementRef | undefined {
         switch (clickedElement) {
             case 'title':
-                return this.newItemTitleRef;
+                return this.editedItemTitleRef;
             case 'quantity':
-                return this.newItemQuantityRef;
+                return this.editedItemQuantityRef;
             case 'comment':
-                return this.newItemCommentRef;
+                return this.editedItemCommentRef;
             default:
                 console.error(`Unknown element clicked: ${clickedElement}`);
                 return undefined;
@@ -139,7 +142,16 @@ export class EditTemplateComponent implements OnInit {
     }
 
     public onCancelItemAdd() {
+        this.unfocusElement(this.newItemTitleRef);
+        this.unfocusElement(this.newItemQuantityRef);
+        this.unfocusElement(this.newItemCommentRef);
         this.addItemFormGroup = this.createItemEditForm();
+    }
+
+    private unfocusElement(element: ElementRef | undefined) {
+        if (element) {
+            element.nativeElement.blur();
+        }
     }
 
     public onEditKeyDown(event: KeyboardEvent) {
