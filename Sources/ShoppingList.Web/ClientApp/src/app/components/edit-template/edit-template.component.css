@@ -5,6 +5,7 @@
 .template-item {
     background: white;
     cursor: text;
+    height: 30px;
 }
 
 .template-item-edit-button {
@@ -45,10 +46,6 @@
     box-sizing: border-box;
 }
 
-.template-item-edit-button {
-    width: 60px;
-}
-
 .template-item-edit, .template-item-add {
     width: 100%;
     padding: 0;
@@ -82,25 +79,20 @@
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.template-item-holder-icon {
-    content: '....';
-    width: 10px;
-    height: 20px;
-    display: inline-block;
-    overflow: hidden;
-    line-height: 5px;
-    padding: 3px 4px;
+.template-item-drag {
     cursor: move;
-    vertical-align: middle;
-    margin-top: -.7em;
-    margin-right: .3em;
-    font-size: 12px;
-    font-family: sans-serif;
-    letter-spacing: 2px;
-    color: #cccccc;
-    text-shadow: 1px 0 1px black;
 }
 
-.template-item-holder-icon::after {
-    content: '.. .. .. ..';
+button {
+    border: none;
+    background-color: white;
+    cursor: pointer;
+
+    width: 25px;
+    height: 29px;
+}
+
+/* Removing blue border for buton with focus */
+button:focus {
+    outline:0;
 }

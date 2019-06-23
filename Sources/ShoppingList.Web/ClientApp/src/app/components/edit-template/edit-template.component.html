@@ -11,8 +11,16 @@
       <td class="template-item-property template-item-title" (click)="onEditItem(item, 'title')">{{item.title}}</td>
       <td class="template-item-property template-item-quantity" (click)="onEditItem(item, 'quantity')">{{item.quantity}}</td>
       <td class="template-item-property template-item-comment" (click)="onEditItem(item, 'comment')">{{item.comment}}</td>
-      <td><span cdkDragHandle class="template-item-holder-icon"></span></td>
-      <td><button class="template-item-edit-button" type="button" (click)="onDeleteItem(item)">Delete</button></td>
+      <td>
+        <button type="button" class="template-item-drag">
+          <i cdkDragHandle class="material-icons">drag_indicator</i>
+        </button>
+      </td>
+      <td>
+        <button class="template-item-edit-button" type="button" (click)="onDeleteItem(item)">
+          <i class="material-icons">delete</i>
+        </button>
+      </td>
     </tr>
     <tr *ngIf="isItemUnderEdit(item)" cdkDrag class="template-item" [formGroup]="editItemFormGroup">
       <td class="template-item-property-edit template-item-title">
@@ -24,9 +32,16 @@
       <td class="template-item-property-edit template-item-comment">
         <input class="template-item-edit" type="text" #editedItemComment (keydown)="onEditKeyDown($event)" formControlName="comment">
       </td>
-      <td><span cdkDragHandle class="template-item-holder-icon"></span></td>
-      <td><button class="template-item-edit-button" type="button" [disabled]="editItemFormGroup.pristine || !editItemFormGroup.valid" (click)="onSaveItemChanges()">Save</button></td>
-      <td><button class="template-item-edit-button" type="button" (click)="onCancelItemEdit()">Cancel</button></td>
+      <td>
+        <button class="template-item-edit-button" type="button" [disabled]="editItemFormGroup.pristine || !editItemFormGroup.valid" (click)="onSaveItemChanges()">
+          <i class="material-icons">save</i>
+        </button>
+      </td>
+      <td>
+        <button class="template-item-edit-button" type="button" (click)="onCancelItemEdit()">
+          <i class="material-icons">cancel</i>
+        </button>
+      </td>
     </tr>
   </ng-container>
   <tr class="template-item" [formGroup]="addItemFormGroup">
@@ -39,8 +54,15 @@
     <td class="template-item-property-add template-item-comment">
       <input class="template-item-add" type="text" #newItemComment (keydown)="onAddKeyDown($event)" formControlName="comment">
     </td>
-    <td></td>
-    <td><button class="template-item-edit-button" type="button" [disabled]="!addItemFormGroup.valid" (click)="onAddItem()">Add</button></td>
-    <td><button class="template-item-edit-button" type="button" (click)="onCancelItemAdd()">Cancel</button></td>
+    <td>
+      <button class="template-item-edit-button" type="button" [disabled]="!addItemFormGroup.valid" (click)="onAddItem()">
+        <i class="material-icons">add</i>
+      </button>
+    </td>
+    <td>
+      <button class="template-item-edit-button" type="button" (click)="onCancelItemAdd()">
+        <i class="material-icons">clear</i>
+      </button>
+    </td>
   </tr>
 </table>
