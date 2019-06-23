@@ -5,6 +5,10 @@ import { TemplateItemModel } from 'src/app/models/template-item.model';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
+interface IKeyboardHandlers {
+    [key: string]: () => void;
+}
+
 @Component({
     selector: 'app-edit-template',
     templateUrl: './edit-template.component.html',
@@ -139,7 +143,7 @@ export class EditTemplateComponent implements OnInit {
     }
 
     public onEditKeyDown(event: KeyboardEvent) {
-        const handlers = {
+        const handlers: IKeyboardHandlers = {
             Enter: () => this.onSaveItemChanges(),
             Escape: () => this.onCancelItemEdit()
         }
@@ -154,7 +158,7 @@ export class EditTemplateComponent implements OnInit {
         this.executeKeyboardHandler(event, handlers);
     }
 
-    private executeKeyboardHandler(event: KeyboardEvent, handlers) {
+    private executeKeyboardHandler(event: KeyboardEvent, handlers: IKeyboardHandlers) {
         const handler = handlers[event.key];
         if (handler) {
             handler();
