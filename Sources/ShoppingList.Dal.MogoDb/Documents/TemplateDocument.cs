@@ -12,8 +12,11 @@ namespace ShoppingList.Dal.MogoDb.Documents
 		[BsonElement("title")]
 		public string Title { get; set; }
 
+		// Array property to empty list, not null.
+		// Otherwise property will be set to null on document creation,
+		// and later $push will fail with error "The field must be an array but is of type null in document".
 		[BsonElement("items")]
-		public IList<TemplateItemDocument> Items { get; set; }
+		public IList<TemplateItemDocument> Items { get; set; } = new List<TemplateItemDocument>();
 
 		public TemplateDocument(ListTemplate listTemplate)
 		{
