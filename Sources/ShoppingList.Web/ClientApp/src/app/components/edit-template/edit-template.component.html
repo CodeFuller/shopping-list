@@ -25,7 +25,7 @@
         <input class="template-item-edit" type="text" #editedItemComment (keydown)="onEditKeyDown($event)" formControlName="comment">
       </td>
       <td><span cdkDragHandle class="template-item-holder-icon"></span></td>
-      <td><button class="template-item-edit-button" type="button" [disabled]="!editItemFormGroup.valid" (click)="onSaveItemChanges()">Save</button></td>
+      <td><button class="template-item-edit-button" type="button" [disabled]="editItemFormGroup.pristine || !editItemFormGroup.valid" (click)="onSaveItemChanges()">Save</button></td>
       <td><button class="template-item-edit-button" type="button" (click)="onCancelItemEdit()">Cancel</button></td>
     </tr>
   </ng-container>
