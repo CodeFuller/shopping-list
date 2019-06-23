@@ -164,7 +164,7 @@ export class EditTemplateComponent implements OnInit {
 
     public onAddKeyDown(event: KeyboardEvent) {
         const handlers = {
-            Enter: () => () => this.onAddItem(),
+            Enter: () => this.onAddItem(),
             Escape: () => this.onCancelItemAdd()
         }
         this.executeKeyboardHandler(event, handlers);
