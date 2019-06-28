@@ -28,9 +28,6 @@ export class EditTemplateComponent implements OnInit {
     @ViewChild('editedItemTitle') editedItemTitleRef: ElementRef | undefined;
     @ViewChild('editedItemQuantity') editedItemQuantityRef: ElementRef | undefined;
     @ViewChild('editedItemComment') editedItemCommentRef: ElementRef | undefined;
-    @ViewChild('newItemTitle') newItemTitleRef: ElementRef | undefined;
-    @ViewChild('newItemQuantity') newItemQuantityRef: ElementRef | undefined;
-    @ViewChild('newItemComment') newItemCommentRef: ElementRef | undefined;
 
     constructor(private templateService: TemplateService, private route: ActivatedRoute, private formBuilder: FormBuilder) {
         this.addItemFormGroup = this.createItemEditForm();
@@ -53,7 +50,7 @@ export class EditTemplateComponent implements OnInit {
         this.fillItemData(newItem, this.addItemFormGroup);
 
         this.templateService.createTemplateItem(this.templateId, newItem).subscribe(() => {
-            this.addItemFormGroup = this.createItemEditForm();
+            this.addItemFormGroup.reset();
             this.loadTemplateItems();
         });
     }
@@ -142,10 +139,7 @@ export class EditTemplateComponent implements OnInit {
     }
 
     public onCancelItemAdd() {
-        this.unfocusElement(this.newItemTitleRef);
-        this.unfocusElement(this.newItemQuantityRef);
-        this.unfocusElement(this.newItemCommentRef);
-        this.addItemFormGroup = this.createItemEditForm();
+        this.addItemFormGroup.reset();
     }
 
     private unfocusElement(element: ElementRef | undefined) {

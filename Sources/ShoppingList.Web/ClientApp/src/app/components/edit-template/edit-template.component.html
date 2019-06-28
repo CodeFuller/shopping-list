@@ -46,13 +46,13 @@
   </ng-container>
   <tr class="template-item" [formGroup]="addItemFormGroup">
     <td class="template-item-property-add template-item-title">
-      <input class="template-item-add" type="text" required #newItemTitle (keydown)="onAddKeyDown($event)" formControlName="title">
+      <input class="template-item-add" type="text" required (keydown)="onAddKeyDown($event)" formControlName="title">
     </td>
     <td class="template-item-property-add template-item-quantity">
-      <input class="template-item-add" type="text" #newItemQuantity (keydown)="onAddKeyDown($event)" formControlName="quantity">
+      <input class="template-item-add" type="text" (keydown)="onAddKeyDown($event)" formControlName="quantity">
     </td>
     <td class="template-item-property-add template-item-comment">
-      <input class="template-item-add" type="text" #newItemComment (keydown)="onAddKeyDown($event)" formControlName="comment">
+      <input class="template-item-add" type="text" (keydown)="onAddKeyDown($event)" formControlName="comment">
     </td>
     <td>
       <button class="template-item-edit-button" type="button" [disabled]="!addItemFormGroup.valid" (click)="onAddItem()">
