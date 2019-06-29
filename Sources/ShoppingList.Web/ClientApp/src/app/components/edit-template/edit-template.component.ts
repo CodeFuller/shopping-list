@@ -142,12 +142,6 @@ export class EditTemplateComponent implements OnInit {
         this.addItemFormGroup.reset();
     }
 
-    private unfocusElement(element: ElementRef | undefined) {
-        if (element) {
-            element.nativeElement.blur();
-        }
-    }
-
     public onEditKeyDown(event: KeyboardEvent) {
         const handlers: IKeyboardHandlers = {
             Enter: () => this.onSaveItemChanges(),
