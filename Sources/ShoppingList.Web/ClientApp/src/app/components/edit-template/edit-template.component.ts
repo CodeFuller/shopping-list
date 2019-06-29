@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { TemplateService } from 'src/app/services/template.service';
-import { TemplateItemModel } from 'src/app/models/template-item.model';
+import { TemplateService } from '../../services/template.service';
+import { TemplateItemModel } from '../../models/template-item.model';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 

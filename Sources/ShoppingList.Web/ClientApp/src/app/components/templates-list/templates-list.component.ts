@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TemplateModel } from 'src/app/models/template.model';
-import { TemplateService } from 'src/app/services/template.service';
+import { TemplateModel } from '../../models/template.model';
+import { TemplateService } from '../../services/template.service';
 
 @Component({
     selector: 'app-templates-list',
