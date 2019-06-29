@@ -7,60 +7,60 @@
     <th>Comment</th>
   </tr>
   <ng-container *ngFor="let item of items">
-    <tr *ngIf="!isItemUnderEdit(item)" cdkDrag class="template-item">
-      <td class="template-item-property template-item-title" (click)="onEditItem(item, 'title')">{{item.title}}</td>
-      <td class="template-item-property template-item-quantity" (click)="onEditItem(item, 'quantity')">{{item.quantity}}</td>
-      <td class="template-item-property template-item-comment" (click)="onEditItem(item, 'comment')">{{item.comment}}</td>
+    <tr *ngIf="!isItemUnderEdit(item)" cdkDrag class="item">
+      <td class="property title" (click)="onEditItem(item, 'title')">{{item.title}}</td>
+      <td class="property quantity" (click)="onEditItem(item, 'quantity')">{{item.quantity}}</td>
+      <td class="property comment" (click)="onEditItem(item, 'comment')">{{item.comment}}</td>
       <td>
-        <button type="button" class="template-item-drag">
+        <button type="button" class="item-drag">
           <i cdkDragHandle class="material-icons">drag_indicator</i>
         </button>
       </td>
       <td>
-        <button class="template-item-edit-button" type="button" (click)="onDeleteItem(item)">
+        <button class="button" type="button" (click)="onDeleteItem(item)">
           <i class="material-icons">delete</i>
         </button>
       </td>
     </tr>
-    <tr *ngIf="isItemUnderEdit(item)" cdkDrag class="template-item" [formGroup]="editItemFormGroup">
-      <td class="template-item-property-edit template-item-title">
-        <input class="template-item-edit" type="text" required #editedItemTitle (keydown)="onEditKeyDown($event)" formControlName="title">
+    <tr *ngIf="isItemUnderEdit(item)" cdkDrag class="item" [formGroup]="editItemFormGroup">
+      <td class="edited-property title">
+        <input class="existing-item-edit" type="text" required #editedItemTitle (keydown)="onEditKeyDown($event)" formControlName="title">
       </td>
-      <td class="template-item-property-edit template-item-quantity">
-        <input class="template-item-edit" type="text" #editedItemQuantity (keydown)="onEditKeyDown($event)" formControlName="quantity">
+      <td class="edited-property quantity">
+        <input class="existing-item-edit" type="text" #editedItemQuantity (keydown)="onEditKeyDown($event)" formControlName="quantity">
       </td>
-      <td class="template-item-property-edit template-item-comment">
-        <input class="template-item-edit" type="text" #editedItemComment (keydown)="onEditKeyDown($event)" formControlName="comment">
+      <td class="edited-property comment">
+        <input class="existing-item-edit" type="text" #editedItemComment (keydown)="onEditKeyDown($event)" formControlName="comment">
       </td>
       <td>
-        <button class="template-item-edit-button" type="button" [disabled]="editItemFormGroup.pristine || !editItemFormGroup.valid" (click)="onSaveItemChanges()">
+        <button class="button" type="button" [disabled]="editItemFormGroup.pristine || !editItemFormGroup.valid" (click)="onSaveItemChanges()">
           <i class="material-icons">save</i>
         </button>
       </td>
       <td>
-        <button class="template-item-edit-button" type="button" (click)="onCancelItemEdit()">
+        <button class="button" type="button" (click)="onCancelItemEdit()">
           <i class="material-icons">cancel</i>
         </button>
       </td>
     </tr>
   </ng-container>
-  <tr class="template-item" [formGroup]="addItemFormGroup">
-    <td class="template-item-property-add template-item-title">
-      <input class="template-item-add" type="text" required (keydown)="onAddKeyDown($event)" formControlName="title">
+  <tr class="item" [formGroup]="addItemFormGroup">
+    <td class="new-item-property title">
+      <input class="new-item-edit" type="text" required (keydown)="onAddKeyDown($event)" formControlName="title">
     </td>
-    <td class="template-item-property-add template-item-quantity">
-      <input class="template-item-add" type="text" (keydown)="onAddKeyDown($event)" formControlName="quantity">
+    <td class="new-item-property quantity">
+      <input class="new-item-edit" type="text" (keydown)="onAddKeyDown($event)" formControlName="quantity">
     </td>
-    <td class="template-item-property-add template-item-comment">
-      <input class="template-item-add" type="text" (keydown)="onAddKeyDown($event)" formControlName="comment">
+    <td class="new-item-property comment">
+      <input class="new-item-edit" type="text" (keydown)="onAddKeyDown($event)" formControlName="comment">
     </td>
     <td>
-      <button class="template-item-edit-button" type="button" [disabled]="!addItemFormGroup.valid" (click)="onAddItem()">
+      <button class="button" type="button" [disabled]="!addItemFormGroup.valid" (click)="onAddItem()">
         <i class="material-icons">add</i>
       </button>
     </td>
     <td>
-      <button class="template-item-edit-button" type="button" (click)="onCancelItemAdd()">
+      <button class="button" type="button" (click)="onCancelItemAdd()">
         <i class="material-icons">clear</i>
       </button>
     </td>

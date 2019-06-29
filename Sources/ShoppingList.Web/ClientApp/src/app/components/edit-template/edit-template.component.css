@@ -2,51 +2,47 @@
     border-collapse: collapse;
 }
 
-.template-item {
+.item {
     background: white;
     cursor: text;
     height: 30px;
 }
 
-.template-item-edit-button {
+.button {
     /* Is shown only on hover of parent item */
     display: none;
 }
 
 /* Display buttons for hover and item under edit */
-.template-item:hover .template-item-edit-button, .template-item:focus-within .template-item-edit-button {
+.item:hover .button, .item:focus-within .button {
     display: initial;
 }
 
-.template-item-property {
+.property {
     padding: 0;
 }
 
-.template-item-title {
+.title, .comment {
     width: 300px;
 }
 
-.template-item-quantity {
+.quantity {
     width: 100px;
 }
 
-.template-item-comment {
-    width: 300px;
-}
-
-.template-item-property, .template-item-property-edit, .template-item-property-add {
+.property, .edited-property, .new-item-property {
     border: 1px solid black;
 }
 
-.template-item-property-edit, .template-item-edit {
+.edited-property, .existing-item-edit {
     background-color: lightblue;
 }
 
-.template-item-property-edit, .template-item-property-add {
+.edited-property, .new-item-property {
     box-sizing: border-box;
 }
 
-.template-item-edit, .template-item-add {
+.existing-item-edit, .new-item-edit {
     width: 100%;
     padding: 0;
     border: 0;
@@ -54,7 +50,7 @@
     font: inherit;
 }
 
-.template-item-property-add, .template-item-add {
+.new-item-property, .new-item-edit {
     background-color: lightgray;
 }
 
@@ -75,11 +71,11 @@
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.template-item:not(.cdk-drag-placeholder) {
+.item:not(.cdk-drag-placeholder) {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.template-item-drag {
+.item-drag {
     cursor: move;
 }
 
