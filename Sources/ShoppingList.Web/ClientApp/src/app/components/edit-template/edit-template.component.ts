@@ -25,9 +25,9 @@ export class EditTemplateComponent implements OnInit {
     public editItemFormGroup: FormGroup | undefined;
 
     // https://stackoverflow.com/a/44803306/5740031
-    @ViewChild('editedItemTitle', { static: false }) editedItemTitleRef: ElementRef | undefined;
-    @ViewChild('editedItemQuantity', { static: false }) editedItemQuantityRef: ElementRef | undefined;
-    @ViewChild('editedItemComment', { static: false }) editedItemCommentRef: ElementRef | undefined;
+    @ViewChild('editedItemTitle') editedItemTitleRef: ElementRef | undefined;
+    @ViewChild('editedItemQuantity') editedItemQuantityRef: ElementRef | undefined;
+    @ViewChild('editedItemComment') editedItemCommentRef: ElementRef | undefined;
 
     constructor(private templateService: TemplateService, private route: ActivatedRoute, private formBuilder: FormBuilder) {
         this.addItemFormGroup = this.createItemEditForm();
