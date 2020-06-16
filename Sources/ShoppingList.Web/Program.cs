@@ -22,7 +22,8 @@ namespace ShoppingList.Web
 				.ConfigureLogging((hostingContext, loggingBuilder) =>
 				{
 					var loggingSettings = new LoggingSettings();
-					hostingContext.Configuration.GetSection("logging").Bind(loggingSettings);
+					var configuration = hostingContext.Configuration;
+					configuration.Bind("logging", loggingSettings);
 
 					var loggingConfiguration = new LoggingConfiguration();
 					loggingConfiguration.LoadSettings(loggingSettings);
