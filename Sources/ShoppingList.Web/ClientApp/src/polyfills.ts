@@ -61,3 +61,7 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+// This import fixes the error: TypeError: Reflect.getMetadata is not a function
+// https://github.com/angular/angular/issues/26714
+import 'core-js/es7/reflect';
