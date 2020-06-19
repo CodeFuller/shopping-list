@@ -1,94 +1,38 @@
-.template-items {
-    border-collapse: collapse;
-}
-
-.item {
-    background: white;
-    cursor: text;
-    height: 30px;
-}
-
-.button {
-    /* Is shown only on hover of parent item */
-    display: none;
-}
-
-/* Display buttons for hover and item under edit */
-.item:hover .button, .item:focus-within .button {
-    display: initial;
-}
-
-.property {
-    padding: 0;
-}
-
-.title, .comment {
-    width: 300px;
-}
-
-.quantity {
-    width: 100px;
-}
-
-.property, .edited-property, .new-item-property {
-    border: 1px solid black;
-}
-
-.edited-property, .existing-item-edit {
-    background-color: lightblue;
-}
-
-.edited-property, .new-item-property {
-    box-sizing: border-box;
-}
-
-.existing-item-edit, .new-item-edit {
-    width: 100%;
-    padding: 0;
-    border: 0;
-
-    font: inherit;
-}
-
-.new-item-property, .new-item-edit {
-    background-color: lightgray;
-}
-
-.cdk-drag-preview {
-    box-sizing: border-box;
-    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-                0 8px 10px 1px rgba(0, 0, 0, 0.14),
-                0 3px 14px 2px rgba(0, 0, 0, 0.12);
-
-    border-collapse: collapse;
-}
-
-.cdk-drag-placeholder {
-    opacity: 0;
-}
-
-.cdk-drag-animating {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-.item:not(.cdk-drag-placeholder) {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+button.mdc-icon-button {
+  background: transparent;
+  padding: 0;
+  border: none;
 }
 
 .item-drag {
-    cursor: move;
+  cursor: move;
+  color: lightgray;
 }
 
-button {
-    border: none;
-    background-color: white;
-    cursor: pointer;
-
-    width: 25px;
-    height: 29px;
+.cdk-drag-preview {
+  box-sizing: border-box;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  border-collapse: collapse;
 }
 
-/* Removing blue border for buton with focus */
-button:focus {
-    outline:0;
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.list-item:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.item-action-button {
+  /* Is shown only on hover of parent item and for items under edit */
+  visibility: hidden; 
+}
+
+/* Display buttons for hover and item under edit */
+.list-item:hover .item-action-button, .list-item:focus-within .item-action-button {
+  visibility: visible;
 }
