@@ -3,11 +3,11 @@
     <a *ngFor="let template of templates" class="list-group-item list-group-item-action d-flex">
       <span class="flex-grow-1" [routerLink]="['/templates', template.id]">{{template.title}}</span>
       <span class="template-action-button mdc-icon-button material-icons text-primary" data-toggle="tooltip" title="Create shopping list"
-            (click)="onCreateShoppingList()">playlist_add</span>
+            (click)="onCreateShoppingListFromTemplate(template)">playlist_add</span>
       <span class="template-action-button mdc-icon-button material-icons text-primary ml-1" data-toggle="tooltip" title="Edit shopping template"
             [routerLink]="['/templates', template.id]">edit</span>
       <span class="template-action-button mdc-icon-button material-icons text-primary ml-1" data-toggle="tooltip" title="Delete shopping template"
-            (click)="onDeleteShoppingList()">delete_forever</span>
+            (click)="onDeleteTemplate(template)">delete_forever</span>
     </a>
   </div>
 

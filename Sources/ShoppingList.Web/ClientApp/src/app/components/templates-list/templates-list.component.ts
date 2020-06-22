@@ -37,12 +37,16 @@ export class TemplatesListComponent implements OnInit {
           });
     }
 
-    onCreateShoppingList() {
+    onCreateShoppingListFromTemplate(template: TemplateModel) {
       alert("onCreateShoppingList()");
     }
 
-    onDeleteShoppingList() {
-      alert("onDeleteShoppingList()");
+    onDeleteTemplate(template: TemplateModel) {
+      this.templateService.deleteTemplate(template.id)
+        .subscribe(() => {
+          this.newTemplateTitle = null;
+          this.loadTemplates();
+        });
     }
 
     private loadTemplates() {

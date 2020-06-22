@@ -58,6 +58,21 @@ namespace ShoppingList.Web.Controllers
 			return Created(GetTemplateUri(newTemplateId), null);
 		}
 
+		[HttpDelete("{templateId}")]
+		public async Task<ActionResult> DeleteTemplate(string templateId, CancellationToken cancellationToken)
+		{
+			try
+			{
+				await repository.DeleteTemplate(templateId, cancellationToken);
+				return NoContent();
+			}
+			catch (NotFoundException e)
+			{
+				logger.LogWarning(e, "Failed to find template {TemplateId}", templateId);
+				return NotFound();
+			}
+		}
+
 		private OutputTemplateData CreateTemplateDto(ListTemplate template)
 		{
 			return new OutputTemplateData(template, GetTemplateUri(template.Id));

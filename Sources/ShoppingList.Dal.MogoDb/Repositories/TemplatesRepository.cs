@@ -74,9 +74,15 @@ namespace ShoppingList.Dal.MogoDb.Repositories
 			throw new NotImplementedException();
 		}
 
-		public Task DeleteTemplate(string templateId, CancellationToken cancellationToken)
+		public async Task DeleteTemplate(string templateId, CancellationToken cancellationToken)
 		{
-			throw new NotImplementedException();
+			var filter = GetTemplateFilter(templateId);
+			var deleteResult = await templatesCollection.DeleteOneAsync(filter, cancellationToken);
+
+			if (deleteResult.DeletedCount != 1)
+			{
+				throw new NotFoundException($"The template with id {templateId} was not found");
+			}
 		}
 
 		public async Task<string> CreateItem(string templateId, TemplateItem item, CancellationToken cancellationToken)

@@ -24,6 +24,10 @@ export class TemplateService {
             .pipe(map(response => plainToClass(TemplateModel, response, { excludeExtraneousValues: true })));
     }
 
+    deleteTemplate(templateId: string): Observable<object> {
+      return this.http.delete(`/api/templates/${templateId}`);
+    }
+
     getTemplate(id: string): Observable<TemplateModel> {
         return this.http.get<TemplateModel>(`/api/templates/${id}`)
             .pipe(map(response => plainToClass(TemplateModel, response, { excludeExtraneousValues: true })));
