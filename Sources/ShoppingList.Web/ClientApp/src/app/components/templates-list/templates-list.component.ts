@@ -37,6 +37,14 @@ export class TemplatesListComponent implements OnInit {
           });
     }
 
+    onCreateShoppingList() {
+      alert("onCreateShoppingList()");
+    }
+
+    onDeleteShoppingList() {
+      alert("onDeleteShoppingList()");
+    }
+
     private loadTemplates() {
         this.templateService.getTemplates()
             .subscribe((data: TemplateModel[]) => this.templates = data);

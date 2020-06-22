@@ -27,12 +27,12 @@ button.mdc-icon-button {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
+/* Item action buttons are shown only on hover or for items under edit */
 .item-action-button {
-  /* Is shown only on hover of parent item and for items under edit */
   visibility: hidden; 
 }
 
-/* Display buttons for hover and item under edit */
+/* Display buttons on hover and for item under edit */
 .list-item:hover .item-action-button, .list-item:focus-within .item-action-button {
   visibility: visible;
 }

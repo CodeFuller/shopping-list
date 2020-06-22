@@ -1,0 +1,13 @@
+/* Template action buttons are shown only on hover */
+.template-action-button {
+  visibility: hidden;
+}
+
+/* Display template action buttons on hover */
+.list-group-item:hover .template-action-button {
+  visibility: visible;
+}
+
+.list-group-item {
+  cursor: pointer;
+}
