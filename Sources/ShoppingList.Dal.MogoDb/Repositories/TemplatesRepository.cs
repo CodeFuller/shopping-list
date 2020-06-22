@@ -43,7 +43,7 @@ namespace ShoppingList.Dal.MogoDb.Repositories
 
 			var document = new TemplateDocument(listTemplate);
 
-			await templatesCollection.InsertOneAsync(document, cancellationToken: cancellationToken).ConfigureAwait(false);
+			await templatesCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
 
 			var id = document.Id;
 			logger.LogInformation("Created template with id {TemplateId} ...", id);
@@ -54,19 +54,18 @@ namespace ShoppingList.Dal.MogoDb.Repositories
 		public async Task<IEnumerable<ListTemplate>> GetTemplates(CancellationToken cancellationToken)
 		{
 			var cursor = await templatesCollection
-				.FindAsync(FilterDefinition<TemplateDocument>.Empty, cancellationToken: cancellationToken)
-				.ConfigureAwait(false);
+				.FindAsync(FilterDefinition<TemplateDocument>.Empty, cancellationToken: cancellationToken);
 
 			using (cursor)
 			{
-				return (await cursor.ToListAsync(cancellationToken).ConfigureAwait(false))
+				return (await cursor.ToListAsync(cancellationToken))
 					.Select(x => x.ToObject());
 			}
 		}
 
 		public async Task<ListTemplate> GetTemplate(string templateId, CancellationToken cancellationToken)
 		{
-			var templateDoc = await FindTemplate(templateId, cancellationToken).ConfigureAwait(false);
+			var templateDoc = await FindTemplate(templateId, cancellationToken);
 			return templateDoc.ToObject();
 		}
 
@@ -91,21 +90,21 @@ namespace ShoppingList.Dal.MogoDb.Repositories
 
 			var update = Builders<TemplateDocument>.Update.Push(e => e.Items, newItem);
 
-			await UpdateTemplate(templateId, update, cancellationToken).ConfigureAwait(false);
+			await UpdateTemplate(templateId, update, cancellationToken);
 
 			return newItemId.ToString();
 		}
 
 		public async Task<IEnumerable<TemplateItem>> GetItems(string templateId, CancellationToken cancellationToken)
 		{
-			var templateDoc = await FindTemplate(templateId, cancellationToken).ConfigureAwait(false);
+			var templateDoc = await FindTemplate(templateId, cancellationToken);
 
 			return templateDoc.Items.Select(x => x.ToObject());
 		}
 
 		public async Task<TemplateItem> GetItem(string templateId, string itemId, CancellationToken cancellationToken)
 		{
-			var templateDoc = await FindTemplate(templateId, cancellationToken).ConfigureAwait(false);
+			var templateDoc = await FindTemplate(templateId, cancellationToken);
 			var matchedItems = templateDoc.Items.Where(x => x.Id == ObjectId.Parse(itemId)).ToList();
 
 			if (matchedItems.Count < 1)
@@ -127,17 +126,17 @@ namespace ShoppingList.Dal.MogoDb.Repositories
 			var templateItemFilter = GetTemplateItemFilter(templateId, item.Id);
 			var update = Builders<TemplateDocument>.Update.Set(doc => doc.Items[-1], newItem);
 
-			await UpdateTemplate(templateId, templateItemFilter, update, cancellationToken).ConfigureAwait(false);
+			await UpdateTemplate(templateId, templateItemFilter, update, cancellationToken);
 		}
 
 		public async Task ReorderItems(string templateId, IReadOnlyCollection<string> newItemsOrder, CancellationToken cancellationToken)
 		{
-			var templateDoc = await FindTemplate(templateId, cancellationToken).ConfigureAwait(false);
+			var templateDoc = await FindTemplate(templateId, cancellationToken);
 			var reorderedItems = GetReorderedTemplateItems(templateDoc, newItemsOrder);
 
 			var update = Builders<TemplateDocument>.Update.Set(doc => doc.Items, reorderedItems.ToList());
 
-			await UpdateTemplate(templateId, update, cancellationToken).ConfigureAwait(false);
+			await UpdateTemplate(templateId, update, cancellationToken);
 		}
 
 		public async Task DeleteItem(string templateId, string itemId, CancellationToken cancellationToken)
@@ -145,7 +144,7 @@ namespace ShoppingList.Dal.MogoDb.Repositories
 			var itemFilter = Builders<TemplateItemDocument>.Filter.Eq(x => x.Id, ObjectId.Parse(itemId));
 			var update = Builders<TemplateDocument>.Update.PullFilter(x => x.Items, itemFilter);
 
-			await UpdateTemplate(templateId, update, cancellationToken).ConfigureAwait(false);
+			await UpdateTemplate(templateId, update, cancellationToken);
 		}
 
 		private Task UpdateTemplate(string templateId, UpdateDefinition<TemplateDocument> update, CancellationToken cancellationToken)
@@ -156,7 +155,7 @@ namespace ShoppingList.Dal.MogoDb.Repositories
 
 		private async Task UpdateTemplate(string templateId, FilterDefinition<TemplateDocument> filter, UpdateDefinition<TemplateDocument> update, CancellationToken cancellationToken)
 		{
-			var updateResult = await templatesCollection.UpdateOneAsync(filter, update, cancellationToken: cancellationToken).ConfigureAwait(false);
+			var updateResult = await templatesCollection.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
 
 			if (updateResult.MatchedCount < 1)
 			{
@@ -217,10 +216,10 @@ namespace ShoppingList.Dal.MogoDb.Repositories
 				Limit = 1,
 			};
 
-			var cursor = await templatesCollection.FindAsync(filter, options, cancellationToken).ConfigureAwait(false);
+			var cursor = await templatesCollection.FindAsync(filter, options, cancellationToken);
 			using (cursor)
 			{
-				var templateDoc = await cursor.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+				var templateDoc = await cursor.FirstOrDefaultAsync(cancellationToken);
 				if (templateDoc == null)
 				{
 					throw new NotFoundException($"The template with id of {templateId} was not found");

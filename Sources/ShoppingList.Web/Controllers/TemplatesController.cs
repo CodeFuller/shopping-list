@@ -29,7 +29,7 @@ namespace ShoppingList.Web.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<OutputTemplateData>>> GetTemplates(CancellationToken cancellationToken)
 		{
-			var templates = await repository.GetTemplates(cancellationToken).ConfigureAwait(false);
+			var templates = await repository.GetTemplates(cancellationToken);
 
 			return Ok(templates.Select(CreateTemplateDto));
 		}
@@ -39,7 +39,7 @@ namespace ShoppingList.Web.Controllers
 		{
 			try
 			{
-				var template = await repository.GetTemplate(templateId, cancellationToken).ConfigureAwait(false);
+				var template = await repository.GetTemplate(templateId, cancellationToken);
 				return Ok(CreateTemplateDto(template));
 			}
 			catch (NotFoundException e)
@@ -53,7 +53,7 @@ namespace ShoppingList.Web.Controllers
 		public async Task<ActionResult> CreateTemplate([FromBody] InputTemplateData templateData, CancellationToken cancellationToken)
 		{
 			var template = templateData.ToObject();
-			var newTemplateId = await repository.CreateTemplate(template, cancellationToken).ConfigureAwait(false);
+			var newTemplateId = await repository.CreateTemplate(template, cancellationToken);
 
 			return Created(GetTemplateUri(newTemplateId), null);
 		}

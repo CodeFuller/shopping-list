@@ -31,7 +31,7 @@ namespace ShoppingList.Web.Controllers
 		{
 			try
 			{
-				var items = await repository.GetItems(templateId, cancellationToken).ConfigureAwait(false);
+				var items = await repository.GetItems(templateId, cancellationToken);
 
 				return Ok(items.Select(x => CreateTemplateItemDto(templateId, x)));
 			}
@@ -47,7 +47,7 @@ namespace ShoppingList.Web.Controllers
 		{
 			try
 			{
-				var item = await repository.GetItem(templateId, itemId, cancellationToken).ConfigureAwait(false);
+				var item = await repository.GetItem(templateId, itemId, cancellationToken);
 
 				return Ok(CreateTemplateItemDto(templateId, item));
 			}
@@ -64,7 +64,7 @@ namespace ShoppingList.Web.Controllers
 			try
 			{
 				var item = itemData.ToObject();
-				var newItemId = await repository.CreateItem(templateId, item, cancellationToken).ConfigureAwait(false);
+				var newItemId = await repository.CreateItem(templateId, item, cancellationToken);
 
 				return Created(GetTemplateItemUri(templateId, newItemId), null);
 			}
@@ -82,7 +82,7 @@ namespace ShoppingList.Web.Controllers
 			{
 				var item = itemData.ToObject();
 				item.Id = itemId;
-				await repository.UpdateItem(templateId, item, cancellationToken).ConfigureAwait(false);
+				await repository.UpdateItem(templateId, item, cancellationToken);
 			}
 			catch (NotFoundException e)
 			{
@@ -98,7 +98,7 @@ namespace ShoppingList.Web.Controllers
 		{
 			try
 			{
-				await repository.ReorderItems(templateId, newItemsOrder, cancellationToken).ConfigureAwait(false);
+				await repository.ReorderItems(templateId, newItemsOrder, cancellationToken);
 			}
 			catch (NotFoundException e)
 			{
@@ -119,7 +119,7 @@ namespace ShoppingList.Web.Controllers
 		{
 			try
 			{
-				await repository.DeleteItem(templateId, itemId, cancellationToken).ConfigureAwait(false);
+				await repository.DeleteItem(templateId, itemId, cancellationToken);
 			}
 			catch (NotFoundException e)
 			{
