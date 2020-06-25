@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using ShoppingList.Dal.MogoDb.Extensions;
+using ShoppingList.Dal.MongoDb.Extensions;
 using ShoppingList.Logic.Models;
 
-namespace ShoppingList.Dal.MogoDb.Documents
+namespace ShoppingList.Dal.MongoDb.Documents
 {
 	internal class ShoppingTemplateDocument
 	{

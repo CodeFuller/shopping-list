@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ShoppingList.Dal.MogoDb.Documents;
+using ShoppingList.Dal.MongoDb.Documents;
 using ShoppingList.Logic.Models;
 
-namespace ShoppingList.Dal.MogoDb.Tests.Documents
+namespace ShoppingList.Dal.MongoDb.Tests.Documents
 {
 	[TestClass]
 	public class TemplateDocumentTests

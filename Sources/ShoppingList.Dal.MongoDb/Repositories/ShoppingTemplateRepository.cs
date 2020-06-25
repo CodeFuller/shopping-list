@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using ShoppingList.Dal.MogoDb.Documents;
-using ShoppingList.Dal.MogoDb.Extensions;
+using ShoppingList.Dal.MongoDb.Documents;
+using ShoppingList.Dal.MongoDb.Extensions;
 using ShoppingList.Logic.Exceptions;
 using ShoppingList.Logic.Interfaces;
 using ShoppingList.Logic.Models;
 
-namespace ShoppingList.Dal.MogoDb.Repositories
+namespace ShoppingList.Dal.MongoDb.Repositories
 {
 	internal class ShoppingTemplateRepository : IShoppingTemplateRepository, IShoppingTemplateItemRepository
 	{

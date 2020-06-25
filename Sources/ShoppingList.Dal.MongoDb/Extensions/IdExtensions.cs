@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using ShoppingList.Logic.Models;
 
-namespace ShoppingList.Dal.MogoDb.Extensions
+namespace ShoppingList.Dal.MongoDb.Extensions
 {
 	internal static class IdExtensions
 	{

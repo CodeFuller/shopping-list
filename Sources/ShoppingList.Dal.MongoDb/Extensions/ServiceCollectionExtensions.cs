@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
-using ShoppingList.Dal.MogoDb.Documents;
-using ShoppingList.Dal.MogoDb.Repositories;
+using ShoppingList.Dal.MongoDb.Documents;
+using ShoppingList.Dal.MongoDb.Repositories;
 using ShoppingList.Logic.Interfaces;
 
-namespace ShoppingList.Dal.MogoDb.Extensions
+namespace ShoppingList.Dal.MongoDb.Extensions
 {
 	public static class ServiceCollectionExtensions
 	{

@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 
-namespace ShoppingList.Dal.MogoDb.Documents
+namespace ShoppingList.Dal.MongoDb.Documents
 {
 	internal class ShoppingListDocument
 	{

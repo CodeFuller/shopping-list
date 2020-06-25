@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ShoppingList.Logic.Interfaces;
 using ShoppingList.Logic.Models;
 
-namespace ShoppingList.Dal.MogoDb.Repositories
+namespace ShoppingList.Dal.MongoDb.Repositories
 {
 	internal class ShoppingListRepository : IShoppingListRepository
 	{

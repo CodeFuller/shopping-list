@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ShoppingList.Dal.MogoDb.Extensions;
+using ShoppingList.Dal.MongoDb.Extensions;
 using ShoppingList.Logic.Extensions;
 
 namespace ShoppingList.Web

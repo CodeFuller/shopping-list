@@ -5,13 +5,13 @@ VisualStudioVersion = 16.0.28917.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingList.Web", "Sources\ShoppingList.Web\ShoppingList.Web.csproj", "{1C37290D-3719-424F-947C-A8B6FD5BE624}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingList.Dal.MogoDb", "Sources\ShoppingList.Dal.MogoDb\ShoppingList.Dal.MogoDb.csproj", "{A3528532-308F-4A18-8AB6-A2C74B2231E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingList.Dal.MongoDb", "Sources\ShoppingList.Dal.MongoDb\ShoppingList.Dal.MongoDb.csproj", "{A3528532-308F-4A18-8AB6-A2C74B2231E4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{C9D9531E-4979-4348-B46D-7D8ADB9AFCF7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E9886CA7-68DA-47AE-829C-C5A6CCDDE4D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingList.Dal.MogoDb.Tests", "Tests\ShoppingList.Dal.MogoDb.Tests\ShoppingList.Dal.MogoDb.Tests.csproj", "{534D79C0-5703-493A-9CC6-30203906337F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingList.Dal.MongoDb.Tests", "Tests\ShoppingList.Dal.MongoDb.Tests\ShoppingList.Dal.MongoDb.Tests.csproj", "{534D79C0-5703-493A-9CC6-30203906337F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingList.Logic", "Sources\ShoppingList.Logic\ShoppingList.Logic.csproj", "{1031B316-3CB8-41AF-8B32-FF844DE96561}"
 EndProject
