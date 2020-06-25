@@ -13,7 +13,7 @@ namespace ShoppingList.Dal.MongoDb.Documents
 		[BsonElement("title")]
 		public string Title { get; set; }
 
-		// Array property to empty list, not null.
+		// Array property must be set to empty list, not null.
 		// Otherwise property will be set to null on document creation,
 		// and later $push will fail with error "The field must be an array but is of type null in document".
 		[BsonElement("items")]
@@ -21,11 +21,7 @@ namespace ShoppingList.Dal.MongoDb.Documents
 
 		public ShoppingTemplateDocument(ShoppingTemplateInfo templateInfo)
 		{
-			if (templateInfo.Id != null)
-			{
-				Id = templateInfo.Id.ToObjectId();
-			}
-
+			Id = templateInfo.Id?.ToObjectId() ?? default;
 			Title = templateInfo.Title;
 		}
 

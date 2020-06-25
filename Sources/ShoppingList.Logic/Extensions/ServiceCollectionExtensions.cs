@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ShoppingList.Logic.Interfaces;
+using ShoppingList.Logic.Internal;
 using ShoppingList.Logic.Services;
 
 namespace ShoppingList.Logic.Extensions
@@ -11,6 +12,8 @@ namespace ShoppingList.Logic.Extensions
 			services.AddSingleton<IShoppingTemplateService, ShoppingTemplateService>();
 			services.AddSingleton<IShoppingTemplateItemService, ShoppingTemplateItemService>();
 			services.AddSingleton<IShoppingListService, ShoppingListService>();
+
+			services.AddSingleton<ISystemClock, SystemClock>();
 
 			return services;
 		}

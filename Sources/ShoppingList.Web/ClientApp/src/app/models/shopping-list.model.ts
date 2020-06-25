@@ -1,10 +1,14 @@
-import { Expose, Type } from 'class-transformer';
 import { ListItem } from './list-item.model';
 
 export class ShoppingListModel {
-    @Expose() title!: string;
 
-    @Expose()
-    @Type(() => ListItem)
-    items!: ListItem[];
+    readonly id: string;
+    readonly title: string;
+    readonly items: ListItem[];
+
+    public constructor(id: string, title: string, items: ListItem[]) {
+        this.id = id;
+        this.title = title;
+        this.items = items;
+    }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TemplateModel } from '../../models/template.model';
 import { TemplateService } from '../../services/template.service';
+import { ShoppingListService } from '../../services/shopping-list.service';
 
 @Component({
     selector: 'app-templates-list',
@@ -9,13 +10,16 @@ import { TemplateService } from '../../services/template.service';
 })
 export class TemplatesListComponent implements OnInit {
 
+    private readonly templateService: TemplateService;
+    private readonly shoppingListService: ShoppingListService;
+
     public templates: TemplateModel[] | undefined;
-    templateService: TemplateService;
 
     public newTemplateTitle: string | null = null;
 
-    constructor(templateService: TemplateService) {
+    constructor(templateService: TemplateService, shoppingListService: ShoppingListService) {
         this.templateService = templateService;
+        this.shoppingListService = shoppingListService;
     }
 
     ngOnInit() {
@@ -38,7 +42,8 @@ export class TemplatesListComponent implements OnInit {
     }
 
     onCreateShoppingListFromTemplate(template: TemplateModel) {
-      alert("onCreateShoppingList()");
+        this.shoppingListService.createShoppingList(template)
+            .subscribe();
     }
 
     onDeleteTemplate(template: TemplateModel) {
