@@ -6,7 +6,6 @@ import { plainToClass } from 'class-transformer';
 import { ShoppingListModel } from '../models/shopping-list.model';
 import { TemplateModel } from '../models/template.model';
 import { CreateShoppingListRequest } from '../contracts/create-shopping-list.request';
-import { CreateShoppingListResponse } from '../contracts/create-shopping-list.response';
 
 @Injectable()
 export class ShoppingListService {
@@ -14,6 +13,11 @@ export class ShoppingListService {
 
     constructor(http: HttpClient) {
         this.http = http;
+    }
+
+    getShoppingLists(): Observable<ShoppingListModel[]> {
+        return this.http.get<ShoppingListModel[]>('/api/shopping-lists')
+            .pipe(map(response => plainToClass(ShoppingListModel, response, { excludeExtraneousValues: true })));
     }
 
     getShoppingList(): Observable<ShoppingListModel> {
@@ -25,7 +29,6 @@ export class ShoppingListService {
     createShoppingList(template: TemplateModel): Observable<ShoppingListModel> {
         const request = new CreateShoppingListRequest(template.id);
 
-        return this.http.post<CreateShoppingListResponse>(`/api/shopping-lists`, request)
-            .pipe(map(response => response.toModel()));
+        return this.http.post<ShoppingListModel>(`/api/shopping-lists`, request);
     }
 }

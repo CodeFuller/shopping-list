@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
@@ -24,6 +26,18 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 			await shoppingListCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
 
 			shoppingList.Id = document.Id.ToIdModel();
+		}
+
+		public async Task<IReadOnlyCollection<ShoppingListInfo>> GetShoppingListsInfo(CancellationToken cancellationToken)
+		{
+			using var cursor = await shoppingListCollection
+				.FindAsync(FilterDefinition<ShoppingListDocument>.Empty, cancellationToken: cancellationToken);
+
+			var shoppingLists = await cursor.ToListAsync(cancellationToken);
+
+			return shoppingLists
+				.Select(x => x.ToShoppingListInfo())
+				.ToList();
 		}
 
 		public Task<ShoppingListModel> GetShoppingList(IdModel listId, CancellationToken cancellationToken)

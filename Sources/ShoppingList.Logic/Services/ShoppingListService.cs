@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,6 +46,11 @@ namespace ShoppingList.Logic.Services
 			await shoppingListRepository.CreateShoppingList(shoppingList, cancellationToken);
 
 			return shoppingList;
+		}
+
+		public Task<IReadOnlyCollection<ShoppingListInfo>> GetShoppingListsInfo(CancellationToken cancellationToken)
+		{
+			return shoppingListRepository.GetShoppingListsInfo(cancellationToken);
 		}
 
 		public Task<ShoppingListModel> GetShoppingList(IdModel listId, CancellationToken cancellationToken)

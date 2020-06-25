@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +28,14 @@ namespace ShoppingList.Web.Controllers
 			var shoppingList = await shoppingListService.CreateShoppingListFromTemplate(request.TemplateId.ToId(), cancellationToken);
 			var shoppingListData = new OutputShoppingListData(shoppingList);
 			return Created(GetShoppingListUri(shoppingList.Id), shoppingListData);
+		}
+
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<ShoppingListInfoData>>> GetShoppingLists(CancellationToken cancellationToken)
+		{
+			var shoppingLists = await shoppingListService.GetShoppingListsInfo(cancellationToken);
+
+			return Ok(shoppingLists.Select(x => new ShoppingListInfoData(x)));
 		}
 
 		[HttpGet("{listId}")]

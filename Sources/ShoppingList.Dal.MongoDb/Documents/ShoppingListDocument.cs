@@ -23,5 +23,14 @@ namespace ShoppingList.Dal.MongoDb.Documents
 			Title = shoppingList.Title;
 			Items = shoppingList.Items.Select(x => new ShoppingItemDocument(x)).ToList();
 		}
+
+		public ShoppingListInfo ToShoppingListInfo()
+		{
+			return new ShoppingListInfo
+			{
+				Id = Id.ToIdModel(),
+				Title = Title,
+			};
+		}
 	}
 }

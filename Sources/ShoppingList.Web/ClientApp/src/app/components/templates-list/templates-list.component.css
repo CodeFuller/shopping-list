@@ -1,4 +1,4 @@
-/* Template action buttons are shown only on hover */
+/* Action buttons for the item are shown only on hover */
 .template-action-button {
   visibility: hidden;
 }

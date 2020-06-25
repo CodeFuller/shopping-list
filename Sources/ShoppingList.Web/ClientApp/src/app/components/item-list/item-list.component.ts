@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ListItem } from '../../models/list-item.model';
+import { ShoppingItem } from '../../models/shopping-item.model';
 
 @Component({
     selector: 'app-item-list',
@@ -9,7 +9,7 @@ import { ListItem } from '../../models/list-item.model';
 export class ItemListComponent implements OnInit {
 
     @Input() public title!: string;
-    @Input() public items!: ListItem[];
+    @Input() public items!: ShoppingItem[];
 
     constructor() { }
 
