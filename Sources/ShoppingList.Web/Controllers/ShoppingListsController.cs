@@ -1,8 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ShoppingList.Web.Dto;
-using ShoppingList.Web.Dto.ShoppingListDto;
+using ShoppingList.Logic.Extensions;
+using ShoppingList.Logic.Interfaces;
+using ShoppingList.Logic.Models;
+using ShoppingList.Web.Contracts.ShoppingListContracts;
 
 namespace ShoppingList.Web.Controllers
 {
@@ -10,30 +13,33 @@ namespace ShoppingList.Web.Controllers
 	[ApiController]
 	public class ShoppingListsController : ControllerBase
 	{
-		[HttpGet("{listId:int}")]
-		public ActionResult<OutputShoppingListData> GetShoppingList(int listId)
+		private readonly IShoppingListService shoppingListService;
+
+		public ShoppingListsController(IShoppingListService shoppingListService)
 		{
-			var data = new OutputShoppingListData
-			{
-				Title = $"Test List #{listId}",
-				ShoppingDate = new DateTimeOffset(2019, 06, 15, 10, 13, 12, TimeSpan.Zero),
-				Items = new List<ShoppingItemDto>
-				{
-					new ShoppingItemDto
-					{
-						Title = "Tomatoes",
-						Comment = "Red",
-					},
+			this.shoppingListService = shoppingListService ?? throw new ArgumentNullException(nameof(shoppingListService));
+		}
 
-					new ShoppingItemDto
-					{
-						Title = "Cucumbers",
-						Quantity = 3,
-					},
-				},
-			};
+		[HttpPost]
+		public async Task<ActionResult<OutputShoppingListData>> CreateShoppingList([FromBody] CreateShoppingListRequest request, CancellationToken cancellationToken)
+		{
+			var shoppingList = await shoppingListService.CreateShoppingListFromTemplate(request.TemplateId.ToId(), cancellationToken);
+			var shoppingListData = new OutputShoppingListData(shoppingList);
+			return Created(GetShoppingListUri(shoppingList.Id), shoppingListData);
+		}
 
-			return Ok(data);
+		[HttpGet("{listId}")]
+		public async Task<ActionResult<OutputShoppingListData>> GetShoppingList([FromRoute] string listId, CancellationToken cancellationToken)
+		{
+			var shoppingList = await shoppingListService.GetShoppingList(listId.ToId(), cancellationToken);
+
+			return Ok(new OutputShoppingListData(shoppingList));
+		}
+
+		private Uri GetShoppingListUri(IdModel id)
+		{
+			var actionUrl = Url.Action(nameof(GetShoppingList), null, new { id.Value }, Request.Scheme, Request.Host.ToUriComponent());
+			return new Uri(actionUrl, UriKind.RelativeOrAbsolute);
 		}
 	}
 }

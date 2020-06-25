@@ -1,12 +1,11 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MongoDB.Driver;
-using ShoppingList.Abstractions.Interfaces;
-using ShoppingList.Dal.MogoDb;
-using ShoppingList.Dal.MogoDb.Repositories;
+using ShoppingList.Dal.MogoDb.Extensions;
+using ShoppingList.Logic.Extensions;
 
 namespace ShoppingList.Web
 {
@@ -29,14 +28,10 @@ namespace ShoppingList.Web
 				configuration.RootPath = "ClientApp/dist";
 			});
 
-			services.Configure<MongoDbSettings>(options => Configuration.Bind("mongoDb", options));
+			services.AddShoppingListServices();
 
-			var dbSettings = new MongoDbSettings();
-			Configuration.Bind("mongoDb", dbSettings);
-			services.AddSingleton<IMongoClient>(sp => new MongoClient(dbSettings.ConnectionString));
-
-			services.AddTransient<ITemplatesRepository, TemplatesRepository>();
-			services.AddTransient<ITemplateItemsRepository, TemplatesRepository>();
+			var connectionString = GetConnectionString();
+			services.AddMongoDbDal(connectionString);
 		}
 
 		public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -73,6 +68,17 @@ namespace ShoppingList.Web
 					spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
 				}
 			});
+		}
+
+		private string GetConnectionString()
+		{
+			var connectionString = Configuration.GetConnectionString("shoppingListDatabase");
+			if (String.IsNullOrEmpty(connectionString))
+			{
+				throw new InvalidOperationException("Connection string 'shoppingListDatabase' is not set");
+			}
+
+			return connectionString;
 		}
 	}
 }

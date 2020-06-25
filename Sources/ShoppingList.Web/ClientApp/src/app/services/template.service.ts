@@ -28,11 +28,6 @@ export class TemplateService {
       return this.http.delete(`/api/templates/${templateId}`);
     }
 
-    getTemplate(id: string): Observable<TemplateModel> {
-        return this.http.get<TemplateModel>(`/api/templates/${id}`)
-            .pipe(map(response => plainToClass(TemplateModel, response, { excludeExtraneousValues: true })));
-    }
-
     createTemplateItem(templateId: string, newItem: TemplateItemModel): Observable<string> {
         return this.http.post(`/api/templates/${templateId}/items`, newItem, {observe: 'response'})
             .pipe(map(response => {

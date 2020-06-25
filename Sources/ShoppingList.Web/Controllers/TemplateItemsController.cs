@@ -5,10 +5,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ShoppingList.Abstractions.Exceptions;
-using ShoppingList.Abstractions.Interfaces;
-using ShoppingList.Abstractions.Objects;
-using ShoppingList.Web.Dto.TemplateItemDto;
+using ShoppingList.Logic.Exceptions;
+using ShoppingList.Logic.Extensions;
+using ShoppingList.Logic.Interfaces;
+using ShoppingList.Logic.Models;
+using ShoppingList.Web.Contracts.ShoppingItemContracts;
 
 namespace ShoppingList.Web.Controllers
 {
@@ -16,24 +17,24 @@ namespace ShoppingList.Web.Controllers
 	[ApiController]
 	public class TemplateItemsController : ControllerBase
 	{
-		private readonly ITemplateItemsRepository repository;
+		private readonly IShoppingTemplateItemService templateItemService;
 
 		private readonly ILogger<TemplatesController> logger;
 
-		public TemplateItemsController(ITemplateItemsRepository repository, ILogger<TemplatesController> logger)
+		public TemplateItemsController(IShoppingTemplateItemService templateItemService, ILogger<TemplatesController> logger)
 		{
-			this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
+			this.templateItemService = templateItemService ?? throw new ArgumentNullException(nameof(templateItemService));
 			this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<OutputTemplateItemData>>> GetTemplateItems(string templateId, CancellationToken cancellationToken)
+		public async Task<ActionResult<IEnumerable<OutputTemplateItemData>>> GetTemplateItems([FromRoute] string templateId, CancellationToken cancellationToken)
 		{
 			try
 			{
-				var items = await repository.GetItems(templateId, cancellationToken);
+				var items = await templateItemService.GetTemplateItems(templateId.ToId(), cancellationToken);
 
-				return Ok(items.Select(x => CreateTemplateItemDto(templateId, x)));
+				return Ok(items.Select(x => new OutputTemplateItemData(x)));
 			}
 			catch (NotFoundException e)
 			{
@@ -43,13 +44,13 @@ namespace ShoppingList.Web.Controllers
 		}
 
 		[HttpGet("{itemId}")]
-		public async Task<ActionResult<IEnumerable<OutputTemplateItemData>>> GetTemplateItem(string templateId, string itemId, CancellationToken cancellationToken)
+		public async Task<ActionResult<OutputTemplateItemData>> GetTemplateItem([FromRoute] string templateId, [FromRoute] string itemId, CancellationToken cancellationToken)
 		{
 			try
 			{
-				var item = await repository.GetItem(templateId, itemId, cancellationToken);
+				var item = await templateItemService.GetTemplateItem(templateId.ToId(), itemId.ToId(), cancellationToken);
 
-				return Ok(CreateTemplateItemDto(templateId, item));
+				return Ok(new OutputTemplateItemData(item));
 			}
 			catch (NotFoundException e)
 			{
@@ -59,14 +60,14 @@ namespace ShoppingList.Web.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<OutputTemplateItemData>> CreateTemplateItem(string templateId, [FromBody] InputTemplateItemData itemData, CancellationToken cancellationToken)
+		public async Task<ActionResult<OutputTemplateItemData>> CreateTemplateItem([FromRoute] string templateId, [FromBody] InputTemplateItemData itemData, CancellationToken cancellationToken)
 		{
 			try
 			{
-				var item = itemData.ToObject();
-				var newItemId = await repository.CreateItem(templateId, item, cancellationToken);
+				var templateIdModel = templateId.ToId();
+				var newItemId = await templateItemService.CreateTemplateItem(templateIdModel, itemData.ToModel(), cancellationToken);
 
-				return Created(GetTemplateItemUri(templateId, newItemId), null);
+				return Created(GetTemplateItemUri(templateIdModel, newItemId), null);
 			}
 			catch (NotFoundException e)
 			{
@@ -76,13 +77,13 @@ namespace ShoppingList.Web.Controllers
 		}
 
 		[HttpPut("{itemId}")]
-		public async Task<ActionResult> UpdateTemplateItem(string templateId, string itemId, [FromBody] InputTemplateItemData itemData, CancellationToken cancellationToken)
+		public async Task<ActionResult> UpdateTemplateItem([FromRoute] string templateId, [FromRoute] string itemId, [FromBody] InputTemplateItemData itemData, CancellationToken cancellationToken)
 		{
 			try
 			{
-				var item = itemData.ToObject();
-				item.Id = itemId;
-				await repository.UpdateItem(templateId, item, cancellationToken);
+				var item = itemData.ToModel();
+				item.Id = itemId.ToId();
+				await templateItemService.UpdateTemplateItem(templateId.ToId(), item, cancellationToken);
 			}
 			catch (NotFoundException e)
 			{
@@ -94,11 +95,11 @@ namespace ShoppingList.Web.Controllers
 		}
 
 		[HttpPatch]
-		public async Task<ActionResult> ReorderTemplateItems(string templateId, [FromBody] IReadOnlyCollection<string> newItemsOrder, CancellationToken cancellationToken)
+		public async Task<ActionResult> ReorderTemplateItems([FromRoute] string templateId, [FromBody] IReadOnlyCollection<string> newItemsOrder, CancellationToken cancellationToken)
 		{
 			try
 			{
-				await repository.ReorderItems(templateId, newItemsOrder, cancellationToken);
+				await templateItemService.ReorderItems(templateId.ToId(), newItemsOrder.Select(x => x.ToId()), cancellationToken);
 			}
 			catch (NotFoundException e)
 			{
@@ -115,11 +116,11 @@ namespace ShoppingList.Web.Controllers
 		}
 
 		[HttpDelete("{itemId}")]
-		public async Task<ActionResult> DeleteTemplateItem(string templateId, string itemId, CancellationToken cancellationToken)
+		public async Task<ActionResult> DeleteTemplateItem([FromRoute] string templateId, [FromRoute] string itemId, CancellationToken cancellationToken)
 		{
 			try
 			{
-				await repository.DeleteItem(templateId, itemId, cancellationToken);
+				await templateItemService.DeleteItem(templateId.ToId(), itemId.ToId(), cancellationToken);
 			}
 			catch (NotFoundException e)
 			{
@@ -130,12 +131,7 @@ namespace ShoppingList.Web.Controllers
 			return NoContent();
 		}
 
-		private OutputTemplateItemData CreateTemplateItemDto(string templateId, TemplateItem item)
-		{
-			return new OutputTemplateItemData(item, GetTemplateItemUri(templateId, item.Id));
-		}
-
-		private Uri GetTemplateItemUri(string templateId, string itemId)
+		private Uri GetTemplateItemUri(IdModel templateId, IdModel itemId)
 		{
 			var actionUrl = Url.Action(nameof(GetTemplateItem), null, new { templateId, itemId }, Request.Scheme, Request.Host.ToUriComponent());
 			return new Uri(actionUrl, UriKind.RelativeOrAbsolute);

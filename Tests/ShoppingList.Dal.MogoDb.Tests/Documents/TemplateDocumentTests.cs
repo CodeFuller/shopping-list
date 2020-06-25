@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ShoppingList.Abstractions.Objects;
 using ShoppingList.Dal.MogoDb.Documents;
+using ShoppingList.Logic.Models;
 
 namespace ShoppingList.Dal.MogoDb.Tests.Documents
 {
@@ -17,12 +17,12 @@ namespace ShoppingList.Dal.MogoDb.Tests.Documents
 		{
 			// Arrange
 
-			var template = new ListTemplate
+			var templateInfo = new ShoppingTemplateInfo
 			{
 				Title = "Test title",
 			};
 
-			var target = new TemplateDocument(template);
+			var target = new ShoppingTemplateDocument(templateInfo);
 
 			// Act
 

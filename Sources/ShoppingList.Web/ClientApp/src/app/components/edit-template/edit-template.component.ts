@@ -63,7 +63,7 @@ export class EditTemplateComponent implements OnInit {
         }
 
         item.title = title;
-        item.quantity = this.getNumberFormValue(form, 'quantity');
+        item.quantity = this.getFormValue(form, 'quantity');
         item.comment = this.getFormValue(form, 'comment');
     }
 
@@ -179,7 +179,7 @@ export class EditTemplateComponent implements OnInit {
     private createItemEditForm(item?: TemplateItemModel): FormGroup {
         return this.formBuilder.group({
             title: [item ? item.title : null, Validators.required],
-            quantity: [item ? item.quantity : null, Validators.pattern(/^\d*$/)],
+            quantity: [item ? item.quantity : null],
             comment: [item ? item.comment : null],
         });
     }
@@ -187,15 +187,6 @@ export class EditTemplateComponent implements OnInit {
     private getFormValue(form: FormGroup, name: string): string | null {
         const control = form.get(name);
         return control ? control.value : null;
-    }
-
-    private getNumberFormValue(form: FormGroup, name: string): number | null {
-        const value = this.getFormValue(form, name);
-        if (!value) {
-            return null;
-        }
-
-        return parseInt(value, 10);
     }
 
     public isItemUnderEdit(item: TemplateItemModel): boolean {

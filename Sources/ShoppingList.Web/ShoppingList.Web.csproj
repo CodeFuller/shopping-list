@@ -34,8 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ShoppingList.Abstractions\ShoppingList.Abstractions.csproj" />
     <ProjectReference Include="..\ShoppingList.Dal.MogoDb\ShoppingList.Dal.MogoDb.csproj" />
+    <ProjectReference Include="..\ShoppingList.Logic\ShoppingList.Logic.csproj" />
   </ItemGroup>
 
   <ItemGroup>
