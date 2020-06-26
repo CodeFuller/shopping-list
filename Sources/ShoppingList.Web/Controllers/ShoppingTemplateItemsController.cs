@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using ShoppingList.Logic.Exceptions;
 using ShoppingList.Logic.Extensions;
 using ShoppingList.Logic.Interfaces;
-using ShoppingList.Logic.Models;
 using ShoppingList.Web.Contracts.ShoppingItemContracts;
 
 namespace ShoppingList.Web.Controllers
@@ -28,29 +27,13 @@ namespace ShoppingList.Web.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<OutputTemplateItemData>>> GetTemplateItems([FromRoute] string templateId, CancellationToken cancellationToken)
+		public async Task<ActionResult<IEnumerable<OutputShoppingItemData>>> GetTemplateItems([FromRoute] string templateId, CancellationToken cancellationToken)
 		{
 			try
 			{
 				var items = await templateItemService.GetTemplateItems(templateId.ToId(), cancellationToken);
 
-				return Ok(items.Select(x => new OutputTemplateItemData(x)));
-			}
-			catch (NotFoundException e)
-			{
-				logger.LogWarning(e, "Failed to find template {TemplateId}", templateId);
-				return NotFound();
-			}
-		}
-
-		[HttpGet("{itemId}")]
-		public async Task<ActionResult<OutputTemplateItemData>> GetTemplateItem([FromRoute] string templateId, [FromRoute] string itemId, CancellationToken cancellationToken)
-		{
-			try
-			{
-				var item = await templateItemService.GetTemplateItem(templateId.ToId(), itemId.ToId(), cancellationToken);
-
-				return Ok(new OutputTemplateItemData(item));
+				return Ok(items.Select(x => new OutputShoppingItemData(x)));
 			}
 			catch (NotFoundException e)
 			{
@@ -60,14 +43,13 @@ namespace ShoppingList.Web.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<OutputTemplateItemData>> CreateTemplateItem([FromRoute] string templateId, [FromBody] InputTemplateItemData itemData, CancellationToken cancellationToken)
+		public async Task<ActionResult<OutputShoppingItemData>> CreateTemplateItem([FromRoute] string templateId, [FromBody] InputShoppingItemData itemData, CancellationToken cancellationToken)
 		{
 			try
 			{
-				var templateIdModel = templateId.ToId();
-				var newItemId = await templateItemService.CreateTemplateItem(templateIdModel, itemData.ToModel(), cancellationToken);
+				var newItem = await templateItemService.CreateTemplateItem(templateId.ToId(), itemData.ToModel(), cancellationToken);
 
-				return Created(GetTemplateItemUri(templateIdModel, newItemId), null);
+				return Ok(new OutputShoppingItemData(newItem));
 			}
 			catch (NotFoundException e)
 			{
@@ -77,7 +59,7 @@ namespace ShoppingList.Web.Controllers
 		}
 
 		[HttpPut("{itemId}")]
-		public async Task<ActionResult> UpdateTemplateItem([FromRoute] string templateId, [FromRoute] string itemId, [FromBody] InputTemplateItemData itemData, CancellationToken cancellationToken)
+		public async Task<ActionResult> UpdateTemplateItem([FromRoute] string templateId, [FromRoute] string itemId, [FromBody] InputShoppingItemData itemData, CancellationToken cancellationToken)
 		{
 			try
 			{
@@ -129,12 +111,6 @@ namespace ShoppingList.Web.Controllers
 			}
 
 			return NoContent();
-		}
-
-		private Uri GetTemplateItemUri(IdModel templateId, IdModel itemId)
-		{
-			var actionUrl = Url.Action(nameof(GetTemplateItem), null, new { templateId, itemId }, Request.Scheme, Request.Host.ToUriComponent());
-			return new Uri(actionUrl, UriKind.RelativeOrAbsolute);
 		}
 	}
 }

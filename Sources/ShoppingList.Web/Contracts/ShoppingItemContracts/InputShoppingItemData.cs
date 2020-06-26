@@ -4,7 +4,7 @@ using ShoppingList.Logic.Models;
 namespace ShoppingList.Web.Contracts.ShoppingItemContracts
 {
 	[DataContract]
-	public class InputTemplateItemData : BasicTemplateItemData
+	public class InputShoppingItemData : BasicShoppingItemData
 	{
 		public ShoppingItemModel ToModel()
 		{

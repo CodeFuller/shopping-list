@@ -3,12 +3,12 @@ using ShoppingList.Logic.Models;
 
 namespace ShoppingList.Web.Contracts.ShoppingItemContracts
 {
-	public class OutputTemplateItemData : BasicTemplateItemData
+	public class OutputShoppingItemData : BasicShoppingItemData
 	{
 		[DataMember(Name = "id")]
 		public string Id { get; }
 
-		public OutputTemplateItemData(ShoppingItemModel item)
+		public OutputShoppingItemData(ShoppingItemModel item)
 			: base(item)
 		{
 			Id = item.Id.Value;

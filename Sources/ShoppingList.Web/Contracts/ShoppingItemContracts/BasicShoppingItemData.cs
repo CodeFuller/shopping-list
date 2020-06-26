@@ -4,7 +4,7 @@ using ShoppingList.Logic.Models;
 namespace ShoppingList.Web.Contracts.ShoppingItemContracts
 {
 	[DataContract]
-	public class BasicTemplateItemData
+	public class BasicShoppingItemData
 	{
 		[DataMember(Name = "title")]
 		public string Title { get; set; }
@@ -15,11 +15,11 @@ namespace ShoppingList.Web.Contracts.ShoppingItemContracts
 		[DataMember(Name = "comment")]
 		public string Comment { get; set; }
 
-		protected BasicTemplateItemData()
+		protected BasicShoppingItemData()
 		{
 		}
 
-		protected BasicTemplateItemData(ShoppingItemModel item)
+		protected BasicShoppingItemData(ShoppingItemModel item)
 		{
 			Title = item.Title;
 			Quantity = item.Quantity;

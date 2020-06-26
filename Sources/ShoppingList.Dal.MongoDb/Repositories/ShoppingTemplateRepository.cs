@@ -84,24 +84,6 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 				.ToList();
 		}
 
-		public async Task<ShoppingItemModel> GetItem(IdModel templateId, IdModel itemId, CancellationToken cancellationToken)
-		{
-			var shoppingTemplate = await FindTemplate(templateId, cancellationToken);
-			var matchedItems = shoppingTemplate.Items.Where(x => x.Id == itemId.ToObjectId()).ToList();
-
-			if (matchedItems.Count < 1)
-			{
-				throw new NotFoundException($"The item with id of {itemId} was not found in template {templateId}");
-			}
-
-			if (matchedItems.Count > 1)
-			{
-				logger.LogError("Multiple ({MatchedCount}) template items are matched for {TemplateId} {TemplateItemId}", matchedItems.Count, templateId, itemId);
-			}
-
-			return matchedItems.First().ToModel();
-		}
-
 		public async Task UpdateItem(IdModel templateId, ShoppingItemModel item, CancellationToken cancellationToken)
 		{
 			var newItem = new ShoppingItemDocument(item);

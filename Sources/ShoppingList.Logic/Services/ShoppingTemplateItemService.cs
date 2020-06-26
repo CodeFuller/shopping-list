@@ -16,19 +16,17 @@ namespace ShoppingList.Logic.Services
 			this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
 		}
 
-		public Task<IdModel> CreateTemplateItem(IdModel templateId, ShoppingItemModel item, CancellationToken cancellationToken)
+		public async Task<ShoppingItemModel> CreateTemplateItem(IdModel templateId, ShoppingItemModel item, CancellationToken cancellationToken)
 		{
-			return repository.CreateItem(templateId, item, cancellationToken);
+			var newItemId = await repository.CreateItem(templateId, item, cancellationToken);
+			item.Id = newItemId;
+
+			return item;
 		}
 
 		public Task<IReadOnlyCollection<ShoppingItemModel>> GetTemplateItems(IdModel templateId, CancellationToken cancellationToken)
 		{
 			return repository.GetItems(templateId, cancellationToken);
-		}
-
-		public Task<ShoppingItemModel> GetTemplateItem(IdModel templateId, IdModel itemId, CancellationToken cancellationToken)
-		{
-			return repository.GetItem(templateId, itemId, cancellationToken);
 		}
 
 		public Task UpdateTemplateItem(IdModel templateId, ShoppingItemModel item, CancellationToken cancellationToken)
