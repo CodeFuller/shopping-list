@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using ShoppingList.Logic.Exceptions;
 using ShoppingList.Logic.Extensions;
 using ShoppingList.Logic.Interfaces;
-using ShoppingList.Logic.Models;
 using ShoppingList.Web.Contracts.ShoppingTemplateContracts;
 
 namespace ShoppingList.Web.Controllers
@@ -28,35 +27,20 @@ namespace ShoppingList.Web.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<OutputTemplateData>>> GetTemplates(CancellationToken cancellationToken)
+		public async Task<ActionResult<IEnumerable<OutputShoppingTemplateInfoData>>> GetTemplates(CancellationToken cancellationToken)
 		{
 			var templates = await templateService.GetAllTemplates(cancellationToken);
 
-			return Ok(templates.Select(CreateTemplateDto));
-		}
-
-		[HttpGet("{templateId}")]
-		public async Task<ActionResult<OutputTemplateData>> GetTemplate([FromRoute] string templateId, CancellationToken cancellationToken)
-		{
-			try
-			{
-				var template = await templateService.GetTemplate(templateId.ToId(), cancellationToken);
-				return Ok(CreateTemplateDto(template));
-			}
-			catch (NotFoundException e)
-			{
-				logger.LogWarning(e, "Failed to find template {TemplateId}", templateId);
-				return NotFound();
-			}
+			return Ok(templates.Select(x => new OutputShoppingTemplateInfoData(x)));
 		}
 
 		[HttpPost]
-		public async Task<ActionResult> CreateTemplate([FromBody] InputTemplateData templateData, CancellationToken cancellationToken)
+		public async Task<ActionResult<OutputShoppingTemplateData>> CreateTemplate([FromBody] InputShoppingTemplateInfoData templateInfoData, CancellationToken cancellationToken)
 		{
-			var template = templateData.ToModel();
-			var newTemplateId = await templateService.CreateTemplate(template, cancellationToken);
+			var templateInfo = templateInfoData.ToModel();
+			var newTemplate = await templateService.CreateTemplate(templateInfo, cancellationToken);
 
-			return Created(GetTemplateUri(newTemplateId), null);
+			return Ok(new OutputShoppingTemplateData(newTemplate));
 		}
 
 		[HttpDelete("{templateId}")]
@@ -72,17 +56,6 @@ namespace ShoppingList.Web.Controllers
 				logger.LogWarning(e, "Template with id {TemplateId} does not exist", templateId);
 				return NotFound();
 			}
-		}
-
-		private static OutputTemplateData CreateTemplateDto(ShoppingTemplateInfo templateInfo)
-		{
-			return new OutputTemplateData(templateInfo);
-		}
-
-		private Uri GetTemplateUri(IdModel templateId)
-		{
-			var actionUrl = Url.Action(nameof(GetTemplate), null, new { templateId.Value }, Request.Scheme, Request.Host.ToUriComponent());
-			return new Uri(actionUrl, UriKind.RelativeOrAbsolute);
 		}
 	}
 }

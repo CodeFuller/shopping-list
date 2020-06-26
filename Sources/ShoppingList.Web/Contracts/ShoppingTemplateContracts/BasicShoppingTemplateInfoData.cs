@@ -4,16 +4,16 @@ using ShoppingList.Logic.Models;
 namespace ShoppingList.Web.Contracts.ShoppingTemplateContracts
 {
 	[DataContract]
-	public abstract class BasicTemplateData
+	public abstract class BasicShoppingTemplateInfoData
 	{
 		[DataMember(Name = "title")]
 		public string Title { get; set; }
 
-		protected BasicTemplateData()
+		protected BasicShoppingTemplateInfoData()
 		{
 		}
 
-		protected BasicTemplateData(ShoppingTemplateInfo templateInfo)
+		protected BasicShoppingTemplateInfoData(ShoppingTemplateInfo templateInfo)
 		{
 			Title = templateInfo.Title;
 		}

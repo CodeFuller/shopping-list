@@ -25,9 +25,9 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 			this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
-		public async Task<IdModel> CreateTemplate(ShoppingTemplateInfo templateInfo, CancellationToken cancellationToken)
+		public async Task<IdModel> CreateTemplate(ShoppingTemplateModel shoppingTemplate, CancellationToken cancellationToken)
 		{
-			var document = new ShoppingTemplateDocument(templateInfo);
+			var document = new ShoppingTemplateDocument(shoppingTemplate);
 			await templatesCollection.InsertOneAsync(document, cancellationToken: cancellationToken);
 
 			return document.Id.ToIdModel();
@@ -41,14 +41,14 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 			var templatesList = await cursor.ToListAsync(cancellationToken);
 
 			return templatesList
-				.Select(x => x.ToModel())
+				.Select(x => x.ToShoppingTemplateInfo())
 				.ToList();
 		}
 
-		public async Task<ShoppingTemplateInfo> GetTemplate(IdModel templateId, CancellationToken cancellationToken)
+		public async Task<ShoppingTemplateModel> GetTemplate(IdModel templateId, CancellationToken cancellationToken)
 		{
 			var shoppingTemplate = await FindTemplate(templateId, cancellationToken);
-			return shoppingTemplate.ToModel();
+			return shoppingTemplate.ToShoppingTemplateModel();
 		}
 
 		public async Task DeleteTemplate(IdModel templateId, CancellationToken cancellationToken)

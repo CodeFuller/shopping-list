@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using ShoppingList.Dal.MongoDb.Extensions;
@@ -13,24 +14,32 @@ namespace ShoppingList.Dal.MongoDb.Documents
 		[BsonElement("title")]
 		public string Title { get; set; }
 
-		// Array property must be set to empty list, not null.
-		// Otherwise property will be set to null on document creation,
-		// and later $push will fail with error "The field must be an array but is of type null in document".
 		[BsonElement("items")]
-		public IList<ShoppingItemDocument> Items { get; set; } = new List<ShoppingItemDocument>();
+		public IList<ShoppingItemDocument> Items { get; set; }
 
-		public ShoppingTemplateDocument(ShoppingTemplateInfo templateInfo)
+		public ShoppingTemplateDocument(ShoppingTemplateModel shoppingTemplate)
 		{
-			Id = templateInfo.Id?.ToObjectId() ?? default;
-			Title = templateInfo.Title;
+			Id = shoppingTemplate.Id?.ToObjectId() ?? default;
+			Title = shoppingTemplate.Title;
+			Items = shoppingTemplate.Items.Select(x => new ShoppingItemDocument(x)).ToList();
 		}
 
-		public ShoppingTemplateInfo ToModel()
+		public ShoppingTemplateInfo ToShoppingTemplateInfo()
 		{
 			return new ShoppingTemplateInfo
 			{
 				Id = Id.ToIdModel(),
 				Title = Title,
+			};
+		}
+
+		public ShoppingTemplateModel ToShoppingTemplateModel()
+		{
+			return new ShoppingTemplateModel
+			{
+				Id = Id.ToIdModel(),
+				Title = Title,
+				Items = Items.Select(x => x.ToModel()).ToList(),
 			};
 		}
 	}

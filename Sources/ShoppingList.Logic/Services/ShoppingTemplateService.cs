@@ -20,24 +20,27 @@ namespace ShoppingList.Logic.Services
 			this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
-		public async Task<IdModel> CreateTemplate(ShoppingTemplateInfo templateInfo, CancellationToken cancellationToken)
+		public async Task<ShoppingTemplateModel> CreateTemplate(ShoppingTemplateInfo templateInfo, CancellationToken cancellationToken)
 		{
 			logger.LogInformation("Creating template {@TemplateInfo} ...", templateInfo);
-			var templateId = await repository.CreateTemplate(templateInfo, cancellationToken);
+
+			var shoppingTemplate = new ShoppingTemplateModel
+			{
+				Title = templateInfo.Title,
+				Items = new List<ShoppingItemModel>(),
+			};
+
+			var templateId = await repository.CreateTemplate(shoppingTemplate, cancellationToken);
+			shoppingTemplate.Id = templateId;
 
 			logger.LogInformation("Created template with id {TemplateId}", templateId);
 
-			return templateId;
+			return shoppingTemplate;
 		}
 
 		public Task<IReadOnlyCollection<ShoppingTemplateInfo>> GetAllTemplates(CancellationToken cancellationToken)
 		{
 			return repository.GetAllTemplates(cancellationToken);
-		}
-
-		public Task<ShoppingTemplateInfo> GetTemplate(IdModel templateId, CancellationToken cancellationToken)
-		{
-			return repository.GetTemplate(templateId, cancellationToken);
 		}
 
 		public Task DeleteTemplate(IdModel templateId, CancellationToken cancellationToken)

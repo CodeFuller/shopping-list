@@ -37,6 +37,9 @@ export class TemplatesListComponent implements OnInit {
       this.templateService.createTemplate(newTemplate)
           .subscribe(() => {
               this.newTemplateTitle = null;
+
+              // TODO: We can avoid reloading the full list and just add new template (returned from server) to the list.
+              // What is the best practice: to reload on not to reload :) ?
               this.loadTemplates();
           });
     }

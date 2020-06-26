@@ -7,11 +7,9 @@ namespace ShoppingList.Logic.Interfaces
 {
 	public interface IShoppingTemplateService
 	{
-		Task<IdModel> CreateTemplate(ShoppingTemplateInfo templateInfo, CancellationToken cancellationToken);
+		Task<ShoppingTemplateModel> CreateTemplate(ShoppingTemplateInfo templateInfo, CancellationToken cancellationToken);
 
 		Task<IReadOnlyCollection<ShoppingTemplateInfo>> GetAllTemplates(CancellationToken cancellationToken);
-
-		Task<ShoppingTemplateInfo> GetTemplate(IdModel templateId, CancellationToken cancellationToken);
 
 		Task DeleteTemplate(IdModel templateId, CancellationToken cancellationToken);
 	}
