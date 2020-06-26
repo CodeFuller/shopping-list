@@ -15,13 +15,13 @@ namespace ShoppingList.Web.Controllers
 {
 	[Route("api/templates")]
 	[ApiController]
-	public class TemplatesController : ControllerBase
+	public class ShoppingTemplatesController : ControllerBase
 	{
 		private readonly IShoppingTemplateService templateService;
 
-		private readonly ILogger<TemplatesController> logger;
+		private readonly ILogger<ShoppingTemplatesController> logger;
 
-		public TemplatesController(IShoppingTemplateService templateService, ILogger<TemplatesController> logger)
+		public ShoppingTemplatesController(IShoppingTemplateService templateService, ILogger<ShoppingTemplatesController> logger)
 		{
 			this.templateService = templateService ?? throw new ArgumentNullException(nameof(templateService));
 			this.logger = logger ?? throw new ArgumentNullException(nameof(logger));

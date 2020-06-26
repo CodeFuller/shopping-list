@@ -19,9 +19,9 @@ namespace ShoppingList.Web.Controllers
 	{
 		private readonly IShoppingTemplateItemService templateItemService;
 
-		private readonly ILogger<TemplatesController> logger;
+		private readonly ILogger<TemplateItemsController> logger;
 
-		public TemplateItemsController(IShoppingTemplateItemService templateItemService, ILogger<TemplatesController> logger)
+		public TemplateItemsController(IShoppingTemplateItemService templateItemService, ILogger<TemplateItemsController> logger)
 		{
 			this.templateItemService = templateItemService ?? throw new ArgumentNullException(nameof(templateItemService));
 			this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
