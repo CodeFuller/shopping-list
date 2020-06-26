@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { TemplateModel } from '../../models/template.model';
 import { TemplateService } from '../../services/template.service';
 import { ShoppingListService } from '../../services/shopping-list.service';
+import { ShoppingTemplateModel } from '../../models/shopping-template.model';
 
 @Component({
     selector: 'app-templates-list',
@@ -13,7 +13,7 @@ export class TemplatesListComponent implements OnInit {
     private readonly templateService: TemplateService;
     private readonly shoppingListService: ShoppingListService;
 
-    templates: TemplateModel[] = []
+    templates: ShoppingTemplateModel[] = [];
 
     newTemplateTitle: string | null = null;
 
@@ -31,7 +31,7 @@ export class TemplatesListComponent implements OnInit {
           return;
       }
 
-      const newTemplate = new TemplateModel();
+      const newTemplate = new ShoppingTemplateModel();
       newTemplate.title = this.newTemplateTitle;
 
       this.templateService.createTemplate(newTemplate)
@@ -41,12 +41,12 @@ export class TemplatesListComponent implements OnInit {
           });
     }
 
-    onCreateShoppingListFromTemplate(template: TemplateModel) {
+    onCreateShoppingListFromTemplate(template: ShoppingTemplateModel) {
         this.shoppingListService.createShoppingList(template)
             .subscribe();
     }
 
-    onDeleteTemplate(template: TemplateModel) {
+    onDeleteTemplate(template: ShoppingTemplateModel) {
       this.templateService.deleteTemplate(template.id)
         .subscribe(() => {
           this.newTemplateTitle = null;
@@ -56,6 +56,6 @@ export class TemplatesListComponent implements OnInit {
 
     private loadTemplates() {
         this.templateService.getTemplates()
-            .subscribe((data: TemplateModel[]) => this.templates = data);
+            .subscribe((data: ShoppingTemplateModel[]) => this.templates = data);
     }
 }

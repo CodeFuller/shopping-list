@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { plainToClass } from 'class-transformer';
-import { TemplateModel } from '../models/template.model';
-import { TemplateItemModel } from '../models/template-item.model';
+import { ShoppingTemplateModel } from '../models/shopping-template.model';
+import { ShoppingItemModel } from '../models/shopping-item.model';
 
 @Injectable()
 export class TemplateService {
@@ -15,38 +15,38 @@ export class TemplateService {
         this.http = http;
     }
 
-    createTemplate(newTemplate: TemplateModel): Observable<TemplateModel> {
+    createTemplate(newTemplate: ShoppingTemplateModel): Observable<ShoppingTemplateModel> {
         return this.http.post(`/api/templates`, newTemplate)
-            .pipe(map(response => plainToClass(TemplateModel, response, { excludeExtraneousValues: true })));
+            .pipe(map(response => plainToClass(ShoppingTemplateModel, response, { excludeExtraneousValues: true })));
     }
 
-    getTemplates(): Observable<TemplateModel[]> {
+    getTemplates(): Observable<ShoppingTemplateModel[]> {
         return this.http.get<Object[]>('/api/templates')
-            .pipe(map(response => plainToClass(TemplateModel, response, { excludeExtraneousValues: true })));
+            .pipe(map(response => plainToClass(ShoppingTemplateModel, response, { excludeExtraneousValues: true })));
     }
 
     deleteTemplate(templateId: string): Observable<object> {
       return this.http.delete(`/api/templates/${templateId}`);
     }
 
-    createTemplateItem(templateId: string, newItem: TemplateItemModel): Observable<TemplateItemModel> {
+    createTemplateItem(templateId: string, newItem: ShoppingItemModel): Observable<ShoppingItemModel> {
         return this.http.post(`/api/templates/${templateId}/items`, newItem)
-            .pipe(map(response => plainToClass(TemplateItemModel, response, { excludeExtraneousValues: true })));
+            .pipe(map(response => plainToClass(ShoppingItemModel, response, { excludeExtraneousValues: true })));
     }
 
-    getTemplateItems(templateId: string): Observable<TemplateItemModel[]> {
+    getTemplateItems(templateId: string): Observable<ShoppingItemModel[]> {
         return this.http.get<Object[]>(`/api/templates/${templateId}/items`)
-            .pipe(map(response => plainToClass(TemplateItemModel, response, { excludeExtraneousValues: true })));
+            .pipe(map(response => plainToClass(ShoppingItemModel, response, { excludeExtraneousValues: true })));
     }
 
-    updateTemplateItem(templateId: string, item: TemplateItemModel): Observable<TemplateItemModel> {
+    updateTemplateItem(templateId: string, item: ShoppingItemModel): Observable<ShoppingItemModel> {
         return this.http.put(`/api/templates/${templateId}/items/${item.id}`, item)
-            .pipe(map(response => plainToClass(TemplateItemModel, response, { excludeExtraneousValues: true })));
+            .pipe(map(response => plainToClass(ShoppingItemModel, response, { excludeExtraneousValues: true })));
     }
 
-    reorderTemplateItems(templateId: string, newItemsOrder: string[]): Observable<TemplateItemModel[]> {
+    reorderTemplateItems(templateId: string, newItemsOrder: string[]): Observable<ShoppingItemModel[]> {
         return this.http.patch<Object[]>(`/api/templates/${templateId}/items`, newItemsOrder)
-            .pipe(map(response => plainToClass(TemplateItemModel, response, { excludeExtraneousValues: true })));
+            .pipe(map(response => plainToClass(ShoppingItemModel, response, { excludeExtraneousValues: true })));
     }
 
     deleteTemplateItem(templateId: string, itemId: string): Observable<object> {

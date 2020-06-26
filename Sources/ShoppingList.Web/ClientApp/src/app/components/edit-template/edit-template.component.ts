@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { TemplateService } from '../../services/template.service';
-import { TemplateItemModel } from '../../models/template-item.model';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ShoppingItemModel } from '../../models/shopping-item.model';
 
 interface IKeyboardHandlers {
     [key: string]: () => void;
@@ -17,9 +17,9 @@ interface IKeyboardHandlers {
 export class EditTemplateComponent implements OnInit {
 
     templateId: string | undefined;
-    items: TemplateItemModel[] = [];
+    items: ShoppingItemModel[] = [];
 
-    itemUnderEdit: TemplateItemModel | undefined;
+    itemUnderEdit: ShoppingItemModel | undefined;
 
     addItemFormGroup: FormGroup;
     editItemFormGroup: FormGroup | undefined;
@@ -46,7 +46,7 @@ export class EditTemplateComponent implements OnInit {
             return;
         }
 
-        const newItem = new TemplateItemModel();
+        const newItem = new ShoppingItemModel();
         this.fillItemData(newItem, this.addItemFormGroup);
 
         this.templateService.createTemplateItem(this.templateId, newItem).subscribe(createdItem => {
@@ -55,7 +55,7 @@ export class EditTemplateComponent implements OnInit {
         });
     }
 
-    private fillItemData(item: TemplateItemModel, form: FormGroup) {
+    private fillItemData(item: ShoppingItemModel, form: FormGroup) {
         const title = this.getFormValue(form, 'title');
         if (!title) {
             console.error('Item title is not set');
@@ -67,7 +67,7 @@ export class EditTemplateComponent implements OnInit {
         item.comment = this.getFormValue(form, 'comment');
     }
 
-    onEditItem(item: TemplateItemModel, clickedElement: string) {
+    onEditItem(item: ShoppingItemModel, clickedElement: string) {
         this.itemUnderEdit = item;
         this.editItemFormGroup = this.createItemEditForm(item);
 
@@ -98,7 +98,7 @@ export class EditTemplateComponent implements OnInit {
         }
     }
 
-    onDeleteItem(item: TemplateItemModel) {
+    onDeleteItem(item: ShoppingItemModel) {
         if (!this.templateId || !item.id) {
             console.error('Can not delete item without id');
             return;
@@ -180,10 +180,10 @@ export class EditTemplateComponent implements OnInit {
 
         // TBD: Avoid nested subscriptions
         this.templateService.getTemplateItems(this.templateId)
-            .subscribe((data: TemplateItemModel[]) => this.items = data);
+            .subscribe((data: ShoppingItemModel[]) => this.items = data);
     }
 
-    private createItemEditForm(item?: TemplateItemModel): FormGroup {
+    private createItemEditForm(item?: ShoppingItemModel): FormGroup {
         return this.formBuilder.group({
             title: [item ? item.title : null, Validators.required],
             quantity: [item ? item.quantity : null],
@@ -196,11 +196,11 @@ export class EditTemplateComponent implements OnInit {
         return control ? control.value : null;
     }
 
-    isItemUnderEdit(item: TemplateItemModel): boolean {
+    isItemUnderEdit(item: ShoppingItemModel): boolean {
         return this.itemUnderEdit !== undefined && item.id === this.itemUnderEdit.id;
     }
 
-    drop(event: CdkDragDrop<TemplateItemModel[]>) {
+    drop(event: CdkDragDrop<ShoppingItemModel[]>) {
         moveItemInArray(this.items, event.previousIndex, event.currentIndex);
         this.updateItemsOrder();
     }

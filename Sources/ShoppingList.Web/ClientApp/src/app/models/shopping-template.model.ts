@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 
-export class TemplateModel {
+export class ShoppingTemplateModel {
     @Expose() id!: string;
     @Expose() title!: string;
 }
