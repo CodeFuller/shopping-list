@@ -39,10 +39,5 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 				.Select(x => x.ToShoppingListInfo())
 				.ToList();
 		}
-
-		public Task<ShoppingListModel> GetShoppingList(IdModel listId, CancellationToken cancellationToken)
-		{
-			throw new NotImplementedException();
-		}
 	}
 }

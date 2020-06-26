@@ -9,18 +9,19 @@ import { TemplateItemModel } from '../models/template-item.model';
 @Injectable()
 export class TemplateService {
 
-    private http: HttpClient;
+    private readonly http: HttpClient;
 
     constructor(http: HttpClient) {
         this.http = http;
     }
 
-    createTemplate(newTemplate: TemplateModel): Observable<object> {
-        return this.http.post(`/api/templates`, newTemplate);
+    createTemplate(newTemplate: TemplateModel): Observable<TemplateModel> {
+        return this.http.post(`/api/templates`, newTemplate)
+            .pipe(map(response => plainToClass(TemplateModel, response, { excludeExtraneousValues: true })));
     }
 
     getTemplates(): Observable<TemplateModel[]> {
-        return this.http.get<TemplateModel[]>('/api/templates')
+        return this.http.get<Object[]>('/api/templates')
             .pipe(map(response => plainToClass(TemplateModel, response, { excludeExtraneousValues: true })));
     }
 
@@ -28,26 +29,13 @@ export class TemplateService {
       return this.http.delete(`/api/templates/${templateId}`);
     }
 
-    createTemplateItem(templateId: string, newItem: TemplateItemModel): Observable<string> {
-        return this.http.post(`/api/templates/${templateId}/items`, newItem, {observe: 'response'})
-            .pipe(map(response => {
-                const location = response.headers.get('Location');
-                if (!location) {
-                    throw Error('Response for template item creation does not contain location header');
-                }
-
-                const re = new RegExp('/([^/]+)$');
-                const matches = location.match(re);
-                if (!matches) {
-                    throw Error(`Failed to parse new item id from location header '${location}'`);
-                }
-
-                return matches[1];
-            }));
+    createTemplateItem(templateId: string, newItem: TemplateItemModel): Observable<TemplateItemModel> {
+        return this.http.post(`/api/templates/${templateId}/items`, newItem)
+            .pipe(map(response => plainToClass(TemplateItemModel, response, { excludeExtraneousValues: true })));
     }
 
     getTemplateItems(templateId: string): Observable<TemplateItemModel[]> {
-        return this.http.get<TemplateItemModel[]>(`/api/templates/${templateId}/items`)
+        return this.http.get<Object[]>(`/api/templates/${templateId}/items`)
             .pipe(map(response => plainToClass(TemplateItemModel, response, { excludeExtraneousValues: true })));
     }
 

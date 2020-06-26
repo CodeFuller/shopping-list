@@ -9,7 +9,7 @@ namespace ShoppingList.Logic.Interfaces
 	{
 		Task<ShoppingTemplateModel> CreateTemplate(ShoppingTemplateInfo templateInfo, CancellationToken cancellationToken);
 
-		Task<IReadOnlyCollection<ShoppingTemplateInfo>> GetAllTemplates(CancellationToken cancellationToken);
+		Task<IReadOnlyCollection<ShoppingTemplateInfo>> GetTemplatesInfo(CancellationToken cancellationToken);
 
 		Task DeleteTemplate(IdModel templateId, CancellationToken cancellationToken);
 	}

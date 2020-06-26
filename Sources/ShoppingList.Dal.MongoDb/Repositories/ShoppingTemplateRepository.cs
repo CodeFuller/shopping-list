@@ -33,7 +33,7 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 			return document.Id.ToIdModel();
 		}
 
-		public async Task<IReadOnlyCollection<ShoppingTemplateInfo>> GetAllTemplates(CancellationToken cancellationToken)
+		public async Task<IReadOnlyCollection<ShoppingTemplateInfo>> GetTemplatesInfo(CancellationToken cancellationToken)
 		{
 			using var cursor = await templatesCollection
 				.FindAsync(FilterDefinition<ShoppingTemplateDocument>.Empty, cancellationToken: cancellationToken);

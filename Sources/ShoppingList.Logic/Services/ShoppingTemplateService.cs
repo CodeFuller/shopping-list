@@ -38,9 +38,9 @@ namespace ShoppingList.Logic.Services
 			return shoppingTemplate;
 		}
 
-		public Task<IReadOnlyCollection<ShoppingTemplateInfo>> GetAllTemplates(CancellationToken cancellationToken)
+		public Task<IReadOnlyCollection<ShoppingTemplateInfo>> GetTemplatesInfo(CancellationToken cancellationToken)
 		{
-			return repository.GetAllTemplates(cancellationToken);
+			return repository.GetTemplatesInfo(cancellationToken);
 		}
 
 		public Task DeleteTemplate(IdModel templateId, CancellationToken cancellationToken)

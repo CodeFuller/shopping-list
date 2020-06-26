@@ -29,7 +29,7 @@ namespace ShoppingList.Web.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<OutputShoppingTemplateInfoData>>> GetTemplates(CancellationToken cancellationToken)
 		{
-			var templates = await templateService.GetAllTemplates(cancellationToken);
+			var templates = await templateService.GetTemplatesInfo(cancellationToken);
 
 			return Ok(templates.Select(x => new OutputShoppingTemplateInfoData(x)));
 		}

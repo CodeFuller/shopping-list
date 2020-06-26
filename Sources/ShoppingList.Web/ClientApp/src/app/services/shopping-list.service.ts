@@ -16,7 +16,7 @@ export class ShoppingListService {
     }
 
     getShoppingLists(): Observable<ShoppingListModel[]> {
-        return this.http.get<ShoppingListModel[]>('/api/shopping-lists')
+        return this.http.get<Object[]>('/api/shopping-lists')
             .pipe(map(response => plainToClass(ShoppingListModel, response, { excludeExtraneousValues: true })));
     }
 
@@ -29,6 +29,7 @@ export class ShoppingListService {
     createShoppingList(template: TemplateModel): Observable<ShoppingListModel> {
         const request = new CreateShoppingListRequest(template.id);
 
-        return this.http.post<ShoppingListModel>(`/api/shopping-lists`, request);
+        return this.http.post(`/api/shopping-lists`, request)
+            .pipe(map(response => plainToClass(ShoppingListModel, response, { excludeExtraneousValues: true })));
     }
 }
