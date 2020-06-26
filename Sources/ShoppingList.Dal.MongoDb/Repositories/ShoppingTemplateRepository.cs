@@ -84,6 +84,14 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 				.ToList();
 		}
 
+		public async Task SetItems(IdModel templateId, IEnumerable<ShoppingItemModel> items, CancellationToken cancellationToken)
+		{
+			var newItems = items.Select(x => new ShoppingItemDocument(x)).ToList();
+			var update = Builders<ShoppingTemplateDocument>.Update.Set(doc => doc.Items, newItems);
+
+			await UpdateTemplate(templateId, update, cancellationToken);
+		}
+
 		public async Task UpdateItem(IdModel templateId, ShoppingItemModel item, CancellationToken cancellationToken)
 		{
 			var newItem = new ShoppingItemDocument(item);
@@ -91,16 +99,6 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 			var update = Builders<ShoppingTemplateDocument>.Update.Set(doc => doc.Items[-1], newItem);
 
 			await UpdateTemplate(templateId, templateItemFilter, update, cancellationToken);
-		}
-
-		public async Task ReorderItems(IdModel templateId, IEnumerable<IdModel> newItemsOrder, CancellationToken cancellationToken)
-		{
-			var shoppingTemplate = await FindTemplate(templateId, cancellationToken);
-			var reorderedItems = GetReorderedTemplateItems(shoppingTemplate, newItemsOrder.ToList());
-
-			var update = Builders<ShoppingTemplateDocument>.Update.Set(doc => doc.Items, reorderedItems.ToList());
-
-			await UpdateTemplate(templateId, update, cancellationToken);
 		}
 
 		public async Task DeleteItem(IdModel templateId, IdModel itemId, CancellationToken cancellationToken)
@@ -130,32 +128,6 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 			{
 				logger.LogError("Multiple ({MatchedCount}) templates are matched for {TemplateId}", updateResult.MatchedCount, templateId);
 			}
-		}
-
-		private static IEnumerable<ShoppingItemDocument> GetReorderedTemplateItems(ShoppingTemplateDocument shoppingTemplate, IReadOnlyCollection<IdModel> orderedItemIds)
-		{
-			var existingIds = shoppingTemplate.Items.Select(x => x.Id)
-				.Select(id => id.ToIdModel())
-				.ToList();
-
-			var missingIds = existingIds.Except(orderedItemIds).ToList();
-			var unknownIds = orderedItemIds.Except(existingIds).ToList();
-
-			if (missingIds.Any())
-			{
-				throw new DataConflictException($"Missing item id(s) in re-order list: {String.Join(", ", missingIds)}");
-			}
-
-			if (unknownIds.Any())
-			{
-				throw new DataConflictException($"Unknown item id(s) in re-order list: {String.Join(", ", unknownIds)}");
-			}
-
-			var itemsOrder = orderedItemIds
-				.Select((id, i) => new { Id = id.ToObjectId(), Index = i })
-				.ToDictionary(x => x.Id, x => x.Index);
-
-			return shoppingTemplate.Items.OrderBy(x => itemsOrder[x.Id]);
 		}
 
 		private static FilterDefinition<ShoppingTemplateDocument> GetTemplateFilter(IdModel templateId)

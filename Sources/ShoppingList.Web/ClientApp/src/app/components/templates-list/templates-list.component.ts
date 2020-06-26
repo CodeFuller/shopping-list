@@ -13,9 +13,9 @@ export class TemplatesListComponent implements OnInit {
     private readonly templateService: TemplateService;
     private readonly shoppingListService: ShoppingListService;
 
-    public templates: TemplateModel[] | undefined;
+    templates: TemplateModel[] = []
 
-    public newTemplateTitle: string | null = null;
+    newTemplateTitle: string | null = null;
 
     constructor(templateService: TemplateService, shoppingListService: ShoppingListService) {
         this.templateService = templateService;
@@ -35,12 +35,9 @@ export class TemplatesListComponent implements OnInit {
       newTemplate.title = this.newTemplateTitle;
 
       this.templateService.createTemplate(newTemplate)
-          .subscribe(() => {
+          .subscribe(createdTemplate => {
               this.newTemplateTitle = null;
-
-              // TODO: We can avoid reloading the full list and just add new template (returned from server) to the list.
-              // What is the best practice: to reload on not to reload :) ?
-              this.loadTemplates();
+              this.templates.push(createdTemplate);
           });
     }
 
@@ -53,7 +50,7 @@ export class TemplatesListComponent implements OnInit {
       this.templateService.deleteTemplate(template.id)
         .subscribe(() => {
           this.newTemplateTitle = null;
-          this.loadTemplates();
+          this.templates = this.templates.filter(x => x.id !== template.id);
         });
     }
 

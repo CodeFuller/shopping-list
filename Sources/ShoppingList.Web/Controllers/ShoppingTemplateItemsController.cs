@@ -66,14 +66,14 @@ namespace ShoppingList.Web.Controllers
 				var item = itemData.ToModel();
 				item.Id = itemId.ToId();
 				await templateItemService.UpdateTemplateItem(templateId.ToId(), item, cancellationToken);
+
+				return Ok(item);
 			}
 			catch (NotFoundException e)
 			{
 				logger.LogWarning(e, "Failed to find item {TemplateItemId} in template {TemplateId}", itemId, templateId);
 				return NotFound();
 			}
-
-			return NoContent();
 		}
 
 		[HttpPatch]
@@ -81,7 +81,9 @@ namespace ShoppingList.Web.Controllers
 		{
 			try
 			{
-				await templateItemService.ReorderItems(templateId.ToId(), newItemsOrder.Select(x => x.ToId()), cancellationToken);
+				var newItems = await templateItemService.ReorderItems(templateId.ToId(), newItemsOrder.Select(x => x.ToId()), cancellationToken);
+
+				return Ok(newItems.Select(x => new OutputShoppingItemData(x)));
 			}
 			catch (NotFoundException e)
 			{
@@ -93,8 +95,6 @@ namespace ShoppingList.Web.Controllers
 				logger.LogWarning(e, "Failed to reorder items for template {TemplateId}", templateId);
 				return Conflict();
 			}
-
-			return NoContent();
 		}
 
 		[HttpDelete("{itemId}")]
@@ -103,14 +103,13 @@ namespace ShoppingList.Web.Controllers
 			try
 			{
 				await templateItemService.DeleteItem(templateId.ToId(), itemId.ToId(), cancellationToken);
+				return NoContent();
 			}
 			catch (NotFoundException e)
 			{
 				logger.LogWarning(e, "Failed to reorder items for template {TemplateId}", templateId);
 				return NotFound();
 			}
-
-			return NoContent();
 		}
 	}
 }

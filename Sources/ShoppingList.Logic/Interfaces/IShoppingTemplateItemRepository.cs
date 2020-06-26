@@ -11,9 +11,9 @@ namespace ShoppingList.Logic.Interfaces
 
 		Task<IReadOnlyCollection<ShoppingItemModel>> GetItems(IdModel templateId, CancellationToken cancellationToken);
 
-		Task UpdateItem(IdModel templateId, ShoppingItemModel item, CancellationToken cancellationToken);
+		Task SetItems(IdModel templateId, IEnumerable<ShoppingItemModel> items, CancellationToken cancellationToken);
 
-		Task ReorderItems(IdModel templateId, IEnumerable<IdModel> newItemsOrder, CancellationToken cancellationToken);
+		Task UpdateItem(IdModel templateId, ShoppingItemModel item, CancellationToken cancellationToken);
 
 		Task DeleteItem(IdModel templateId, IdModel itemId, CancellationToken cancellationToken);
 	}

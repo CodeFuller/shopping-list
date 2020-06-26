@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ShoppingList.Logic.Exceptions;
 using ShoppingList.Logic.Interfaces;
 using ShoppingList.Logic.Models;
 
@@ -34,9 +36,33 @@ namespace ShoppingList.Logic.Services
 			return repository.UpdateItem(templateId, item, cancellationToken);
 		}
 
-		public Task ReorderItems(IdModel templateId, IEnumerable<IdModel> newItemsOrder, CancellationToken cancellationToken)
+		public async Task<IReadOnlyCollection<ShoppingItemModel>> ReorderItems(IdModel templateId, IEnumerable<IdModel> newItemsOrder, CancellationToken cancellationToken)
 		{
-			return repository.ReorderItems(templateId, newItemsOrder, cancellationToken);
+			var currentItems = await repository.GetItems(templateId, cancellationToken);
+			var existingIds = currentItems.Select(x => x.Id).ToList();
+
+			var newOrdersList = newItemsOrder.ToList();
+
+			var missingIds = existingIds.Except(newOrdersList).ToList();
+			var unknownIds = newOrdersList.Except(existingIds).ToList();
+
+			if (missingIds.Any())
+			{
+				throw new DataConflictException($"Missing item id(s) in re-order list: {String.Join(", ", missingIds)}");
+			}
+
+			if (unknownIds.Any())
+			{
+				throw new DataConflictException($"Unknown item id(s) in re-order list: {String.Join(", ", unknownIds)}");
+			}
+
+			var newItems = newOrdersList
+				.Select(id => currentItems.Single(x => x.Id == id))
+				.ToList();
+
+			await repository.SetItems(templateId, newItems, cancellationToken);
+
+			return newItems;
 		}
 
 		public Task DeleteItem(IdModel templateId, IdModel itemId, CancellationToken cancellationToken)

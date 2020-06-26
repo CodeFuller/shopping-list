@@ -16,13 +16,13 @@ interface IKeyboardHandlers {
 })
 export class EditTemplateComponent implements OnInit {
 
-    public templateId: string | undefined;
-    public items: TemplateItemModel[] = [];
+    templateId: string | undefined;
+    items: TemplateItemModel[] = [];
 
-    public itemUnderEdit: TemplateItemModel | undefined;
+    itemUnderEdit: TemplateItemModel | undefined;
 
-    public addItemFormGroup: FormGroup;
-    public editItemFormGroup: FormGroup | undefined;
+    addItemFormGroup: FormGroup;
+    editItemFormGroup: FormGroup | undefined;
 
     // https://stackoverflow.com/a/44803306/5740031
     @ViewChild('editedItemTitle') editedItemTitleRef: ElementRef | undefined;
@@ -33,14 +33,14 @@ export class EditTemplateComponent implements OnInit {
         this.addItemFormGroup = this.createItemEditForm();
     }
 
-    public ngOnInit() {
+    ngOnInit() {
         this.route.paramMap.subscribe((params: ParamMap) => {
             this.templateId = params.get('id') || undefined;
             this.loadTemplateItems();
         });
     }
 
-    public onAddItem() {
+    onAddItem() {
         if (!this.templateId) {
             console.error('Template id is undefined');
             return;
@@ -49,9 +49,9 @@ export class EditTemplateComponent implements OnInit {
         const newItem = new TemplateItemModel();
         this.fillItemData(newItem, this.addItemFormGroup);
 
-        this.templateService.createTemplateItem(this.templateId, newItem).subscribe(() => {
+        this.templateService.createTemplateItem(this.templateId, newItem).subscribe(createdItem => {
             this.addItemFormGroup.reset();
-            this.loadTemplateItems();
+            this.items.push(createdItem);
         });
     }
 
@@ -67,7 +67,7 @@ export class EditTemplateComponent implements OnInit {
         item.comment = this.getFormValue(form, 'comment');
     }
 
-    public onEditItem(item: TemplateItemModel, clickedElement: string) {
+    onEditItem(item: TemplateItemModel, clickedElement: string) {
         this.itemUnderEdit = item;
         this.editItemFormGroup = this.createItemEditForm(item);
 
@@ -98,38 +98,45 @@ export class EditTemplateComponent implements OnInit {
         }
     }
 
-    public onDeleteItem(item: TemplateItemModel) {
+    onDeleteItem(item: TemplateItemModel) {
         if (!this.templateId || !item.id) {
             console.error('Can not delete item without id');
             return;
         }
 
         this.templateService.deleteTemplateItem(this.templateId, item.id).subscribe(() => {
-            this.loadTemplateItems();
+            this.items = this.items.filter(x => x.id !== item.id);
         });
     }
 
-    public onSaveItemChanges() {
+    onSaveItemChanges() {
         if (!this.templateId || !this.itemUnderEdit || !this.editItemFormGroup) {
             console.error('Can not save changes because no item is under edit');
             return;
         }
 
+        const itemId = this.itemUnderEdit.id;
         this.fillItemData(this.itemUnderEdit, this.editItemFormGroup);
 
-        this.templateService.updateTemplateItem(this.templateId, this.itemUnderEdit).subscribe(() => {
+        this.templateService.updateTemplateItem(this.templateId, this.itemUnderEdit).subscribe(updatedItem => {
+            for (const [index, item] of this.items.entries()) {
+                if (item.id === itemId) {
+                    this.items[index] = updatedItem;
+                    break;
+                }
+            }
+
             this.itemUnderEdit = undefined;
-            this.loadTemplateItems();
         });
     }
 
     private updateItemsOrder() {
-        const itemsOrder: string[] = this.items.map(item => item.id!);
+        const itemsOrder = this.items.map(item => item.id!);
         this.templateService.reorderTemplateItems(this.templateId!, itemsOrder)
-            .subscribe(() => this.loadTemplateItems());
+            .subscribe(newItems => this.items = newItems);
     }
 
-    public onCancelItemEdit() {
+    onCancelItemEdit() {
         if (!this.itemUnderEdit) {
             console.error('Can not cancel changes because no item is under edit');
             return;
@@ -138,11 +145,11 @@ export class EditTemplateComponent implements OnInit {
         this.itemUnderEdit = undefined;
     }
 
-    public onCancelItemAdd() {
+    onCancelItemAdd() {
         this.addItemFormGroup.reset();
     }
 
-    public onEditKeyDown(event: KeyboardEvent) {
+    onEditKeyDown(event: KeyboardEvent) {
         const handlers: IKeyboardHandlers = {
             Enter: () => this.onSaveItemChanges(),
             Escape: () => this.onCancelItemEdit()
@@ -150,7 +157,7 @@ export class EditTemplateComponent implements OnInit {
         this.executeKeyboardHandler(event, handlers);
     }
 
-    public onAddKeyDown(event: KeyboardEvent) {
+    onAddKeyDown(event: KeyboardEvent) {
         const handlers = {
             Enter: () => this.onAddItem(),
             Escape: () => this.onCancelItemAdd()
@@ -189,11 +196,11 @@ export class EditTemplateComponent implements OnInit {
         return control ? control.value : null;
     }
 
-    public isItemUnderEdit(item: TemplateItemModel): boolean {
+    isItemUnderEdit(item: TemplateItemModel): boolean {
         return this.itemUnderEdit !== undefined && item.id === this.itemUnderEdit.id;
     }
 
-    public drop(event: CdkDragDrop<TemplateItemModel[]>) {
+    drop(event: CdkDragDrop<TemplateItemModel[]>) {
         moveItemInArray(this.items, event.previousIndex, event.currentIndex);
         this.updateItemsOrder();
     }

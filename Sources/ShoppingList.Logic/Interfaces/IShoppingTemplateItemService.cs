@@ -13,7 +13,7 @@ namespace ShoppingList.Logic.Interfaces
 
 		Task UpdateTemplateItem(IdModel templateId, ShoppingItemModel item, CancellationToken cancellationToken);
 
-		Task ReorderItems(IdModel templateId, IEnumerable<IdModel> newItemsOrder, CancellationToken cancellationToken);
+		Task<IReadOnlyCollection<ShoppingItemModel>> ReorderItems(IdModel templateId, IEnumerable<IdModel> newItemsOrder, CancellationToken cancellationToken);
 
 		Task DeleteItem(IdModel templateId, IdModel itemId, CancellationToken cancellationToken);
 	}

@@ -39,12 +39,14 @@ export class TemplateService {
             .pipe(map(response => plainToClass(TemplateItemModel, response, { excludeExtraneousValues: true })));
     }
 
-    updateTemplateItem(templateId: string, item: TemplateItemModel): Observable<object> {
-        return this.http.put(`/api/templates/${templateId}/items/${item.id}`, item);
+    updateTemplateItem(templateId: string, item: TemplateItemModel): Observable<TemplateItemModel> {
+        return this.http.put(`/api/templates/${templateId}/items/${item.id}`, item)
+            .pipe(map(response => plainToClass(TemplateItemModel, response, { excludeExtraneousValues: true })));
     }
 
-    reorderTemplateItems(templateId: string, newItemsOrder: string[]): Observable<object> {
-        return this.http.patch(`/api/templates/${templateId}/items`, newItemsOrder);
+    reorderTemplateItems(templateId: string, newItemsOrder: string[]): Observable<TemplateItemModel[]> {
+        return this.http.patch<Object[]>(`/api/templates/${templateId}/items`, newItemsOrder)
+            .pipe(map(response => plainToClass(TemplateItemModel, response, { excludeExtraneousValues: true })));
     }
 
     deleteTemplateItem(templateId: string, itemId: string): Observable<object> {
