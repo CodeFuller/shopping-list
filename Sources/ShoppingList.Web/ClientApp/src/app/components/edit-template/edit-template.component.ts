@@ -119,11 +119,9 @@ export class EditTemplateComponent implements OnInit {
         this.fillItemData(this.itemUnderEdit, this.editItemFormGroup);
 
         this.templateService.updateTemplateItem(this.templateId, this.itemUnderEdit).subscribe(updatedItem => {
-            for (const [index, item] of this.items.entries()) {
-                if (item.id === itemId) {
-                    this.items[index] = updatedItem;
-                    break;
-                }
+            const index = this.items.findIndex(x => x.id === itemId);
+            if (index >= 0) {
+                this.items[index] = updatedItem;
             }
 
             this.itemUnderEdit = undefined;
