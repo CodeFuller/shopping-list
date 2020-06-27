@@ -20,12 +20,6 @@ export class ShoppingListService {
             .pipe(map(response => plainToClass(ShoppingListModel, response, { excludeExtraneousValues: true })));
     }
 
-    getShoppingList(): Observable<ShoppingListModel> {
-        // TBD: Remove hardcoded list id
-        return this.http.get<ShoppingListModel>('/api/shopping-lists/12345')
-            .pipe(map(response => plainToClass(ShoppingListModel, response, { excludeExtraneousValues: true })));
-    }
-
     createShoppingList(template: ShoppingTemplateModel): Observable<ShoppingListModel> {
         const request = new CreateShoppingListRequest(template.id);
 

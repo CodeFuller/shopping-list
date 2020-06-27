@@ -59,7 +59,7 @@ namespace ShoppingList.Web.Controllers
 		}
 
 		[HttpPut("{itemId}")]
-		public async Task<ActionResult> UpdateTemplateItem([FromRoute] string templateId, [FromRoute] string itemId, [FromBody] InputShoppingItemData itemData, CancellationToken cancellationToken)
+		public async Task<ActionResult<OutputShoppingItemData>> UpdateTemplateItem([FromRoute] string templateId, [FromRoute] string itemId, [FromBody] InputShoppingItemData itemData, CancellationToken cancellationToken)
 		{
 			try
 			{
@@ -67,7 +67,7 @@ namespace ShoppingList.Web.Controllers
 				item.Id = itemId.ToId();
 				await templateItemService.UpdateTemplateItem(templateId.ToId(), item, cancellationToken);
 
-				return Ok(item);
+				return Ok(new OutputShoppingItemData(item));
 			}
 			catch (NotFoundException e)
 			{
@@ -77,7 +77,7 @@ namespace ShoppingList.Web.Controllers
 		}
 
 		[HttpPatch]
-		public async Task<ActionResult> ReorderTemplateItems([FromRoute] string templateId, [FromBody] IReadOnlyCollection<string> newItemsOrder, CancellationToken cancellationToken)
+		public async Task<ActionResult<IEnumerable<OutputShoppingItemData>>> ReorderTemplateItems([FromRoute] string templateId, [FromBody] IReadOnlyCollection<string> newItemsOrder, CancellationToken cancellationToken)
 		{
 			try
 			{

@@ -8,9 +8,8 @@ import { AppComponent } from './app.component';
 import { TemplatesListComponent } from './components/templates-list/templates-list.component';
 import { EditTemplateComponent } from './components/edit-template/edit-template.component';
 import { ShoppingListsComponent } from './components/shopping-lists/shopping-lists.component';
-import { ShoppingListComponent } from './components/shopping-list/shopping-list.component';
-import { ItemListComponent } from './components/item-list/item-list.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { EditItemsListComponent } from './components/edit-items-list/edit-items-list.component';
 
 @NgModule({
       declarations: [
@@ -18,8 +17,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
             TemplatesListComponent,
             EditTemplateComponent,
             ShoppingListsComponent,
-            ShoppingListComponent,
-            ItemListComponent
+            EditItemsListComponent
       ],
       imports: [
             BrowserModule,
