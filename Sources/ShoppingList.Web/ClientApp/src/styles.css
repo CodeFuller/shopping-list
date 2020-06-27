@@ -1,1 +1,17 @@
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+/* Styles for sticky footer (https://css-tricks.com/couple-takes-sticky-footer/) */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.wrapper {
+    min-height: 100%;
+    margin-bottom: -60px;
+}
+
+.footer, .push-footer {
+    height: 60px;
+    line-height: 60px;
+}

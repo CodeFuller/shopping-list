@@ -1,11 +1,22 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
-    <div class="container">
-        <a class="navbar-brand" [routerLink]="['/templates']">Shopping List</a>
-        <ul class="nav navbar-nav">
-            <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"><a class="nav-link" [routerLink]="['/templates']">Templates</a></li>
-            <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"><a class="nav-link" [routerLink]="['/shopping-lists']">Lists</a></li>
-        </ul>
-    </div>
-</nav>
+<div class="wrapper">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
+            <div class="container">
+                <a class="navbar-brand" [routerLink]="['/templates']">Shopping List</a>
+                <ul class="nav navbar-nav">
+                    <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"><a class="nav-link" [routerLink]="['/templates']">Templates</a></li>
+                    <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"><a class="nav-link" [routerLink]="['/shopping-lists']">Lists</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
 
-<router-outlet></router-outlet>
+    <router-outlet class="mb-3"></router-outlet>
+    <div class="push-footer"></div>
+</div>
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; 2020 - Movie Library - by&nbsp;<a href="http://codefuller.com/">CodeFuller</a>
+    </div>
+</footer>
