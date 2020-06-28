@@ -32,6 +32,7 @@ namespace ShoppingList.Logic.Services
 				Title = $"{shoppingTemplate.Title} - {clock.UtcNow:yyyy.MM.dd}",
 				Items = shoppingTemplate.Items.Select(x => new ShoppingItemModel
 				{
+					Id = x.Id,
 					Title = x.Title,
 					Quantity = x.Quantity,
 					Comment = x.Comment,

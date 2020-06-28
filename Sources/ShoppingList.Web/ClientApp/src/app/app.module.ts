@@ -10,6 +10,7 @@ import { EditTemplateComponent } from './components/edit-template/edit-template.
 import { ShoppingListsComponent } from './components/shopping-lists/shopping-lists.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { EditItemsListComponent } from './components/edit-items-list/edit-items-list.component';
+import { EditShoppingListComponent } from './components/edit-shopping-list/edit-shopping-list.component';
 
 @NgModule({
       declarations: [
@@ -17,7 +18,8 @@ import { EditItemsListComponent } from './components/edit-items-list/edit-items-
             TemplatesListComponent,
             EditTemplateComponent,
             ShoppingListsComponent,
-            EditItemsListComponent
+            EditItemsListComponent,
+            EditShoppingListComponent
       ],
       imports: [
             BrowserModule,

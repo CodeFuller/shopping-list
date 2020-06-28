@@ -12,8 +12,8 @@ using ShoppingList.Web.Contracts.ShoppingItemContracts;
 
 namespace ShoppingList.Web.Controllers
 {
-	[Route("api/templates/{templateId}/items")]
 	[ApiController]
+	[Route("api/templates/{templateId}/items")]
 	public class ShoppingTemplateItemsController : ControllerBase
 	{
 		private readonly IShoppingTemplateItemService templateItemService;
@@ -37,7 +37,7 @@ namespace ShoppingList.Web.Controllers
 			}
 			catch (NotFoundException e)
 			{
-				logger.LogWarning(e, "Failed to find template {TemplateId}", templateId);
+				logger.LogError(e, "Failed to find template {TemplateId}", templateId);
 				return NotFound();
 			}
 		}
@@ -53,7 +53,7 @@ namespace ShoppingList.Web.Controllers
 			}
 			catch (NotFoundException e)
 			{
-				logger.LogWarning(e, "Failed to find template {TemplateId}", templateId);
+				logger.LogError(e, "Failed to find template {TemplateId}", templateId);
 				return NotFound();
 			}
 		}
@@ -71,7 +71,7 @@ namespace ShoppingList.Web.Controllers
 			}
 			catch (NotFoundException e)
 			{
-				logger.LogWarning(e, "Failed to find item {TemplateItemId} in template {TemplateId}", itemId, templateId);
+				logger.LogError(e, "Failed to find item {TemplateItemId} in template {TemplateId}", itemId, templateId);
 				return NotFound();
 			}
 		}
@@ -81,18 +81,18 @@ namespace ShoppingList.Web.Controllers
 		{
 			try
 			{
-				var newItems = await templateItemService.ReorderItems(templateId.ToId(), newItemsOrder.Select(x => x.ToId()), cancellationToken);
+				var newItems = await templateItemService.ReorderTemplateItems(templateId.ToId(), newItemsOrder.Select(x => x.ToId()), cancellationToken);
 
 				return Ok(newItems.Select(x => new OutputShoppingItemData(x)));
 			}
 			catch (NotFoundException e)
 			{
-				logger.LogWarning(e, "Failed to reorder items for template {TemplateId}", templateId);
+				logger.LogError(e, "Failed to reorder items for template {TemplateId}", templateId);
 				return NotFound();
 			}
 			catch (DataConflictException e)
 			{
-				logger.LogWarning(e, "Failed to reorder items for template {TemplateId}", templateId);
+				logger.LogError(e, "Failed to reorder items for template {TemplateId}", templateId);
 				return Conflict();
 			}
 		}
@@ -102,12 +102,12 @@ namespace ShoppingList.Web.Controllers
 		{
 			try
 			{
-				await templateItemService.DeleteItem(templateId.ToId(), itemId.ToId(), cancellationToken);
+				await templateItemService.DeleteTemplateItem(templateId.ToId(), itemId.ToId(), cancellationToken);
 				return NoContent();
 			}
 			catch (NotFoundException e)
 			{
-				logger.LogWarning(e, "Failed to reorder items for template {TemplateId}", templateId);
+				logger.LogError(e, "Failed to reorder items for template {TemplateId}", templateId);
 				return NotFound();
 			}
 		}

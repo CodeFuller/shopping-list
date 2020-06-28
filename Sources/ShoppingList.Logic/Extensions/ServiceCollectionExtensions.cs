@@ -12,8 +12,10 @@ namespace ShoppingList.Logic.Extensions
 			services.AddSingleton<IShoppingTemplateService, ShoppingTemplateService>();
 			services.AddSingleton<IShoppingTemplateItemService, ShoppingTemplateItemService>();
 			services.AddSingleton<IShoppingListService, ShoppingListService>();
+			services.AddSingleton<IShoppingListItemService, ShoppingListItemService>();
 
 			services.AddSingleton<ISystemClock, SystemClock>();
+			services.AddSingleton<IItemsOrderingHelper, ItemsOrderingHelper>();
 
 			return services;
 		}

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using ShoppingList.Dal.MongoDb.Documents;
 using ShoppingList.Dal.MongoDb.Extensions;
+using ShoppingList.Dal.MongoDb.Interfaces;
 using ShoppingList.Logic.Exceptions;
 using ShoppingList.Logic.Interfaces;
 using ShoppingList.Logic.Models;
@@ -17,12 +17,13 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 	internal class ShoppingTemplateRepository : IShoppingTemplateRepository, IShoppingTemplateItemRepository
 	{
 		private readonly IMongoCollection<ShoppingTemplateDocument> templatesCollection;
-		private readonly ILogger<ShoppingTemplateRepository> logger;
 
-		public ShoppingTemplateRepository(IMongoCollection<ShoppingTemplateDocument> templatesCollection, ILogger<ShoppingTemplateRepository> logger)
+		private readonly IShoppingItemsRepository<ShoppingTemplateDocument, ShoppingItemDocument> itemsRepository;
+
+		public ShoppingTemplateRepository(IMongoCollection<ShoppingTemplateDocument> templatesCollection, IShoppingItemsRepository<ShoppingTemplateDocument, ShoppingItemDocument> itemsRepository)
 		{
 			this.templatesCollection = templatesCollection ?? throw new ArgumentNullException(nameof(templatesCollection));
-			this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+			this.itemsRepository = itemsRepository ?? throw new ArgumentNullException(nameof(itemsRepository));
 		}
 
 		public async Task<IdModel> CreateTemplate(ShoppingTemplateModel shoppingTemplate, CancellationToken cancellationToken)
@@ -47,13 +48,13 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 
 		public async Task<ShoppingTemplateModel> GetTemplate(IdModel templateId, CancellationToken cancellationToken)
 		{
-			var shoppingTemplate = await FindTemplate(templateId, cancellationToken);
+			var shoppingTemplate = await templatesCollection.FindDocument(templateId.ToObjectId(), cancellationToken);
 			return shoppingTemplate.ToShoppingTemplateModel();
 		}
 
 		public async Task DeleteTemplate(IdModel templateId, CancellationToken cancellationToken)
 		{
-			var filter = GetTemplateFilter(templateId);
+			var filter = templateId.ToObjectId().BuildDocumentFilter<ShoppingTemplateDocument>();
 			var deleteResult = await templatesCollection.DeleteOneAsync(filter, cancellationToken);
 
 			if (deleteResult.DeletedCount != 1)
@@ -69,99 +70,32 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 				Id = ObjectId.GenerateNewId(),
 			};
 
-			var update = Builders<ShoppingTemplateDocument>.Update.Push(e => e.Items, newItem);
-			await UpdateTemplate(templateId, update, cancellationToken);
+			await itemsRepository.CreateItem(templateId.ToObjectId(), newItem, cancellationToken);
 
 			return newItem.Id.ToIdModel();
 		}
 
 		public async Task<IReadOnlyCollection<ShoppingItemModel>> GetItems(IdModel templateId, CancellationToken cancellationToken)
 		{
-			var shoppingTemplate = await FindTemplate(templateId, cancellationToken);
+			var items = await itemsRepository.GetItems(templateId.ToObjectId(), cancellationToken);
 
-			return shoppingTemplate.Items
-				.Select(x => x.ToModel())
-				.ToList();
+			return items.Select(x => x.ToModel()).ToList();
 		}
 
-		public async Task SetItems(IdModel templateId, IEnumerable<ShoppingItemModel> items, CancellationToken cancellationToken)
+		public Task SetItems(IdModel templateId, IEnumerable<ShoppingItemModel> items, CancellationToken cancellationToken)
 		{
-			var newItems = items.Select(x => new ShoppingItemDocument(x)).ToList();
-			var update = Builders<ShoppingTemplateDocument>.Update.Set(doc => doc.Items, newItems);
-
-			await UpdateTemplate(templateId, update, cancellationToken);
+			var documentItems = items.Select(x => new ShoppingItemDocument(x));
+			return itemsRepository.SetItems(templateId.ToObjectId(), documentItems, cancellationToken);
 		}
 
-		public async Task UpdateItem(IdModel templateId, ShoppingItemModel item, CancellationToken cancellationToken)
+		public Task UpdateItem(IdModel templateId, ShoppingItemModel item, CancellationToken cancellationToken)
 		{
-			var newItem = new ShoppingItemDocument(item);
-			var templateItemFilter = GetTemplateItemFilter(templateId, item.Id);
-			var update = Builders<ShoppingTemplateDocument>.Update.Set(doc => doc.Items[-1], newItem);
-
-			await UpdateTemplate(templateId, templateItemFilter, update, cancellationToken);
+			return itemsRepository.UpdateItem(templateId.ToObjectId(), new ShoppingItemDocument(item), cancellationToken);
 		}
 
-		public async Task DeleteItem(IdModel templateId, IdModel itemId, CancellationToken cancellationToken)
+		public Task DeleteItem(IdModel templateId, IdModel itemId, CancellationToken cancellationToken)
 		{
-			var itemFilter = Builders<ShoppingItemDocument>.Filter.Eq(x => x.Id, itemId.ToObjectId());
-			var update = Builders<ShoppingTemplateDocument>.Update.PullFilter(x => x.Items, itemFilter);
-
-			await UpdateTemplate(templateId, update, cancellationToken);
-		}
-
-		private Task UpdateTemplate(IdModel templateId, UpdateDefinition<ShoppingTemplateDocument> update, CancellationToken cancellationToken)
-		{
-			var templateFilter = GetTemplateFilter(templateId);
-			return UpdateTemplate(templateId, templateFilter, update, cancellationToken);
-		}
-
-		private async Task UpdateTemplate(IdModel templateId, FilterDefinition<ShoppingTemplateDocument> filter, UpdateDefinition<ShoppingTemplateDocument> update, CancellationToken cancellationToken)
-		{
-			var updateResult = await templatesCollection.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
-
-			if (updateResult.MatchedCount < 1)
-			{
-				throw new NotFoundException($"The template with id of {templateId} was not found");
-			}
-
-			if (updateResult.MatchedCount > 1)
-			{
-				logger.LogError("Multiple ({MatchedCount}) templates are matched for {TemplateId}", updateResult.MatchedCount, templateId);
-			}
-		}
-
-		private static FilterDefinition<ShoppingTemplateDocument> GetTemplateFilter(IdModel templateId)
-		{
-			var templateObjectId = templateId.ToObjectId();
-			return Builders<ShoppingTemplateDocument>.Filter.Where(d => d.Id == templateObjectId);
-		}
-
-		private static FilterDefinition<ShoppingTemplateDocument> GetTemplateItemFilter(IdModel templateId, IdModel itemId)
-		{
-			var templateFilter = GetTemplateFilter(templateId);
-
-			var itemObjectId = itemId.ToObjectId();
-			var itemFilter = Builders<ShoppingTemplateDocument>.Filter.ElemMatch(x => x.Items, x => x.Id == itemObjectId);
-			return Builders<ShoppingTemplateDocument>.Filter.And(templateFilter, itemFilter);
-		}
-
-		private async Task<ShoppingTemplateDocument> FindTemplate(IdModel templateId, CancellationToken cancellationToken)
-		{
-			var filter = GetTemplateFilter(templateId);
-
-			var options = new FindOptions<ShoppingTemplateDocument>
-			{
-				Limit = 1,
-			};
-
-			using var cursor = await templatesCollection.FindAsync(filter, options, cancellationToken);
-			var shoppingTemplate = await cursor.FirstOrDefaultAsync(cancellationToken);
-			if (shoppingTemplate == null)
-			{
-				throw new NotFoundException($"The template with id of {templateId} was not found");
-			}
-
-			return shoppingTemplate;
+			return itemsRepository.DeleteItem(templateId.ToObjectId(), itemId.ToObjectId(), cancellationToken);
 		}
 	}
 }

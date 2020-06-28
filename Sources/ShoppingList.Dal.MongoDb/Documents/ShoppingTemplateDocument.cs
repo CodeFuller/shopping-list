@@ -3,11 +3,12 @@ using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using ShoppingList.Dal.MongoDb.Extensions;
+using ShoppingList.Dal.MongoDb.Interfaces;
 using ShoppingList.Logic.Models;
 
 namespace ShoppingList.Dal.MongoDb.Documents
 {
-	internal class ShoppingTemplateDocument
+	internal class ShoppingTemplateDocument : IDocumentWithId, IDocumentWithShoppingItems<ShoppingItemDocument>
 	{
 		public ObjectId Id { get; set; }
 

@@ -12,8 +12,8 @@ using ShoppingList.Web.Contracts.ShoppingTemplateContracts;
 
 namespace ShoppingList.Web.Controllers
 {
-	[Route("api/templates")]
 	[ApiController]
+	[Route("api/templates")]
 	public class ShoppingTemplatesController : ControllerBase
 	{
 		private readonly IShoppingTemplateService templateService;
@@ -53,7 +53,7 @@ namespace ShoppingList.Web.Controllers
 			}
 			catch (NotFoundException e)
 			{
-				logger.LogWarning(e, "Template with id {TemplateId} does not exist", templateId);
+				logger.LogError(e, "Template with id {TemplateId} does not exist", templateId);
 				return NotFound();
 			}
 		}

@@ -1,89 +1,89 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { TemplateService } from '../../services/template.service';
+import { ShoppingListService } from '../../services/shopping-list.service';
 import { ShoppingItemModel } from '../../models/shopping-item.model';
 import { EditItemsListComponent } from '../edit-items-list/edit-items-list.component';
 
 @Component({
-    selector: 'edit-template',
-    templateUrl: './edit-template.component.html',
-    styleUrls: ['./edit-template.component.css']
+    selector: 'edit-shopping-list',
+    templateUrl: './edit-shopping-list.component.html',
+    styleUrls: ['./edit-shopping-list.component.css']
 })
-export class EditTemplateComponent implements OnInit {
+export class EditShoppingListComponent implements OnInit {
 
-    private readonly templateService: TemplateService;
+    private readonly shoppingListService: ShoppingListService;
     private readonly route: ActivatedRoute;
 
-    private templateId: string | undefined;
+    private shoppingListId: string | undefined;
 
     @ViewChild(EditItemsListComponent)
     private editItemsList!: EditItemsListComponent;
 
-    constructor(templateService: TemplateService, route: ActivatedRoute) {
-        this.templateService = templateService;
+    constructor(shoppingListService: ShoppingListService, route: ActivatedRoute) {
+        this.shoppingListService = shoppingListService;
         this.route = route;
     }
 
     ngOnInit() {
         this.route.paramMap.subscribe((params: ParamMap) => {
-            this.templateId = params.get('id') || undefined;
+            this.shoppingListId = params.get('id') || undefined;
             this.loadTemplateItems();
         });
     }
 
     private loadTemplateItems() {
-        if (!this.templateId) {
-            console.error('Template id is unknown');
+        if (!this.shoppingListId) {
+            console.error('Shopping list id is unknown');
             return;
         }
 
-        this.templateService
-            .getTemplateItems(this.templateId)
+        this.shoppingListService
+            .getShoppingListItems(this.shoppingListId)
             .subscribe((data: ShoppingItemModel[]) => this.editItemsList.items = data);
     }
 
     onItemAdded([itemToCreate, callback]: [ShoppingItemModel, (createdItem: ShoppingItemModel) => void]) {
-        if (!this.templateId) {
-            console.error('Template id is undefined');
+        if (!this.shoppingListId) {
+            console.error('Shopping list id is undefined');
             return;
         }
 
-        this.templateService
-            .createTemplateItem(this.templateId, itemToCreate)
+        this.shoppingListService
+            .createShoppingListItem(this.shoppingListId, itemToCreate)
             .subscribe(createdItem => callback(createdItem));
     }
 
     onItemUpdated([itemToUpdate, callback]: [ShoppingItemModel, (updatedItem: ShoppingItemModel) => void]) {
-        if (!this.templateId) {
-            console.error('Template id is undefined');
+        if (!this.shoppingListId) {
+            console.error('Shopping list id is undefined');
             return;
         }
 
-        this.templateService
-            .updateTemplateItem(this.templateId, itemToUpdate)
+        this.shoppingListService
+            .updateShoppingListItem(this.shoppingListId, itemToUpdate)
             .subscribe(updatedItem => callback(updatedItem));
     }
 
     onItemsOrderChanged([orderToSet, callback]: [ShoppingItemModel[], (orderedItems: ShoppingItemModel[]) => void]) {
-        if (!this.templateId) {
-            console.error('Template id is undefined');
+        if (!this.shoppingListId) {
+            console.error('Shopping list id is undefined');
             return;
         }
 
         const itemsOrder = orderToSet.map(item => item.id!);
-        this.templateService
-            .reorderTemplateItems(this.templateId, itemsOrder)
+        this.shoppingListService
+            .reorderShoppingListItems(this.shoppingListId, itemsOrder)
             .subscribe(orderedItems => callback(orderedItems));
     }
 
     onItemDeleted([itemToDelete, callback]: [ShoppingItemModel, () => void]) {
-        if (!this.templateId) {
-            console.error('Template id is undefined');
+        if (!this.shoppingListId) {
+            console.error('Shopping list id is undefined');
             return;
         }
 
-        this.templateService
-            .deleteTemplateItem(this.templateId, itemToDelete.id!)
+        this.shoppingListService
+            .deleteShoppingListItem(this.shoppingListId, itemToDelete.id!)
             .subscribe(() => callback());
     }
 }

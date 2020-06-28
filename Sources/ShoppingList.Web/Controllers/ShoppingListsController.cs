@@ -10,8 +10,8 @@ using ShoppingList.Web.Contracts.ShoppingListContracts;
 
 namespace ShoppingList.Web.Controllers
 {
-	[Route("api/shopping-lists")]
 	[ApiController]
+	[Route("api/shopping-lists")]
 	public class ShoppingListsController : ControllerBase
 	{
 		private readonly IShoppingListService shoppingListService;

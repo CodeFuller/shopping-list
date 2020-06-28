@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using ShoppingList.Dal.MongoDb.Documents;
+using ShoppingList.Dal.MongoDb.Interfaces;
 using ShoppingList.Dal.MongoDb.Repositories;
 using ShoppingList.Logic.Interfaces;
 
@@ -29,7 +30,13 @@ namespace ShoppingList.Dal.MongoDb.Extensions
 			services.AddSingleton<ShoppingTemplateRepository>();
 			services.AddSingleton<IShoppingTemplateRepository>(sp => sp.GetRequiredService<ShoppingTemplateRepository>());
 			services.AddSingleton<IShoppingTemplateItemRepository>(sp => sp.GetRequiredService<ShoppingTemplateRepository>());
-			services.AddSingleton<IShoppingListRepository, ShoppingListRepository>();
+
+			services.AddSingleton<ShoppingListRepository>();
+			services.AddSingleton<IShoppingListRepository>(sp => sp.GetRequiredService<ShoppingListRepository>());
+			services.AddSingleton<IShoppingListItemRepository>(sp => sp.GetRequiredService<ShoppingListRepository>());
+
+			services.AddSingleton<IShoppingItemsRepository<ShoppingTemplateDocument, ShoppingItemDocument>, ShoppingItemsRepository<ShoppingTemplateDocument, ShoppingItemDocument>>();
+			services.AddSingleton<IShoppingItemsRepository<ShoppingListDocument, ShoppingItemDocument>, ShoppingItemsRepository<ShoppingListDocument, ShoppingItemDocument>>();
 
 			return services;
 		}

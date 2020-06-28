@@ -1,11 +1,12 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using ShoppingList.Dal.MongoDb.Extensions;
+using ShoppingList.Dal.MongoDb.Interfaces;
 using ShoppingList.Logic.Models;
 
 namespace ShoppingList.Dal.MongoDb.Documents
 {
-	internal class ShoppingItemDocument
+	internal class ShoppingItemDocument : IDocumentWithId
 	{
 		[BsonElement("id")]
 		public ObjectId Id { get; set; }
