@@ -47,7 +47,7 @@ export class EditShoppingListComponent implements OnInit {
                 error => this.dialogService.showError(error).subscribe());
     }
 
-    onItemAdded([itemToCreate, callback]: [ShoppingItemModel, (createdItem: ShoppingItemModel) => void]) {
+    onItemAdded([itemToCreate, callback, errorCallback]: [ShoppingItemModel, (createdItem: ShoppingItemModel) => void, () => void]) {
         if (!this.shoppingListId) {
             console.error('Shopping list id is undefined');
             return;
@@ -57,10 +57,13 @@ export class EditShoppingListComponent implements OnInit {
             .createShoppingListItem(this.shoppingListId, itemToCreate)
             .subscribe(
                 createdItem => callback(createdItem),
-                error => this.dialogService.showError(error).subscribe());
+                error => {
+                    this.dialogService.showError(error).subscribe();
+                    errorCallback();
+                });
     }
 
-    onItemUpdated([itemToUpdate, callback]: [ShoppingItemModel, (updatedItem: ShoppingItemModel) => void]) {
+    onItemUpdated([itemToUpdate, callback, errorCallback]: [ShoppingItemModel, (updatedItem: ShoppingItemModel) => void, () => void]) {
         if (!this.shoppingListId) {
             console.error('Shopping list id is undefined');
             return;
@@ -70,10 +73,13 @@ export class EditShoppingListComponent implements OnInit {
             .updateShoppingListItem(this.shoppingListId, itemToUpdate)
             .subscribe(
                 updatedItem => callback(updatedItem),
-                error => this.dialogService.showError(error).subscribe());
+                error => {
+                    this.dialogService.showError(error).subscribe();
+                    errorCallback();
+                });
     }
 
-    onItemsOrderChanged([orderToSet, callback]: [ShoppingItemModel[], (orderedItems: ShoppingItemModel[]) => void]) {
+    onItemsOrderChanged([orderToSet, callback, errorCallback]: [ShoppingItemModel[], (orderedItems: ShoppingItemModel[]) => void, () => void]) {
         if (!this.shoppingListId) {
             console.error('Shopping list id is undefined');
             return;
@@ -84,10 +90,13 @@ export class EditShoppingListComponent implements OnInit {
             .reorderShoppingListItems(this.shoppingListId, itemsOrder)
             .subscribe(
                 orderedItems => callback(orderedItems),
-                error => this.dialogService.showError(error).subscribe());
+                error => {
+                    this.dialogService.showError(error).subscribe();
+                    errorCallback();
+                });
     }
 
-    onItemDeleted([itemToDelete, callback]: [ShoppingItemModel, () => void]) {
+    onItemDeleted([itemToDelete, callback, errorCallback]: [ShoppingItemModel, () => void, () => void]) {
         if (!this.shoppingListId) {
             console.error('Shopping list id is undefined');
             return;
@@ -97,6 +106,9 @@ export class EditShoppingListComponent implements OnInit {
             .deleteShoppingListItem(this.shoppingListId, itemToDelete.id!)
             .subscribe(
                 () => callback(),
-                error => this.dialogService.showError(error).subscribe());
+                error => {
+                    this.dialogService.showError(error).subscribe();
+                    errorCallback();
+                });
     }
 }

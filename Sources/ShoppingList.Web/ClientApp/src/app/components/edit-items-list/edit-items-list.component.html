@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <table class="table table-bordered table-sm" cdkDropList (cdkDropListDropped)="drop($event)">
+    <table *ngIf="!loadingItems" class="table table-bordered table-sm" cdkDropList (cdkDropListDropped)="drop($event)">
         <thead>
             <tr class="d-flex">
                 <th class="col-5" scope="col">Title</th>
@@ -9,7 +9,16 @@
         </thead>
         <tbody>
             <ng-container *ngFor="let item of items">
-                <tr *ngIf="!isItemUnderEdit(item)" class="d-flex list-item" cdkDrag>
+                <tr *ngIf="item.id === updatingItemId">
+                    <td>
+                        <div class="text-center">
+                            <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                <span class="sr-only">Updating ...</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr *ngIf="item.id !== updatingItemId && !isItemUnderEdit(item)" class="d-flex list-item" cdkDrag>
                     <td class="col-5 pl-0" (click)="onEditItem(item, 'title')">
                         <div>
                             <button class="item-drag mdc-icon-button material-icons align-middle">drag_indicator</button>
@@ -24,7 +33,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr *ngIf="isItemUnderEdit(item)" class="d-flex list-item" cdkDrag [formGroup]="editItemFormGroup">
+                <tr *ngIf="item.id !== updatingItemId && isItemUnderEdit(item)" class="d-flex list-item" cdkDrag [formGroup]="editItemFormGroup">
                     <td class="col-5 edited-property title">
                         <input class="existing-item-edit form-control" type="text" required #editedItemTitle (keydown)="onEditKeyDown($event)" formControlName="title">
                     </td>
@@ -40,7 +49,7 @@
                     </td>
                 </tr>
             </ng-container>
-            <tr class="d-flex" [formGroup]="addItemFormGroup">
+            <tr *ngIf="!addingNewItem" class="d-flex" [formGroup]="addItemFormGroup">
                 <td class="col-5 new-item-property title">
                     <input class="new-item-edit form-control" type="text" required (keydown)="onAddKeyDown($event)" formControlName="title">
                 </td>
@@ -55,6 +64,20 @@
                     </div>
                 </td>
             </tr>
+            <tr *ngIf="addingNewItem">
+                <td>
+                    <div class="text-center">
+                        <div class="spinner-border spinner-border-sm text-primary" role="status">
+                            <span class="sr-only">Adding ...</span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
         </tbody>
     </table>
+    <div *ngIf="loadingItems" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading ...</span>
+        </div>
+    </div>
 </div>

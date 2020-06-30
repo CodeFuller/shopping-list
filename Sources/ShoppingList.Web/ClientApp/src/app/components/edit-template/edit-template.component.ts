@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 import { TemplateService } from '../../services/template.service';
 import { ShoppingItemModel } from '../../models/shopping-item.model';
 import { EditItemsListComponent } from '../edit-items-list/edit-items-list.component';
@@ -42,12 +43,13 @@ export class EditTemplateComponent implements OnInit {
 
         this.templateService
             .getTemplateItems(this.templateId)
+            .pipe(finalize(() => this.editItemsList.finishLoadingItems()))
             .subscribe(
                 data => this.editItemsList.items = data,
                 error => this.dialogService.showError(error).subscribe());
     }
 
-    onItemAdded([itemToCreate, callback]: [ShoppingItemModel, (createdItem: ShoppingItemModel) => void]) {
+    onItemAdded([itemToCreate, callback, errorCallback]: [ShoppingItemModel, (createdItem: ShoppingItemModel) => void, () => void]) {
         if (!this.templateId) {
             console.error('Template id is undefined');
             return;
@@ -57,10 +59,13 @@ export class EditTemplateComponent implements OnInit {
             .createTemplateItem(this.templateId, itemToCreate)
             .subscribe(
                 createdItem => callback(createdItem),
-                error => this.dialogService.showError(error).subscribe());
+                error => {
+                    this.dialogService.showError(error).subscribe();
+                    errorCallback();
+                });
     }
 
-    onItemUpdated([itemToUpdate, callback]: [ShoppingItemModel, (updatedItem: ShoppingItemModel) => void]) {
+    onItemUpdated([itemToUpdate, callback, errorCallback]: [ShoppingItemModel, (updatedItem: ShoppingItemModel) => void, () => void]) {
         if (!this.templateId) {
             console.error('Template id is undefined');
             return;
@@ -70,10 +75,13 @@ export class EditTemplateComponent implements OnInit {
             .updateTemplateItem(this.templateId, itemToUpdate)
             .subscribe(
                 updatedItem => callback(updatedItem),
-                error => this.dialogService.showError(error).subscribe());
+                error => {
+                    this.dialogService.showError(error).subscribe();
+                    errorCallback();
+                });
     }
 
-    onItemsOrderChanged([orderToSet, callback]: [ShoppingItemModel[], (orderedItems: ShoppingItemModel[]) => void]) {
+    onItemsOrderChanged([orderToSet, callback, errorCallback]: [ShoppingItemModel[], (orderedItems: ShoppingItemModel[]) => void, () => void]) {
         if (!this.templateId) {
             console.error('Template id is undefined');
             return;
@@ -84,10 +92,13 @@ export class EditTemplateComponent implements OnInit {
             .reorderTemplateItems(this.templateId, itemsOrder)
             .subscribe(
                 orderedItems => callback(orderedItems),
-                error => this.dialogService.showError(error).subscribe());
+                error => {
+                    this.dialogService.showError(error).subscribe();
+                    errorCallback();
+                });
     }
 
-    onItemDeleted([itemToDelete, callback]: [ShoppingItemModel, () => void]) {
+    onItemDeleted([itemToDelete, callback, errorCallback]: [ShoppingItemModel, () => void, () => void]) {
         if (!this.templateId) {
             console.error('Template id is undefined');
             return;
@@ -97,6 +108,9 @@ export class EditTemplateComponent implements OnInit {
             .deleteTemplateItem(this.templateId, itemToDelete.id!)
             .subscribe(
                 () => callback(),
-                error => this.dialogService.showError(error).subscribe());
+                error => {
+                    this.dialogService.showError(error).subscribe();
+                    errorCallback();
+                });
     }
 }

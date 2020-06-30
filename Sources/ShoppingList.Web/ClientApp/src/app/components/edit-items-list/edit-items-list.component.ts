@@ -8,23 +8,27 @@ interface IKeyboardHandlers {
 }
 
 @Component({
-  selector: 'edit-items-list',
-  templateUrl: './edit-items-list.component.html',
-  styleUrls: ['./edit-items-list.component.css']
+    selector: 'edit-items-list',
+    templateUrl: './edit-items-list.component.html',
+    styleUrls: ['./edit-items-list.component.css']
 })
 export class EditItemsListComponent {
     private readonly formBuilder: FormBuilder;
 
     items: ShoppingItemModel[] = [];
+    loadingItems: boolean = true;
+    addingNewItem: boolean = false;
+
     itemUnderEdit: ShoppingItemModel | undefined;
+    updatingItemId: string | null = null;
 
     addItemFormGroup: FormGroup;
     editItemFormGroup: FormGroup | undefined;
 
-    @Output() itemAdded = new EventEmitter<[ShoppingItemModel, (createdItem: ShoppingItemModel) => void]>();
-    @Output() itemUpdated = new EventEmitter<[ShoppingItemModel, (updatedItem: ShoppingItemModel) => void]>();
-    @Output() itemsOrderChanged = new EventEmitter<[ShoppingItemModel[], (orderedItems: ShoppingItemModel[]) => void]>();
-    @Output() itemDeleted = new EventEmitter<[ShoppingItemModel, () => void]>();
+    @Output() itemAdded = new EventEmitter<[ShoppingItemModel, (createdItem: ShoppingItemModel) => void, () => void]>();
+    @Output() itemUpdated = new EventEmitter<[ShoppingItemModel, (updatedItem: ShoppingItemModel) => void, () => void]>();
+    @Output() itemsOrderChanged = new EventEmitter<[ShoppingItemModel[], (orderedItems: ShoppingItemModel[]) => void, () => void]>();
+    @Output() itemDeleted = new EventEmitter<[ShoppingItemModel, () => void, () => void]>();
 
     // https://stackoverflow.com/a/44803306/5740031
     @ViewChild('editedItemTitle') editedItemTitleRef: ElementRef | undefined;
@@ -36,14 +40,26 @@ export class EditItemsListComponent {
         this.addItemFormGroup = this.createItemEditForm();
     }
 
+    finishLoadingItems() {
+        this.loadingItems = false;
+    }
+
     onAddItem() {
         const newItem = new ShoppingItemModel();
         this.fillItemData(newItem, this.addItemFormGroup);
 
-        this.itemAdded.emit([newItem, (createdItem: ShoppingItemModel) => {
-            this.addItemFormGroup.reset();
-            this.items.push(createdItem);
-        }]);
+        this.addingNewItem = true;
+        this.itemAdded.emit(
+            [
+                newItem,
+                (createdItem: ShoppingItemModel) => {
+                    this.addItemFormGroup.reset();
+                    this.items.push(createdItem);
+                    this.addingNewItem = false;
+                },
+                () => this.addingNewItem = false
+            ]
+        );
     }
 
     private fillItemData(item: ShoppingItemModel, form: FormGroup) {
@@ -97,14 +113,24 @@ export class EditItemsListComponent {
 
         this.fillItemData(this.itemUnderEdit, this.editItemFormGroup);
 
-        this.itemUpdated.emit([this.itemUnderEdit, (updatedItem: ShoppingItemModel) => {
-            const index = this.items.findIndex(x => x.id === updatedItem.id);
-            if (index >= 0) {
-                this.items[index] = updatedItem;
-            }
+        this.updatingItemId = this.itemUnderEdit.id;
+        this.itemUpdated.emit(
+            [
+                this.itemUnderEdit,
+                (updatedItem: ShoppingItemModel) => {
+                    const index = this.items.findIndex(x => x.id === updatedItem.id);
+                    if (index >= 0) {
+                        this.items[index] = updatedItem;
+                    }
 
-            this.itemUnderEdit = undefined;
-        }]);
+                    this.itemUnderEdit = undefined;
+                    this.updatingItemId = null;
+                },
+                () => {
+                    this.updatingItemId = null;
+                }
+            ]
+        );
     }
 
     onDeleteItem(item: ShoppingItemModel) {
@@ -113,9 +139,16 @@ export class EditItemsListComponent {
             return;
         }
 
-        this.itemDeleted.emit([item, () => {
-            this.items = this.items.filter(x => x.id !== item.id);
-        }]);
+        this.updatingItemId = item.id;
+        this.itemDeleted.emit(
+            [
+                item,
+                () => {
+                    this.items = this.items.filter(x => x.id !== item.id);
+                    this.updatingItemId = null;
+                },
+                () => this.updatingItemId = null
+            ]);
     }
 
     onCancelItemEdit() {
@@ -172,10 +205,21 @@ export class EditItemsListComponent {
     }
 
     drop(event: CdkDragDrop<ShoppingItemModel[]>) {
-        // TODO: We should not move items in source array, till the request to server is completed.
+        const originalItems = [...this.items];
         moveItemInArray(this.items, event.previousIndex, event.currentIndex);
-        this.itemsOrderChanged.emit([this.items, (orderedItems: ShoppingItemModel[]) => {
-            this.items.splice(0, this.items.length, ...orderedItems);
-        }]);
+
+        this.updatingItemId = this.items[event.currentIndex].id;
+        this.itemsOrderChanged.emit(
+            [
+                this.items,
+                (orderedItems: ShoppingItemModel[]) => {
+                    this.items = orderedItems;
+                    this.updatingItemId = null;
+                },
+                () => {
+                    this.items = originalItems;
+                    this.updatingItemId = null;
+                }
+            ]);
     }
 }
