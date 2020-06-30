@@ -52,7 +52,7 @@ export class EditItemsListComponent {
         this.itemAdded.emit(
             [
                 newItem,
-                (createdItem: ShoppingItemModel) => {
+                createdItem => {
                     this.addItemFormGroup.reset();
                     this.items.push(createdItem);
                     this.addingNewItem = false;
@@ -111,13 +111,15 @@ export class EditItemsListComponent {
             return;
         }
 
-        this.fillItemData(this.itemUnderEdit, this.editItemFormGroup);
+        const newItem = new ShoppingItemModel();
+        newItem.id = this.itemUnderEdit.id;
+        this.fillItemData(newItem, this.editItemFormGroup);
 
-        this.updatingItemId = this.itemUnderEdit.id;
+        this.updatingItemId = newItem.id;
         this.itemUpdated.emit(
             [
-                this.itemUnderEdit,
-                (updatedItem: ShoppingItemModel) => {
+                newItem,
+                updatedItem => {
                     const index = this.items.findIndex(x => x.id === updatedItem.id);
                     if (index >= 0) {
                         this.items[index] = updatedItem;
@@ -212,7 +214,7 @@ export class EditItemsListComponent {
         this.itemsOrderChanged.emit(
             [
                 this.items,
-                (orderedItems: ShoppingItemModel[]) => {
+                orderedItems => {
                     this.items = orderedItems;
                     this.updatingItemId = null;
                 },
