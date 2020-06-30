@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 import { ShoppingListService } from '../../services/shopping-list.service';
 import { ShoppingItemModel } from '../../models/shopping-item.model';
 import { EditItemsListComponent } from '../edit-items-list/edit-items-list.component';
@@ -42,6 +43,7 @@ export class EditShoppingListComponent implements OnInit {
 
         this.shoppingListService
             .getShoppingListItems(this.shoppingListId)
+            .pipe(finalize(() => this.editItemsList.finishLoadingItems()))
             .subscribe(
                 data => this.editItemsList.items = data,
                 error => this.dialogService.showError(error).subscribe());
