@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { finalize } from 'rxjs/operators';
 import { ShoppingListService } from '../../services/shopping-list.service';
 import { ShoppingListModel } from '../../models/shopping-list.model';
 import { DialogService } from '../../services/dialog.service';
@@ -14,6 +15,7 @@ export class ShoppingListsComponent implements OnInit {
     private readonly dialogService: DialogService;
 
     shoppingLists: ShoppingListModel[] | undefined;
+    loadingShoppingLists: boolean = false;
 
     constructor(shoppingListService: ShoppingListService, dialogService: DialogService) {
         this.shoppingListService = shoppingListService;
@@ -25,7 +27,9 @@ export class ShoppingListsComponent implements OnInit {
     }
 
     private loadShoppingLists() {
+        this.loadingShoppingLists = true;
         this.shoppingListService.getShoppingLists()
+            .pipe(finalize(() => this.loadingShoppingLists = false))
             .subscribe(
                 data => this.shoppingLists = data,
                 error => this.dialogService.showError(error).subscribe());

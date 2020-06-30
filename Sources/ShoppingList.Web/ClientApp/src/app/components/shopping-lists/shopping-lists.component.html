@@ -1,5 +1,5 @@
 <div class="container w-25">
-    <div class="list-group">
+    <div *ngIf="!loadingShoppingLists" class="list-group">
         <a *ngFor="let shoppingList of shoppingLists" class="list-group-item d-flex">
             <span class="flex-grow-1" [routerLink]="['/shopping-lists', shoppingList.id]">{{shoppingList.title}}</span>
             <span class="action-button mdc-icon-button material-icons text-primary" data-toggle="tooltip" title="Process shopping list"
@@ -9,5 +9,10 @@
             <span class="action-button mdc-icon-button material-icons text-primary ml-1" data-toggle="tooltip" title="Delete shopping list"
                   (click)="onDeleteShoppingList(shoppingList)">delete_forever</span>
         </a>
+    </div>
+    <div *ngIf="loadingShoppingLists" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading ...</span>
+        </div>
     </div>
 </div>
