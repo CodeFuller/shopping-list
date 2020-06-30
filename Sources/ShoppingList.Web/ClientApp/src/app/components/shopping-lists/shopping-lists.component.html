@@ -1,6 +1,6 @@
 <div class="container w-25">
     <div class="list-group">
-        <a *ngFor="let shoppingList of shoppingLists" class="list-group-item list-group-item-action d-flex">
+        <a *ngFor="let shoppingList of shoppingLists" class="list-group-item d-flex">
             <span class="flex-grow-1" [routerLink]="['/shopping-lists', shoppingList.id]">{{shoppingList.title}}</span>
             <span class="action-button mdc-icon-button material-icons text-primary" data-toggle="tooltip" title="Process shopping list"
                   [routerLink]="['/shopping-lists', shoppingList.id]">shopping_cart</span>

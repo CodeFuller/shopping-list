@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { finalize } from 'rxjs/operators';
 import { TemplateService } from '../../services/template.service';
 import { ShoppingListService } from '../../services/shopping-list.service';
 import { ShoppingTemplateModel } from '../../models/shopping-template.model';
@@ -16,6 +17,9 @@ export class TemplatesListComponent implements OnInit {
     private readonly dialogService: DialogService;
 
     templates: ShoppingTemplateModel[] = [];
+    loadingTemplates: boolean = false;
+    addingTemplate: boolean = false;
+    deletingTemplateId: string | null = null;
 
     newTemplateTitle: string | null = null;
 
@@ -37,7 +41,9 @@ export class TemplatesListComponent implements OnInit {
         const newTemplate = new ShoppingTemplateModel();
         newTemplate.title = this.newTemplateTitle;
 
+        this.addingTemplate = true;
         this.templateService.createTemplate(newTemplate)
+            .pipe(finalize(() => this.addingTemplate = false))
             .subscribe(
                 createdTemplate => {
                     this.newTemplateTitle = null;
@@ -54,7 +60,9 @@ export class TemplatesListComponent implements OnInit {
     }
 
     onDeleteTemplate(template: ShoppingTemplateModel) {
+        this.deletingTemplateId = template.id;
         this.templateService.deleteTemplate(template.id)
+            .pipe(finalize(() => this.deletingTemplateId = null))
             .subscribe(
                 () => {
                     this.newTemplateTitle = null;
@@ -64,7 +72,9 @@ export class TemplatesListComponent implements OnInit {
     }
 
     private loadTemplates() {
+        this.loadingTemplates = true;
         this.templateService.getTemplates()
+            .pipe(finalize(() => this.loadingTemplates = false))
             .subscribe(
                 data => this.templates = data,
                 error => this.dialogService.showError(error).subscribe());
