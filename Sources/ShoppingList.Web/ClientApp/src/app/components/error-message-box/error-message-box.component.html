@@ -1,0 +1,15 @@
+<div class="modal-header">
+    <span class="modal-title">Error</span>
+    <button type="button" class="close" aria-label="Close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <p class="m-0">
+        <span class="dialog-icon material-icons text-danger align-middle ">error</span>
+        <span class="ml-2">{{errorMessage}}</span>
+    </p>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="close()">OK</button>
+</div>

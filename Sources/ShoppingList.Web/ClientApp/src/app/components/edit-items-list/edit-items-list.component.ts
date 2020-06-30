@@ -172,6 +172,7 @@ export class EditItemsListComponent {
     }
 
     drop(event: CdkDragDrop<ShoppingItemModel[]>) {
+        // TODO: We should not move items in source array, till the request to server is completed.
         moveItemInArray(this.items, event.previousIndex, event.currentIndex);
         this.itemsOrderChanged.emit([this.items, (orderedItems: ShoppingItemModel[]) => {
             this.items.splice(0, this.items.length, ...orderedItems);

@@ -3,6 +3,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { TemplateService } from '../../services/template.service';
 import { ShoppingItemModel } from '../../models/shopping-item.model';
 import { EditItemsListComponent } from '../edit-items-list/edit-items-list.component';
+import { DialogService } from '../../services/dialog.service';
 
 @Component({
     selector: 'edit-template',
@@ -12,6 +13,7 @@ import { EditItemsListComponent } from '../edit-items-list/edit-items-list.compo
 export class EditTemplateComponent implements OnInit {
 
     private readonly templateService: TemplateService;
+    private readonly dialogService: DialogService;
     private readonly route: ActivatedRoute;
 
     private templateId: string | undefined;
@@ -19,8 +21,9 @@ export class EditTemplateComponent implements OnInit {
     @ViewChild(EditItemsListComponent)
     private editItemsList!: EditItemsListComponent;
 
-    constructor(templateService: TemplateService, route: ActivatedRoute) {
+    constructor(templateService: TemplateService, dialogService: DialogService, route: ActivatedRoute) {
         this.templateService = templateService;
+        this.dialogService = dialogService;
         this.route = route;
     }
 
@@ -39,7 +42,9 @@ export class EditTemplateComponent implements OnInit {
 
         this.templateService
             .getTemplateItems(this.templateId)
-            .subscribe((data: ShoppingItemModel[]) => this.editItemsList.items = data);
+            .subscribe(
+                data => this.editItemsList.items = data,
+                error => this.dialogService.showError(error).subscribe());
     }
 
     onItemAdded([itemToCreate, callback]: [ShoppingItemModel, (createdItem: ShoppingItemModel) => void]) {
@@ -50,7 +55,9 @@ export class EditTemplateComponent implements OnInit {
 
         this.templateService
             .createTemplateItem(this.templateId, itemToCreate)
-            .subscribe(createdItem => callback(createdItem));
+            .subscribe(
+                createdItem => callback(createdItem),
+                error => this.dialogService.showError(error).subscribe());
     }
 
     onItemUpdated([itemToUpdate, callback]: [ShoppingItemModel, (updatedItem: ShoppingItemModel) => void]) {
@@ -61,7 +68,9 @@ export class EditTemplateComponent implements OnInit {
 
         this.templateService
             .updateTemplateItem(this.templateId, itemToUpdate)
-            .subscribe(updatedItem => callback(updatedItem));
+            .subscribe(
+                updatedItem => callback(updatedItem),
+                error => this.dialogService.showError(error).subscribe());
     }
 
     onItemsOrderChanged([orderToSet, callback]: [ShoppingItemModel[], (orderedItems: ShoppingItemModel[]) => void]) {
@@ -73,7 +82,9 @@ export class EditTemplateComponent implements OnInit {
         const itemsOrder = orderToSet.map(item => item.id!);
         this.templateService
             .reorderTemplateItems(this.templateId, itemsOrder)
-            .subscribe(orderedItems => callback(orderedItems));
+            .subscribe(
+                orderedItems => callback(orderedItems),
+                error => this.dialogService.showError(error).subscribe());
     }
 
     onItemDeleted([itemToDelete, callback]: [ShoppingItemModel, () => void]) {
@@ -84,6 +95,8 @@ export class EditTemplateComponent implements OnInit {
 
         this.templateService
             .deleteTemplateItem(this.templateId, itemToDelete.id!)
-            .subscribe(() => callback());
+            .subscribe(
+                () => callback(),
+                error => this.dialogService.showError(error).subscribe());
     }
 }

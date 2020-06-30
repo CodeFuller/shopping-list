@@ -11,6 +11,7 @@ import { ShoppingListsComponent } from './components/shopping-lists/shopping-lis
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { EditItemsListComponent } from './components/edit-items-list/edit-items-list.component';
 import { EditShoppingListComponent } from './components/edit-shopping-list/edit-shopping-list.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
       declarations: [
@@ -27,7 +28,8 @@ import { EditShoppingListComponent } from './components/edit-shopping-list/edit-
             HttpClientModule,
             FormsModule,
             ReactiveFormsModule,
-            DragDropModule
+            DragDropModule,
+            NgbModule
       ],
       providers: [],
       bootstrap: [
