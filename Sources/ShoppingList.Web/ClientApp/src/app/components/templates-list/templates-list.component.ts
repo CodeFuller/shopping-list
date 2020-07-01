@@ -3,7 +3,6 @@ import { finalize } from 'rxjs/operators';
 import { TemplateService } from '../../services/template.service';
 import { ShoppingListService } from '../../services/shopping-list.service';
 import { ShoppingTemplateModel } from '../../models/shopping-template.model';
-import { DialogService } from '../../services/dialog.service';
 
 @Component({
     selector: 'app-templates-list',
@@ -14,7 +13,6 @@ export class TemplatesListComponent implements OnInit {
 
     private readonly templateService: TemplateService;
     private readonly shoppingListService: ShoppingListService;
-    private readonly dialogService: DialogService;
 
     templates: ShoppingTemplateModel[] = [];
     loadingTemplates: boolean = false;
@@ -23,10 +21,9 @@ export class TemplatesListComponent implements OnInit {
 
     newTemplateTitle: string | null = null;
 
-    constructor(templateService: TemplateService, shoppingListService: ShoppingListService, dialogService: DialogService) {
+    constructor(templateService: TemplateService, shoppingListService: ShoppingListService) {
         this.templateService = templateService;
         this.shoppingListService = shoppingListService;
-        this.dialogService = dialogService;
     }
 
     ngOnInit() {
@@ -48,15 +45,12 @@ export class TemplatesListComponent implements OnInit {
                 createdTemplate => {
                     this.newTemplateTitle = null;
                     this.templates.push(createdTemplate);
-                },
-                error => this.dialogService.showError(error).subscribe());
+                });
     }
 
     onCreateShoppingListFromTemplate(template: ShoppingTemplateModel) {
         this.shoppingListService.createShoppingList(template)
-            .subscribe(
-                () => { },
-                error => this.dialogService.showError(error).subscribe());
+            .subscribe();
     }
 
     onDeleteTemplate(template: ShoppingTemplateModel) {
@@ -67,16 +61,13 @@ export class TemplatesListComponent implements OnInit {
                 () => {
                     this.newTemplateTitle = null;
                     this.templates = this.templates.filter(x => x.id !== template.id);
-                },
-                error => this.dialogService.showError(error).subscribe());
+                });
     }
 
     private loadTemplates() {
         this.loadingTemplates = true;
         this.templateService.getTemplates()
             .pipe(finalize(() => this.loadingTemplates = false))
-            .subscribe(
-                data => this.templates = data,
-                error => this.dialogService.showError(error).subscribe());
+            .subscribe(data => this.templates = data);
     }
 }

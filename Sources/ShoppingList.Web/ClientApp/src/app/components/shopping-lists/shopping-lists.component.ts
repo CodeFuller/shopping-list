@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { ShoppingListService } from '../../services/shopping-list.service';
 import { ShoppingListModel } from '../../models/shopping-list.model';
-import { DialogService } from '../../services/dialog.service';
 
 @Component({
     selector: 'app-shopping-lists',
@@ -12,14 +11,12 @@ import { DialogService } from '../../services/dialog.service';
 export class ShoppingListsComponent implements OnInit {
 
     private readonly shoppingListService: ShoppingListService;
-    private readonly dialogService: DialogService;
 
     shoppingLists: ShoppingListModel[] | undefined;
     loadingShoppingLists: boolean = false;
 
-    constructor(shoppingListService: ShoppingListService, dialogService: DialogService) {
+    constructor(shoppingListService: ShoppingListService) {
         this.shoppingListService = shoppingListService;
-        this.dialogService = dialogService;
     }
 
     ngOnInit() {
@@ -30,8 +27,6 @@ export class ShoppingListsComponent implements OnInit {
         this.loadingShoppingLists = true;
         this.shoppingListService.getShoppingLists()
             .pipe(finalize(() => this.loadingShoppingLists = false))
-            .subscribe(
-                data => this.shoppingLists = data,
-                error => this.dialogService.showError(error).subscribe());
+            .subscribe(data => this.shoppingLists = data);
     }
 }

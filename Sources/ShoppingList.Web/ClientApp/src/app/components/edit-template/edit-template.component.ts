@@ -4,7 +4,6 @@ import { finalize } from 'rxjs/operators';
 import { TemplateService } from '../../services/template.service';
 import { ShoppingItemModel } from '../../models/shopping-item.model';
 import { EditItemsListComponent } from '../edit-items-list/edit-items-list.component';
-import { DialogService } from '../../services/dialog.service';
 
 @Component({
     selector: 'edit-template',
@@ -14,7 +13,6 @@ import { DialogService } from '../../services/dialog.service';
 export class EditTemplateComponent implements OnInit {
 
     private readonly templateService: TemplateService;
-    private readonly dialogService: DialogService;
     private readonly route: ActivatedRoute;
 
     private templateId: string | undefined;
@@ -22,9 +20,8 @@ export class EditTemplateComponent implements OnInit {
     @ViewChild(EditItemsListComponent)
     private editItemsList!: EditItemsListComponent;
 
-    constructor(templateService: TemplateService, dialogService: DialogService, route: ActivatedRoute) {
+    constructor(templateService: TemplateService, route: ActivatedRoute) {
         this.templateService = templateService;
-        this.dialogService = dialogService;
         this.route = route;
     }
 
@@ -44,9 +41,7 @@ export class EditTemplateComponent implements OnInit {
         this.templateService
             .getTemplateItems(this.templateId)
             .pipe(finalize(() => this.editItemsList.finishLoadingItems()))
-            .subscribe(
-                data => this.editItemsList.items = data,
-                error => this.dialogService.showError(error).subscribe());
+            .subscribe(data => this.editItemsList.items = data);
     }
 
     onItemAdded([itemToCreate, callback, errorCallback]: [ShoppingItemModel, (createdItem: ShoppingItemModel) => void, () => void]) {
@@ -59,10 +54,7 @@ export class EditTemplateComponent implements OnInit {
             .createTemplateItem(this.templateId, itemToCreate)
             .subscribe(
                 createdItem => callback(createdItem),
-                error => {
-                    this.dialogService.showError(error).subscribe();
-                    errorCallback();
-                });
+                () => errorCallback());
     }
 
     onItemUpdated([itemToUpdate, callback, errorCallback]: [ShoppingItemModel, (updatedItem: ShoppingItemModel) => void, () => void]) {
@@ -75,10 +67,7 @@ export class EditTemplateComponent implements OnInit {
             .updateTemplateItem(this.templateId, itemToUpdate)
             .subscribe(
                 updatedItem => callback(updatedItem),
-                error => {
-                    this.dialogService.showError(error).subscribe();
-                    errorCallback();
-                });
+                () => errorCallback());
     }
 
     onItemsOrderChanged([orderToSet, callback, errorCallback]: [ShoppingItemModel[], (orderedItems: ShoppingItemModel[]) => void, () => void]) {
@@ -92,10 +81,7 @@ export class EditTemplateComponent implements OnInit {
             .reorderTemplateItems(this.templateId, itemsOrder)
             .subscribe(
                 orderedItems => callback(orderedItems),
-                error => {
-                    this.dialogService.showError(error).subscribe();
-                    errorCallback();
-                });
+                () => errorCallback());
     }
 
     onItemDeleted([itemToDelete, callback, errorCallback]: [ShoppingItemModel, () => void, () => void]) {
@@ -108,9 +94,6 @@ export class EditTemplateComponent implements OnInit {
             .deleteTemplateItem(this.templateId, itemToDelete.id!)
             .subscribe(
                 () => callback(),
-                error => {
-                    this.dialogService.showError(error).subscribe();
-                    errorCallback();
-                });
+                () => errorCallback());
     }
 }
