@@ -11,11 +11,7 @@
                     <span class="template-action-button mdc-icon-button material-icons text-primary ml-1" data-toggle="tooltip" title="Delete shopping template"
                           (click)="onDeleteTemplate(template)">delete_forever</span>
                 </a>
-                <div *ngIf="template.id === deletingTemplateId" class="text-center">
-                    <div class="spinner-border spinner-border-sm text-primary" role="status">
-                        <span class="sr-only">Deleting ...</span>
-                    </div>
-                </div>
+                <loading-indicator *ngIf="template.id === deletingTemplateId" [small]="true">Deleting ...</loading-indicator>
             </div>
         </div>
 
@@ -26,16 +22,8 @@
                     <button class="btn btn-primary" type="submit" [disabled]="!newTemplateForm.form.valid">Add</button>
                 </div>
             </div>
-            <div *ngIf="addingTemplate" class="text-center">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="sr-only">Adding ...</span>
-                </div>
-            </div>
+            <loading-indicator *ngIf="addingTemplate">Adding ...</loading-indicator>
         </form>
     </div>
-    <div *ngIf="loadingTemplates" class="text-center">
-        <div class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading ...</span>
-        </div>
-    </div>
+    <loading-indicator *ngIf="loadingTemplates">Loading ...</loading-indicator>
 </div>

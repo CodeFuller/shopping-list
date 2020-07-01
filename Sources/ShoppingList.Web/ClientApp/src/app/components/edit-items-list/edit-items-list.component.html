@@ -11,11 +11,7 @@
             <ng-container *ngFor="let item of items">
                 <tr *ngIf="item.id === updatingItemId">
                     <td>
-                        <div class="text-center">
-                            <div class="spinner-border spinner-border-sm text-primary" role="status">
-                                <span class="sr-only">Updating ...</span>
-                            </div>
-                        </div>
+                        <loading-indicator [small]="true">Updating ...</loading-indicator>
                     </td>
                 </tr>
                 <tr *ngIf="item.id !== updatingItemId && !isItemUnderEdit(item)" class="d-flex list-item" cdkDrag>
@@ -66,18 +62,10 @@
             </tr>
             <tr *ngIf="addingNewItem">
                 <td>
-                    <div class="text-center">
-                        <div class="spinner-border spinner-border-sm text-primary" role="status">
-                            <span class="sr-only">Adding ...</span>
-                        </div>
-                    </div>
+                    <loading-indicator [small]="true">Adding ...</loading-indicator>
                 </td>
             </tr>
         </tbody>
     </table>
-    <div *ngIf="loadingItems" class="text-center">
-        <div class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading ...</span>
-        </div>
-    </div>
+    <loading-indicator *ngIf="loadingItems">Loading ...</loading-indicator>
 </div>

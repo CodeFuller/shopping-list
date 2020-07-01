@@ -12,6 +12,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { EditItemsListComponent } from './components/edit-items-list/edit-items-list.component';
 import { EditShoppingListComponent } from './components/edit-shopping-list/edit-shopping-list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { LoadingIndicatorComponent } from './components/loading-indicator/loading-indicator.component';
 
 @NgModule({
       declarations: [
@@ -20,7 +21,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
             EditTemplateComponent,
             ShoppingListsComponent,
             EditItemsListComponent,
-            EditShoppingListComponent
+            EditShoppingListComponent,
+            LoadingIndicatorComponent
       ],
       imports: [
             BrowserModule,
