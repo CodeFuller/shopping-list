@@ -5,7 +5,7 @@ import { catchError, map } from 'rxjs/operators';
 import { DialogService } from './dialog.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ErrorHandlingService {
 

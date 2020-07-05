@@ -15,27 +15,27 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingIndicatorComponent } from './components/loading-indicator/loading-indicator.component';
 
 @NgModule({
-      declarations: [
-            AppComponent,
-            TemplatesListComponent,
-            EditTemplateComponent,
-            ShoppingListsComponent,
-            EditItemsListComponent,
-            EditShoppingListComponent,
-            LoadingIndicatorComponent
-      ],
-      imports: [
-            BrowserModule,
-            AppRoutingModule,
-            HttpClientModule,
-            FormsModule,
-            ReactiveFormsModule,
-            DragDropModule,
-            NgbModule
-      ],
-      providers: [],
-      bootstrap: [
-            AppComponent
-      ]
+    declarations: [
+        AppComponent,
+        TemplatesListComponent,
+        EditTemplateComponent,
+        ShoppingListsComponent,
+        EditItemsListComponent,
+        EditShoppingListComponent,
+        LoadingIndicatorComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        DragDropModule,
+        NgbModule
+    ],
+    providers: [],
+    bootstrap: [
+        AppComponent
+    ]
 })
 export class AppModule { }

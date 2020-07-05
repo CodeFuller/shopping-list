@@ -3,9 +3,9 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { DialogResult } from '../../constants/dialog-result';
 
 @Component({
-  selector: 'error-message-box',
-  templateUrl: './error-message-box.component.html',
-  styleUrls: ['./error-message-box.component.css']
+    selector: 'error-message-box',
+    templateUrl: './error-message-box.component.html',
+    styleUrls: ['./error-message-box.component.css']
 })
 export class ErrorMessageBoxComponent {
 

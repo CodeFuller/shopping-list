@@ -1,45 +1,45 @@
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "baseUrl": "./",
-    "downlevelIteration": true,
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
-    "declaration": false,
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": "./",
+        "downlevelIteration": true,
+        "outDir": "./dist/out-tsc",
+        "sourceMap": true,
+        "declaration": false,
 
-    "skipDefaultLibCheck": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "target": "es2015",
+        "skipDefaultLibCheck": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "target": "es2015",
 
-    "allowJs": false,
-    "allowSyntheticDefaultImports": false,
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "alwaysStrict": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmitOnError": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    // Setting noUnusedParameters to true leads to errors: catlist.component.html (6,7): '$event' is declared but its value is never read.
-    "noUnusedParameters": false,
-    "strictBindCallApply": true,
-    "strictFunctionTypes": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": true,
+        "allowJs": false,
+        "allowSyntheticDefaultImports": false,
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
+        "alwaysStrict": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "forceConsistentCasingInFileNames": true,
+        "noEmitOnError": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        // Setting noUnusedParameters to true leads to errors: catlist.component.html (6,7): '$event' is declared but its value is never read.
+        "noUnusedParameters": false,
+        "strictBindCallApply": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true,
 
-    "importHelpers": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+        "importHelpers": true,
+        "typeRoots": [
+            "node_modules/@types"
+        ],
 
-    "lib": [
-      "es2018",
-      "dom"
-    ]
-  }
+        "lib": [
+            "es2018",
+            "dom"
+        ]
+    }
 }

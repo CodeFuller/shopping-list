@@ -1,8 +1,4 @@
-/* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-
 import { TemplatesListComponent } from './templates-list.component';
 
 describe('TemplatesListComponent', () => {
@@ -11,9 +7,9 @@ describe('TemplatesListComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ TemplatesListComponent ]
+            declarations: [TemplatesListComponent]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     beforeEach(() => {

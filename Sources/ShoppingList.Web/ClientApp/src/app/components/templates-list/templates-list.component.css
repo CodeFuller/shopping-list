@@ -1,13 +1,13 @@
 /* Action buttons for the item are shown only on hover */
 .template-action-button {
-  visibility: hidden;
+    visibility: hidden;
 }
 
 /* Display template action buttons on hover */
 .list-group-item:hover .template-action-button {
-  visibility: visible;
+    visibility: visible;
 }
 
 .list-group-item {
-  cursor: pointer;
+    cursor: pointer;
 }
