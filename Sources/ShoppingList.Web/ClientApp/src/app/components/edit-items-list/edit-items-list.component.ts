@@ -44,7 +44,7 @@ export class EditItemsListComponent {
         this.loadingItems = false;
     }
 
-    onAddItem() {
+    addItem() {
         const newItem = new ShoppingItemModel();
         this.fillItemData(newItem, this.addItemFormGroup);
 
@@ -74,7 +74,7 @@ export class EditItemsListComponent {
         item.comment = this.getFormValue(form, 'comment');
     }
 
-    onEditItem(item: ShoppingItemModel, clickedElement: string) {
+    startItemEditing(item: ShoppingItemModel, clickedElement: string) {
         this.itemUnderEdit = item;
         this.editItemFormGroup = this.createItemEditForm(item);
 
@@ -105,7 +105,7 @@ export class EditItemsListComponent {
         }
     }
 
-    onSaveItemChanges() {
+    saveEditChanges() {
         if (!this.itemUnderEdit || !this.editItemFormGroup) {
             console.error('Can not save changes because no item is under edit');
             return;
@@ -135,7 +135,7 @@ export class EditItemsListComponent {
         );
     }
 
-    onDeleteItem(item: ShoppingItemModel) {
+    deleteItem(item: ShoppingItemModel) {
         if (!item.id) {
             console.error('Can not delete item without id');
             return;
@@ -153,7 +153,7 @@ export class EditItemsListComponent {
             ]);
     }
 
-    onCancelItemEdit() {
+    cancelItemEditing() {
         if (!this.itemUnderEdit) {
             console.error('Can not cancel changes because no item is under edit');
             return;
@@ -162,22 +162,22 @@ export class EditItemsListComponent {
         this.itemUnderEdit = undefined;
     }
 
-    onCancelItemAdd() {
+    cancelItemAdding() {
         this.addItemFormGroup.reset();
     }
 
     onEditKeyDown(event: KeyboardEvent) {
         const handlers: IKeyboardHandlers = {
-            Enter: () => this.onSaveItemChanges(),
-            Escape: () => this.onCancelItemEdit()
+            Enter: () => this.saveEditChanges(),
+            Escape: () => this.cancelItemEditing()
         }
         this.executeKeyboardHandler(event, handlers);
     }
 
     onAddKeyDown(event: KeyboardEvent) {
         const handlers = {
-            Enter: () => this.onAddItem(),
-            Escape: () => this.onCancelItemAdd()
+            Enter: () => this.addItem(),
+            Escape: () => this.cancelItemAdding()
         }
         this.executeKeyboardHandler(event, handlers);
     }
@@ -206,7 +206,7 @@ export class EditItemsListComponent {
         return this.itemUnderEdit !== undefined && item.id === this.itemUnderEdit.id;
     }
 
-    drop(event: CdkDragDrop<ShoppingItemModel[]>) {
+    dropItem(event: CdkDragDrop<ShoppingItemModel[]>) {
         const originalItems = [...this.items];
         moveItemInArray(this.items, event.previousIndex, event.currentIndex);
 

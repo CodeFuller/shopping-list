@@ -30,7 +30,7 @@ export class TemplatesListComponent implements OnInit {
         this.loadTemplates();
     }
 
-    onAddTemplate() {
+    addTemplate() {
         if (!this.newTemplateTitle) {
             return;
         }
@@ -48,12 +48,12 @@ export class TemplatesListComponent implements OnInit {
                 });
     }
 
-    onCreateShoppingListFromTemplate(template: ShoppingTemplateModel) {
+    createShoppingListFromTemplate(template: ShoppingTemplateModel) {
         this.shoppingListService.createShoppingList(template)
             .subscribe();
     }
 
-    onDeleteTemplate(template: ShoppingTemplateModel) {
+    deleteTemplate(template: ShoppingTemplateModel) {
         this.deletingTemplateId = template.id;
         this.templateService.deleteTemplate(template.id)
             .pipe(finalize(() => this.deletingTemplateId = null))

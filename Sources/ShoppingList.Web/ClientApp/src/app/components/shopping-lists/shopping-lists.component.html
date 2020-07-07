@@ -7,7 +7,7 @@
             <span class="action-button mdc-icon-button material-icons text-primary ml-1" data-toggle="tooltip" title="Edit shopping list"
                   [routerLink]="['/shopping-lists', shoppingList.id]">edit</span>
             <span class="action-button mdc-icon-button material-icons text-primary ml-1" data-toggle="tooltip" title="Delete shopping list"
-                  (click)="onDeleteShoppingList(shoppingList)">delete_forever</span>
+                  (click)="deleteShoppingList(shoppingList)">delete_forever</span>
         </a>
     </div>
     <loading-indicator *ngIf="loadingShoppingLists">Loading ...</loading-indicator>
