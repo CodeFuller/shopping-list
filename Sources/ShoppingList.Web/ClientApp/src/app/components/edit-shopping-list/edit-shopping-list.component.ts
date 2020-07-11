@@ -1,16 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { finalize } from 'rxjs/operators';
+import { Observable, from } from 'rxjs';
+import { take, finalize, delay, switchMap } from 'rxjs/operators';
 import { ShoppingListService } from '../../services/shopping-list.service';
 import { ShoppingItemModel } from '../../models/shopping-item.model';
 import { EditItemsListComponent } from '../edit-items-list/edit-items-list.component';
+import { ShoppingListModel } from '../../models/shopping-list.model';
 
 @Component({
     selector: 'edit-shopping-list',
     templateUrl: './edit-shopping-list.component.html',
     styleUrls: ['./edit-shopping-list.component.css']
 })
-export class EditShoppingListComponent implements OnInit {
+export class EditShoppingListComponent implements AfterViewInit {
 
     private readonly shoppingListService: ShoppingListService;
     private readonly route: ActivatedRoute;
@@ -25,23 +27,33 @@ export class EditShoppingListComponent implements OnInit {
         this.route = route;
     }
 
-    ngOnInit() {
-        this.route.paramMap.subscribe((params: ParamMap) => {
-            this.shoppingListId = params.get('id') || undefined;
-            this.loadTemplateItems();
-        });
+    ngAfterViewInit() {
+        this.loadItemsFromRouteOrServer()
+            // Preventing error "Expression has changed after it was checked"
+            .pipe(delay(0))
+            .pipe(finalize(() => this.editItemsList.finishLoadingItems()))
+            .subscribe(items => this.editItemsList.items = items);
     }
 
-    private loadTemplateItems() {
-        if (!this.shoppingListId) {
-            console.error('Shopping list id is unknown');
-            return;
-        }
+    private loadItemsFromRouteOrServer(): Observable<ShoppingItemModel[]> {
+        return this.route.paramMap
+            .pipe(take(1))
+            .pipe(switchMap((params: ParamMap) => {
+                const shoppingListFromRouting: ShoppingListModel = window.history.state;
+                if (shoppingListFromRouting.items) {
+                    console.debug('Got list items from the routing state');
+                    return from([shoppingListFromRouting.items]);
+                }
 
-        this.shoppingListService
-            .getShoppingListItems(this.shoppingListId)
-            .pipe(finalize(() => this.editItemsList.finishLoadingItems()))
-            .subscribe(data => this.editItemsList.items = data);
+                const listId = params.get('id');
+                if (!listId) {
+                    console.error('Shopping list id is unknown');
+                    throw 'Shopping list id is unknown';
+                }
+
+                console.debug('Getting list items from the server ...');
+                return this.shoppingListService.getShoppingListItems(listId);
+            }));
     }
 
     onItemAdded([itemToCreate, callback, errorCallback]: [ShoppingItemModel, (createdItem: ShoppingItemModel) => void, () => void]) {

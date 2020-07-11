@@ -56,9 +56,7 @@ export class TemplatesListComponent implements OnInit {
         this.shoppingListService.createShoppingList(template)
             .pipe(finalize(() => this.inProgressTemplateId = null))
             .subscribe(shoppingList => {
-                console.log(`Navigating to ${shoppingList.id}`);
-                this.router.navigate(['/shopping-lists', shoppingList.id]);
-                console.log(`Navigated to ${shoppingList.id}`);
+                this.router.navigate(['/shopping-lists', shoppingList.id], { state: shoppingList });
             });
     }
 
