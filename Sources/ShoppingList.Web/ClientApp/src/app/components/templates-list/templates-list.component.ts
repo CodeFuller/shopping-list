@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { TemplateService } from '../../services/template.service';
 import { ShoppingListService } from '../../services/shopping-list.service';
@@ -13,17 +14,19 @@ export class TemplatesListComponent implements OnInit {
 
     private readonly templateService: TemplateService;
     private readonly shoppingListService: ShoppingListService;
+    private readonly router: Router;
 
     templates: ShoppingTemplateModel[] = [];
     loadingTemplates: boolean = false;
     addingTemplate: boolean = false;
-    deletingTemplateId: string | null = null;
+    inProgressTemplateId: string | null = null;
 
     newTemplateTitle: string | null = null;
 
-    constructor(templateService: TemplateService, shoppingListService: ShoppingListService) {
+    constructor(templateService: TemplateService, shoppingListService: ShoppingListService, router: Router) {
         this.templateService = templateService;
         this.shoppingListService = shoppingListService;
+        this.router = router;
     }
 
     ngOnInit() {
@@ -49,14 +52,20 @@ export class TemplatesListComponent implements OnInit {
     }
 
     createShoppingListFromTemplate(template: ShoppingTemplateModel) {
+        this.inProgressTemplateId = template.id;
         this.shoppingListService.createShoppingList(template)
-            .subscribe();
+            .pipe(finalize(() => this.inProgressTemplateId = null))
+            .subscribe(shoppingList => {
+                console.log(`Navigating to ${shoppingList.id}`);
+                this.router.navigate(['/shopping-lists', shoppingList.id]);
+                console.log(`Navigated to ${shoppingList.id}`);
+            });
     }
 
     deleteTemplate(template: ShoppingTemplateModel) {
-        this.deletingTemplateId = template.id;
+        this.inProgressTemplateId = template.id;
         this.templateService.deleteTemplate(template.id)
-            .pipe(finalize(() => this.deletingTemplateId = null))
+            .pipe(finalize(() => this.inProgressTemplateId = null))
             .subscribe(
                 () => {
                     this.newTemplateTitle = null;

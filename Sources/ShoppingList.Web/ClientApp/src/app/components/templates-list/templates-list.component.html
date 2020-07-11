@@ -2,7 +2,7 @@
     <div *ngIf="!loadingTemplates">
         <div class="list-group">
             <div *ngFor="let template of templates" class="list-group-item">
-                <a *ngIf="template.id !== deletingTemplateId" class="d-flex">
+                <a *ngIf="template.id !== inProgressTemplateId" class="d-flex">
                     <span class="flex-grow-1" [routerLink]="['/templates', template.id]">{{template.title}}</span>
                     <span class="template-action-button mdc-icon-button material-icons text-primary" data-toggle="tooltip" title="Create shopping list"
                           (click)="createShoppingListFromTemplate(template)">playlist_add</span>
@@ -11,7 +11,7 @@
                     <span class="template-action-button mdc-icon-button material-icons text-primary ml-1" data-toggle="tooltip" title="Delete shopping template"
                           (click)="deleteTemplate(template)">delete_forever</span>
                 </a>
-                <loading-indicator *ngIf="template.id === deletingTemplateId" [small]="true">Deleting ...</loading-indicator>
+                <loading-indicator *ngIf="template.id === inProgressTemplateId" [small]="true">Updating ...</loading-indicator>
             </div>
         </div>
 
