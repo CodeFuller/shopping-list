@@ -29,7 +29,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr *ngIf="item.id !== updatingItemId && isItemUnderEdit(item)" class="d-flex list-item" cdkDrag [formGroup]="editItemFormGroup">
+                <tr *ngIf="item.id !== updatingItemId && isItemUnderEdit(item)" class="d-flex list-item" [formGroup]="editItemFormGroup">
                     <td class="col-5 edited-property">
                         <input class="form-control" type="text" required #editedItemTitle (keydown)="onEditKeyDown($event)" formControlName="title">
                     </td>
