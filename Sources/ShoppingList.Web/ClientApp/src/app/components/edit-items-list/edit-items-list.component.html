@@ -17,7 +17,7 @@
                 <tr *ngIf="item.id !== updatingItemId && !isItemUnderEdit(item)" class="d-flex list-item" cdkDrag>
                     <td class="col-5 pl-0" (click)="startItemEditing(item, 'title')">
                         <div>
-                            <button class="item-drag mdc-icon-button material-icons align-middle">drag_indicator</button>
+                            <button class="item-drag mdc-icon-button material-icons align-middle" cdkDragHandle>drag_indicator</button>
                             <span>{{item.title}}</span>
                         </div>
                     </td>
