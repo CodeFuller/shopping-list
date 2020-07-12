@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { TemplateService } from '../../services/template.service';
 import { ShoppingListService } from '../../services/shopping-list.service';
@@ -10,7 +11,7 @@ import { ShoppingTemplateModel } from '../../models/shopping-template.model';
     templateUrl: './templates-list.component.html',
     styleUrls: ['./templates-list.component.css']
 })
-export class TemplatesListComponent implements OnInit {
+export class TemplatesListComponent implements OnInit, OnDestroy {
 
     private readonly templateService: TemplateService;
     private readonly shoppingListService: ShoppingListService;
@@ -23,6 +24,8 @@ export class TemplatesListComponent implements OnInit {
 
     newTemplateTitle: string | null = null;
 
+    private unsubscribe$ = new Subject<void>();
+
     constructor(templateService: TemplateService, shoppingListService: ShoppingListService, router: Router) {
         this.templateService = templateService;
         this.shoppingListService = shoppingListService;
@@ -31,6 +34,11 @@ export class TemplatesListComponent implements OnInit {
 
     ngOnInit() {
         this.loadTemplates();
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     addTemplate() {
@@ -42,7 +50,7 @@ export class TemplatesListComponent implements OnInit {
         newTemplate.title = this.newTemplateTitle;
 
         this.addingTemplate = true;
-        this.templateService.createTemplate(newTemplate)
+        this.templateService.createTemplate(newTemplate, this.unsubscribe$)
             .pipe(finalize(() => this.addingTemplate = false))
             .subscribe(
                 createdTemplate => {
@@ -53,7 +61,7 @@ export class TemplatesListComponent implements OnInit {
 
     createShoppingListFromTemplate(template: ShoppingTemplateModel) {
         this.inProgressTemplateId = template.id;
-        this.shoppingListService.createShoppingList(template)
+        this.shoppingListService.createShoppingList(template, this.unsubscribe$)
             .pipe(finalize(() => this.inProgressTemplateId = null))
             .subscribe(shoppingList => {
                 this.router.navigate(['/shopping-lists', shoppingList.id], { state: shoppingList });
@@ -62,7 +70,7 @@ export class TemplatesListComponent implements OnInit {
 
     deleteTemplate(template: ShoppingTemplateModel) {
         this.inProgressTemplateId = template.id;
-        this.templateService.deleteTemplate(template.id)
+        this.templateService.deleteTemplate(template.id, this.unsubscribe$)
             .pipe(finalize(() => this.inProgressTemplateId = null))
             .subscribe(
                 () => {
@@ -73,7 +81,7 @@ export class TemplatesListComponent implements OnInit {
 
     private loadTemplates() {
         this.loadingTemplates = true;
-        this.templateService.getTemplates()
+        this.templateService.getTemplates(this.unsubscribe$)
             .pipe(finalize(() => this.loadingTemplates = false))
             .subscribe(data => this.templates = data);
     }

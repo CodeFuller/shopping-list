@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { plainToClass } from 'class-transformer';
 import { ShoppingTemplateModel } from '../models/shopping-template.model';
@@ -17,41 +17,41 @@ export class TemplateService {
         this.safeHttp = safeHttp;
     }
 
-    createTemplate(newTemplate: ShoppingTemplateModel): Observable<ShoppingTemplateModel> {
-        return this.safeHttp.post(`${this.baseAddress}`, newTemplate, 'Failed to create shopping template')
+    createTemplate(newTemplate: ShoppingTemplateModel, cancellation: Subject<void>): Observable<ShoppingTemplateModel> {
+        return this.safeHttp.post(`${this.baseAddress}`, newTemplate, 'Failed to create shopping template', cancellation)
             .pipe(map(response => plainToClass(ShoppingTemplateModel, response, { excludeExtraneousValues: true })));
     }
 
-    getTemplates(): Observable<ShoppingTemplateModel[]> {
-        return this.safeHttp.get<Object[]>(`${this.baseAddress}`, 'Failed to load shopping templates')
+    getTemplates(cancellation: Subject<void>): Observable<ShoppingTemplateModel[]> {
+        return this.safeHttp.get<Object[]>(`${this.baseAddress}`, 'Failed to load shopping templates', cancellation)
             .pipe(map(response => plainToClass(ShoppingTemplateModel, response, { excludeExtraneousValues: true })));
     }
 
-    deleteTemplate(templateId: string): Observable<object> {
-        return this.safeHttp.delete(`${this.baseAddress}/${templateId}`, 'Failed to delete shopping template');
+    deleteTemplate(templateId: string, cancellation: Subject<void>): Observable<object> {
+        return this.safeHttp.delete(`${this.baseAddress}/${templateId}`, 'Failed to delete shopping template', cancellation);
     }
 
-    createTemplateItem(templateId: string, newItem: ShoppingItemModel): Observable<ShoppingItemModel> {
-        return this.safeHttp.post(`${this.baseAddress}/${templateId}/items`, newItem, 'Failed to create template item')
+    createTemplateItem(templateId: string, newItem: ShoppingItemModel, cancellation: Subject<void>): Observable<ShoppingItemModel> {
+        return this.safeHttp.post(`${this.baseAddress}/${templateId}/items`, newItem, 'Failed to create template item', cancellation)
             .pipe(map(response => plainToClass(ShoppingItemModel, response, { excludeExtraneousValues: true })));
     }
 
-    getTemplateItems(templateId: string): Observable<ShoppingItemModel[]> {
-        return this.safeHttp.get<Object[]>(`${this.baseAddress}/${templateId}/items`, 'Failed to load template items')
+    getTemplateItems(templateId: string, cancellation: Subject<void>): Observable<ShoppingItemModel[]> {
+        return this.safeHttp.get<Object[]>(`${this.baseAddress}/${templateId}/items`, 'Failed to load template items', cancellation)
             .pipe(map(response => plainToClass(ShoppingItemModel, response, { excludeExtraneousValues: true })));
     }
 
-    updateTemplateItem(templateId: string, item: ShoppingItemModel): Observable<ShoppingItemModel> {
-        return this.safeHttp.put(`${this.baseAddress}/${templateId}/items/${item.id}`, item, 'Failed to update template item')
+    updateTemplateItem(templateId: string, item: ShoppingItemModel, cancellation: Subject<void>): Observable<ShoppingItemModel> {
+        return this.safeHttp.put(`${this.baseAddress}/${templateId}/items/${item.id}`, item, 'Failed to update template item', cancellation)
             .pipe(map(response => plainToClass(ShoppingItemModel, response, { excludeExtraneousValues: true })));
     }
 
-    reorderTemplateItems(templateId: string, newItemsOrder: string[]): Observable<ShoppingItemModel[]> {
-        return this.safeHttp.patch<Object[]>(`${this.baseAddress}/${templateId}/items`, newItemsOrder, 'Failed to change order of template items')
+    reorderTemplateItems(templateId: string, newItemsOrder: string[], cancellation: Subject<void>): Observable<ShoppingItemModel[]> {
+        return this.safeHttp.patch<Object[]>(`${this.baseAddress}/${templateId}/items`, newItemsOrder, 'Failed to change order of template items', cancellation)
             .pipe(map(response => plainToClass(ShoppingItemModel, response, { excludeExtraneousValues: true })));
     }
 
-    deleteTemplateItem(templateId: string, itemId: string): Observable<object> {
-        return this.safeHttp.delete(`${this.baseAddress}/${templateId}/items/${itemId}`, 'Failed to delete template item');
+    deleteTemplateItem(templateId: string, itemId: string, cancellation: Subject<void>): Observable<object> {
+        return this.safeHttp.delete(`${this.baseAddress}/${templateId}/items/${itemId}`, 'Failed to delete template item', cancellation);
     }
 }

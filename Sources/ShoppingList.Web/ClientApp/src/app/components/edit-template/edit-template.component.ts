@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Subject } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { TemplateService } from '../../services/template.service';
 import { ShoppingItemModel } from '../../models/shopping-item.model';
@@ -10,12 +11,14 @@ import { EditItemsListComponent } from '../edit-items-list/edit-items-list.compo
     templateUrl: './edit-template.component.html',
     styleUrls: ['./edit-template.component.css']
 })
-export class EditTemplateComponent implements OnInit {
+export class EditTemplateComponent implements OnInit, OnDestroy {
 
     private readonly templateService: TemplateService;
     private readonly route: ActivatedRoute;
 
     private templateId: string | undefined;
+
+    private unsubscribe$ = new Subject<void>();
 
     @ViewChild(EditItemsListComponent)
     private editItemsList!: EditItemsListComponent;
@@ -32,6 +35,11 @@ export class EditTemplateComponent implements OnInit {
         });
     }
 
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+    }
+
     private loadTemplateItems() {
         if (!this.templateId) {
             console.error('Template id is unknown');
@@ -39,7 +47,7 @@ export class EditTemplateComponent implements OnInit {
         }
 
         this.templateService
-            .getTemplateItems(this.templateId)
+            .getTemplateItems(this.templateId, this.unsubscribe$)
             .pipe(finalize(() => this.editItemsList.finishLoadingItems()))
             .subscribe(data => this.editItemsList.items = data);
     }
@@ -51,7 +59,7 @@ export class EditTemplateComponent implements OnInit {
         }
 
         this.templateService
-            .createTemplateItem(this.templateId, itemToCreate)
+            .createTemplateItem(this.templateId, itemToCreate, this.unsubscribe$)
             .subscribe(
                 createdItem => callback(createdItem),
                 () => errorCallback());
@@ -64,7 +72,7 @@ export class EditTemplateComponent implements OnInit {
         }
 
         this.templateService
-            .updateTemplateItem(this.templateId, itemToUpdate)
+            .updateTemplateItem(this.templateId, itemToUpdate, this.unsubscribe$)
             .subscribe(
                 updatedItem => callback(updatedItem),
                 () => errorCallback());
@@ -78,7 +86,7 @@ export class EditTemplateComponent implements OnInit {
 
         const itemsOrder = orderToSet.map(item => item.id!);
         this.templateService
-            .reorderTemplateItems(this.templateId, itemsOrder)
+            .reorderTemplateItems(this.templateId, itemsOrder, this.unsubscribe$)
             .subscribe(
                 orderedItems => callback(orderedItems),
                 () => errorCallback());
@@ -91,7 +99,7 @@ export class EditTemplateComponent implements OnInit {
         }
 
         this.templateService
-            .deleteTemplateItem(this.templateId, itemToDelete.id!)
+            .deleteTemplateItem(this.templateId, itemToDelete.id!, this.unsubscribe$)
             .subscribe(
                 () => callback(),
                 () => errorCallback());

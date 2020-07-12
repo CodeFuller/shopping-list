@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ErrorHandlingService } from './error-handling.service';
 
 @Injectable({
@@ -16,28 +17,33 @@ export class SafeHttpClientService {
         this.errorHandlingService = errorHandlingService;
     }
 
-    get<T>(url: string, errorMessage: string): Observable<T> {
+    get<T>(url: string, errorMessage: string, cancellation: Subject<void>): Observable<T> {
         return this.http.get<T>(url)
+            .pipe(takeUntil(cancellation))
             .pipe(this.errorHandlingService.handleHttpError(errorMessage));
     }
 
-    post<T>(url: string, body: any, errorMessage: string): Observable<T> {
+    post<T>(url: string, body: any, errorMessage: string, cancellation: Subject<void>): Observable<T> {
         return this.http.post<T>(url, body)
+            .pipe(takeUntil(cancellation))
             .pipe(this.errorHandlingService.handleHttpError(errorMessage));
     }
 
-    put<T>(url: string, body: any, errorMessage: string): Observable<T> {
+    put<T>(url: string, body: any, errorMessage: string, cancellation: Subject<void>): Observable<T> {
         return this.http.put<T>(url, body)
+            .pipe(takeUntil(cancellation))
             .pipe(this.errorHandlingService.handleHttpError(errorMessage));
     }
 
-    patch<T>(url: string, body: any, errorMessage: string): Observable<T> {
+    patch<T>(url: string, body: any, errorMessage: string, cancellation: Subject<void>): Observable<T> {
         return this.http.patch<T>(url, body)
+            .pipe(takeUntil(cancellation))
             .pipe(this.errorHandlingService.handleHttpError(errorMessage));
     }
 
-    delete<T>(url: string, errorMessage: string): Observable<T> {
+    delete<T>(url: string, errorMessage: string, cancellation: Subject<void>): Observable<T> {
         return this.http.delete<T>(url)
+            .pipe(takeUntil(cancellation))
             .pipe(this.errorHandlingService.handleHttpError(errorMessage));
     }
 }

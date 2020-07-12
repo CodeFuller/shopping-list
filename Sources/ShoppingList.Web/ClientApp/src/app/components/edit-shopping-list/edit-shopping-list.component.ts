@@ -1,6 +1,6 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, from } from 'rxjs';
+import { Observable, Subject, from } from 'rxjs';
 import { take, finalize, delay, switchMap } from 'rxjs/operators';
 import { ShoppingListService } from '../../services/shopping-list.service';
 import { ShoppingItemModel } from '../../models/shopping-item.model';
@@ -12,7 +12,7 @@ import { ShoppingListModel } from '../../models/shopping-list.model';
     templateUrl: './edit-shopping-list.component.html',
     styleUrls: ['./edit-shopping-list.component.css']
 })
-export class EditShoppingListComponent implements AfterViewInit {
+export class EditShoppingListComponent implements AfterViewInit, OnDestroy {
 
     private readonly shoppingListService: ShoppingListService;
     private readonly route: ActivatedRoute;
@@ -21,6 +21,8 @@ export class EditShoppingListComponent implements AfterViewInit {
 
     @ViewChild(EditItemsListComponent)
     private editItemsList!: EditItemsListComponent;
+
+    private unsubscribe$ = new Subject<void>();
 
     constructor(shoppingListService: ShoppingListService, route: ActivatedRoute) {
         this.shoppingListService = shoppingListService;
@@ -33,6 +35,11 @@ export class EditShoppingListComponent implements AfterViewInit {
             .pipe(delay(0))
             .pipe(finalize(() => this.editItemsList.finishLoadingItems()))
             .subscribe(items => this.editItemsList.items = items);
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
     }
 
     private loadItemsFromRouteOrServer(): Observable<ShoppingItemModel[]> {
@@ -53,7 +60,7 @@ export class EditShoppingListComponent implements AfterViewInit {
                 }
 
                 console.debug('Getting list items from the server ...');
-                return this.shoppingListService.getShoppingListItems(this.shoppingListId);
+                return this.shoppingListService.getShoppingListItems(this.shoppingListId, this.unsubscribe$);
             }));
     }
 
@@ -64,7 +71,7 @@ export class EditShoppingListComponent implements AfterViewInit {
         }
 
         this.shoppingListService
-            .createShoppingListItem(this.shoppingListId, itemToCreate)
+            .createShoppingListItem(this.shoppingListId, itemToCreate, this.unsubscribe$)
             .subscribe(
                 createdItem => callback(createdItem),
                 () => errorCallback());
@@ -77,7 +84,7 @@ export class EditShoppingListComponent implements AfterViewInit {
         }
 
         this.shoppingListService
-            .updateShoppingListItem(this.shoppingListId, itemToUpdate)
+            .updateShoppingListItem(this.shoppingListId, itemToUpdate, this.unsubscribe$)
             .subscribe(
                 updatedItem => callback(updatedItem),
                 () => errorCallback());
@@ -91,7 +98,7 @@ export class EditShoppingListComponent implements AfterViewInit {
 
         const itemsOrder = orderToSet.map(item => item.id!);
         this.shoppingListService
-            .reorderShoppingListItems(this.shoppingListId, itemsOrder)
+            .reorderShoppingListItems(this.shoppingListId, itemsOrder, this.unsubscribe$)
             .subscribe(
                 orderedItems => callback(orderedItems),
                 () => errorCallback());
@@ -104,7 +111,7 @@ export class EditShoppingListComponent implements AfterViewInit {
         }
 
         this.shoppingListService
-            .deleteShoppingListItem(this.shoppingListId, itemToDelete.id!)
+            .deleteShoppingListItem(this.shoppingListId, itemToDelete.id!, this.unsubscribe$)
             .subscribe(
                 () => callback(),
                 () => errorCallback());
