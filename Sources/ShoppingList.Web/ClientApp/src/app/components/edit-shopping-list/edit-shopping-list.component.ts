@@ -42,17 +42,18 @@ export class EditShoppingListComponent implements AfterViewInit {
                 const shoppingListFromRouting: ShoppingListModel = window.history.state;
                 if (shoppingListFromRouting.items) {
                     console.debug('Got list items from the routing state');
+                    this.shoppingListId = shoppingListFromRouting.id;
                     return from([shoppingListFromRouting.items]);
                 }
 
-                const listId = params.get('id');
-                if (!listId) {
+                this.shoppingListId = params.get('id') || undefined;
+                if (!this.shoppingListId) {
                     console.error('Shopping list id is unknown');
                     throw 'Shopping list id is unknown';
                 }
 
                 console.debug('Getting list items from the server ...');
-                return this.shoppingListService.getShoppingListItems(listId);
+                return this.shoppingListService.getShoppingListItems(this.shoppingListId);
             }));
     }
 
