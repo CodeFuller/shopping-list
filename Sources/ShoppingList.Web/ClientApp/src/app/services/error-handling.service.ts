@@ -32,10 +32,10 @@ export class ErrorHandlingService {
 
     private buildErrorMessage(operationMessage: string, error: HttpErrorResponse): string {
         let errorDetails: string;
-        if (error.error instanceof ErrorEvent) {
-            errorDetails = 'Client-side error has occurred.';
+        if (error.status) {
+            errorDetails = `Server-side error (HTTP ${error.status}) has occurred.`;
         } else {
-            errorDetails = 'Server-side error has occurred.';
+            errorDetails = 'Client-side error has occurred.';
         }
 
         return `${operationMessage}. ${errorDetails}`;
