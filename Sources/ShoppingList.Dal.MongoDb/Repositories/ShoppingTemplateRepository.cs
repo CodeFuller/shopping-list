@@ -36,8 +36,11 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 
 		public async Task<IReadOnlyCollection<ShoppingTemplateInfo>> GetTemplatesInfo(CancellationToken cancellationToken)
 		{
+			var projection = Builders<ShoppingTemplateDocument>.Projection.Exclude(x => x.Items);
+			var options = new FindOptions<ShoppingTemplateDocument, ShoppingTemplateDocument> { Projection = projection };
+
 			using var cursor = await templatesCollection
-				.FindAsync(FilterDefinition<ShoppingTemplateDocument>.Empty, cancellationToken: cancellationToken);
+				.FindAsync(FilterDefinition<ShoppingTemplateDocument>.Empty, options, cancellationToken);
 
 			var templatesList = await cursor.ToListAsync(cancellationToken);
 

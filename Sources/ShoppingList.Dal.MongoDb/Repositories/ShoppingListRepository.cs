@@ -35,8 +35,11 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 
 		public async Task<IReadOnlyCollection<ShoppingListInfo>> GetShoppingListsInfo(CancellationToken cancellationToken)
 		{
+			var projection = Builders<ShoppingListDocument>.Projection.Exclude(x => x.Items);
+			var options = new FindOptions<ShoppingListDocument, ShoppingListDocument> { Projection = projection };
+
 			using var cursor = await shoppingListCollection
-				.FindAsync(FilterDefinition<ShoppingListDocument>.Empty, cancellationToken: cancellationToken);
+				.FindAsync(FilterDefinition<ShoppingListDocument>.Empty, options, cancellationToken);
 
 			var shoppingLists = await cursor.ToListAsync(cancellationToken);
 
