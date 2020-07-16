@@ -43,6 +43,11 @@ namespace ShoppingList.Logic.Services
 			return repository.GetTemplatesInfo(cancellationToken);
 		}
 
+		public Task<ShoppingTemplateModel> GetTemplate(IdModel templateId, CancellationToken cancellationToken)
+		{
+			return repository.GetTemplate(templateId, cancellationToken);
+		}
+
 		public Task DeleteTemplate(IdModel templateId, CancellationToken cancellationToken)
 		{
 			logger.LogInformation("Deleting template {TemplateId} ...", templateId);

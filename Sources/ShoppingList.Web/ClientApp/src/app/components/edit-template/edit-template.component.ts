@@ -16,6 +16,7 @@ export class EditTemplateComponent implements OnInit, OnDestroy {
 
     private readonly templateService: TemplateService;
     private readonly route: ActivatedRoute;
+    private readonly titleService: Title;
 
     private templateId: string | undefined;
 
@@ -27,14 +28,14 @@ export class EditTemplateComponent implements OnInit, OnDestroy {
     constructor(templateService: TemplateService, route: ActivatedRoute, titleService: Title) {
         this.templateService = templateService;
         this.route = route;
-
-        titleService.setTitle('Edit Shopping Template');
+        this.titleService = titleService;
+        this.setTitle();
     }
 
     ngOnInit() {
         this.route.paramMap.subscribe((params: ParamMap) => {
             this.templateId = params.get('id') || undefined;
-            this.loadTemplateItems();
+            this.loadTemplate();
         });
     }
 
@@ -43,16 +44,25 @@ export class EditTemplateComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    private loadTemplateItems() {
+    private setTitle(templateTitle: string | undefined = undefined) {
+        const templateTitlePart = templateTitle ? ` "${templateTitle}"` : '';
+        const title = `Edite Shopping Template${templateTitlePart}`;
+        this.titleService.setTitle(title);
+    }
+
+    private loadTemplate() {
         if (!this.templateId) {
             console.error('Template id is unknown');
             return;
         }
 
         this.templateService
-            .getTemplateItems(this.templateId, this.unsubscribe$)
+            .getTemplate(this.templateId, this.unsubscribe$)
             .pipe(finalize(() => this.editItemsList.finishLoadingItems()))
-            .subscribe(data => this.editItemsList.items = data);
+            .subscribe(data => {
+                this.setTitle(data.title);
+                this.editItemsList.items = data.items;
+            });
     }
 
     onItemAdded([itemToCreate, callback, errorCallback]: [ShoppingItemModel, (createdItem: ShoppingItemModel) => void, () => void]) {

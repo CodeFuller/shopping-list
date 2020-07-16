@@ -34,6 +34,22 @@ namespace ShoppingList.Web.Controllers
 			return Ok(templates.Select(x => new OutputShoppingTemplateInfoData(x)));
 		}
 
+		[HttpGet("{templateId}")]
+		public async Task<ActionResult<OutputShoppingTemplateData>> GetTemplate([FromRoute] string templateId, CancellationToken cancellationToken)
+		{
+			try
+			{
+				var template = await templateService.GetTemplate(templateId.ToId(), cancellationToken);
+
+				return Ok(new OutputShoppingTemplateData(template));
+			}
+			catch (NotFoundException e)
+			{
+				logger.LogError(e, "Failed to find template {TemplateId}", templateId);
+				return NotFound();
+			}
+		}
+
 		[HttpPost]
 		public async Task<ActionResult<OutputShoppingTemplateData>> CreateTemplate([FromBody] InputShoppingTemplateInfoData templateInfoData, CancellationToken cancellationToken)
 		{

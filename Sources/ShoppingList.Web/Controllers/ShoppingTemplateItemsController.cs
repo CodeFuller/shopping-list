@@ -26,22 +26,6 @@ namespace ShoppingList.Web.Controllers
 			this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
-		[HttpGet]
-		public async Task<ActionResult<IEnumerable<OutputShoppingItemData>>> GetTemplateItems([FromRoute] string templateId, CancellationToken cancellationToken)
-		{
-			try
-			{
-				var items = await templateItemService.GetTemplateItems(templateId.ToId(), cancellationToken);
-
-				return Ok(items.Select(x => new OutputShoppingItemData(x)));
-			}
-			catch (NotFoundException e)
-			{
-				logger.LogError(e, "Failed to find template {TemplateId}", templateId);
-				return NotFound();
-			}
-		}
-
 		[HttpPost]
 		public async Task<ActionResult<OutputShoppingItemData>> CreateTemplateItem([FromRoute] string templateId, [FromBody] InputShoppingItemData itemData, CancellationToken cancellationToken)
 		{

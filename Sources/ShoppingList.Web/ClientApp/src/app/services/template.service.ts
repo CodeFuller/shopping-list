@@ -27,17 +27,17 @@ export class TemplateService {
             .pipe(map(response => plainToClass(ShoppingTemplateModel, response, { excludeExtraneousValues: true })));
     }
 
+    getTemplate(templateId: string, cancellation: Subject<void>): Observable<ShoppingTemplateModel> {
+        return this.safeHttp.get(`${this.baseAddress}/${templateId}`, 'Failed to load template items', cancellation)
+            .pipe(map(response => plainToClass(ShoppingTemplateModel, response, { excludeExtraneousValues: true })));
+    }
+
     deleteTemplate(templateId: string, cancellation: Subject<void>): Observable<object> {
         return this.safeHttp.delete(`${this.baseAddress}/${templateId}`, 'Failed to delete shopping template', cancellation);
     }
 
     createTemplateItem(templateId: string, newItem: ShoppingItemModel, cancellation: Subject<void>): Observable<ShoppingItemModel> {
         return this.safeHttp.post(`${this.baseAddress}/${templateId}/items`, newItem, 'Failed to create template item', cancellation)
-            .pipe(map(response => plainToClass(ShoppingItemModel, response, { excludeExtraneousValues: true })));
-    }
-
-    getTemplateItems(templateId: string, cancellation: Subject<void>): Observable<ShoppingItemModel[]> {
-        return this.safeHttp.get<Object[]>(`${this.baseAddress}/${templateId}/items`, 'Failed to load template items', cancellation)
             .pipe(map(response => plainToClass(ShoppingItemModel, response, { excludeExtraneousValues: true })));
     }
 
