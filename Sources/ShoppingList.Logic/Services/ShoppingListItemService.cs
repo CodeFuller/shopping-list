@@ -28,11 +28,6 @@ namespace ShoppingList.Logic.Services
 			return item;
 		}
 
-		public Task<IReadOnlyCollection<ShoppingItemModel>> GetShoppingListItems(IdModel shoppingListId, CancellationToken cancellationToken)
-		{
-			return repository.GetItems(shoppingListId, cancellationToken);
-		}
-
 		public Task UpdateShoppingListItem(IdModel shoppingListId, ShoppingItemModel item, CancellationToken cancellationToken)
 		{
 			return repository.UpdateItem(shoppingListId, item, cancellationToken);

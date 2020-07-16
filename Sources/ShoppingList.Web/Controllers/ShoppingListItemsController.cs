@@ -26,22 +26,6 @@ namespace ShoppingList.Web.Controllers
 			this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
-		[HttpGet]
-		public async Task<ActionResult<IEnumerable<OutputShoppingItemData>>> GetShoppingListItems([FromRoute] string shoppingListId, CancellationToken cancellationToken)
-		{
-			try
-			{
-				var items = await shoppingListItemService.GetShoppingListItems(shoppingListId.ToId(), cancellationToken);
-
-				return Ok(items.Select(x => new OutputShoppingItemData(x)));
-			}
-			catch (NotFoundException e)
-			{
-				logger.LogError(e, "Failed to find shopping list {ShoppingListId}", shoppingListId);
-				return NotFound();
-			}
-		}
-
 		[HttpPost]
 		public async Task<ActionResult<OutputShoppingItemData>> CreateShoppingListItem([FromRoute] string shoppingListId, [FromBody] InputShoppingItemData itemData, CancellationToken cancellationToken)
 		{

@@ -48,6 +48,12 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 				.ToList();
 		}
 
+		public async Task<ShoppingListModel> GetShoppingList(IdModel shoppingListId, CancellationToken cancellationToken)
+		{
+			var shoppingList = await shoppingListCollection.FindDocument(shoppingListId.ToObjectId(), cancellationToken);
+			return shoppingList.ToShoppingListModel();
+		}
+
 		public async Task<IdModel> CreateItem(IdModel shoppingListId, ShoppingItemModel item, CancellationToken cancellationToken)
 		{
 			var newItem = new ShoppingItemDocument(item)

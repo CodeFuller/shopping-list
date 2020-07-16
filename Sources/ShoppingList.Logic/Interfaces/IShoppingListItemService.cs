@@ -9,8 +9,6 @@ namespace ShoppingList.Logic.Interfaces
 	{
 		Task<ShoppingItemModel> CreateShoppingListItem(IdModel shoppingListId, ShoppingItemModel item, CancellationToken cancellationToken);
 
-		Task<IReadOnlyCollection<ShoppingItemModel>> GetShoppingListItems(IdModel shoppingListId, CancellationToken cancellationToken);
-
 		Task UpdateShoppingListItem(IdModel shoppingListId, ShoppingItemModel item, CancellationToken cancellationToken);
 
 		Task<IReadOnlyCollection<ShoppingItemModel>> ReorderShoppingListItems(IdModel shoppingListId, IEnumerable<IdModel> newItemsOrder, CancellationToken cancellationToken);

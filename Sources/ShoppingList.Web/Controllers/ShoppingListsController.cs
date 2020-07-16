@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using ShoppingList.Logic.Exceptions;
 using ShoppingList.Logic.Extensions;
 using ShoppingList.Logic.Interfaces;
 using ShoppingList.Web.Contracts.ShoppingListContracts;
@@ -16,9 +18,12 @@ namespace ShoppingList.Web.Controllers
 	{
 		private readonly IShoppingListService shoppingListService;
 
-		public ShoppingListsController(IShoppingListService shoppingListService)
+		private readonly ILogger<ShoppingListsController> logger;
+
+		public ShoppingListsController(IShoppingListService shoppingListService, ILogger<ShoppingListsController> logger)
 		{
 			this.shoppingListService = shoppingListService ?? throw new ArgumentNullException(nameof(shoppingListService));
+			this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
 		[HttpPost]
@@ -34,6 +39,22 @@ namespace ShoppingList.Web.Controllers
 			var shoppingLists = await shoppingListService.GetShoppingListsInfo(cancellationToken);
 
 			return Ok(shoppingLists.Select(x => new ShoppingListInfoData(x)));
+		}
+
+		[HttpGet("{shoppingListId}")]
+		public async Task<ActionResult<OutputShoppingListData>> GetShoppingList([FromRoute] string shoppingListId, CancellationToken cancellationToken)
+		{
+			try
+			{
+				var list = await shoppingListService.GetShoppingList(shoppingListId.ToId(), cancellationToken);
+
+				return Ok(new OutputShoppingListData(list));
+			}
+			catch (NotFoundException e)
+			{
+				logger.LogError(e, "Failed to find shopping list {ShoppingListId}", shoppingListId);
+				return NotFound();
+			}
 		}
 	}
 }

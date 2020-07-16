@@ -33,5 +33,15 @@ namespace ShoppingList.Dal.MongoDb.Documents
 				Title = Title,
 			};
 		}
+
+		public ShoppingListModel ToShoppingListModel()
+		{
+			return new ShoppingListModel
+			{
+				Id = Id.ToIdModel(),
+				Title = Title,
+				Items = Items.Select(x => x.ToModel()).ToList(),
+			};
+		}
 	}
 }

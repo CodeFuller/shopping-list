@@ -31,13 +31,13 @@ export class ShoppingListService {
             .pipe(map(response => plainToClass(ShoppingListModel, response, { excludeExtraneousValues: true })));
     }
 
-    createShoppingListItem(shoppingListId: string, newItem: ShoppingItemModel, cancellation: Subject<void>): Observable<ShoppingItemModel> {
-        return this.safeHttp.post(`${this.baseAddress}/${shoppingListId}/items`, newItem, 'Failed to create list item', cancellation)
-            .pipe(map(response => plainToClass(ShoppingItemModel, response, { excludeExtraneousValues: true })));
+    getShoppingList(shoppingListId: string, cancellation: Subject<void>): Observable<ShoppingListModel> {
+        return this.safeHttp.get(`${this.baseAddress}/${shoppingListId}`, 'Failed to load shopping list', cancellation)
+            .pipe(map(response => plainToClass(ShoppingListModel, response, { excludeExtraneousValues: true })));
     }
 
-    getShoppingListItems(shoppingListId: string, cancellation: Subject<void>): Observable<ShoppingItemModel[]> {
-        return this.safeHttp.get<Object[]>(`${this.baseAddress}/${shoppingListId}/items`, 'Failed to load list items', cancellation)
+    createShoppingListItem(shoppingListId: string, newItem: ShoppingItemModel, cancellation: Subject<void>): Observable<ShoppingItemModel> {
+        return this.safeHttp.post(`${this.baseAddress}/${shoppingListId}/items`, newItem, 'Failed to create list item', cancellation)
             .pipe(map(response => plainToClass(ShoppingItemModel, response, { excludeExtraneousValues: true })));
     }
 

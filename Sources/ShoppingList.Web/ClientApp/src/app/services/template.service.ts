@@ -28,7 +28,7 @@ export class TemplateService {
     }
 
     getTemplate(templateId: string, cancellation: Subject<void>): Observable<ShoppingTemplateModel> {
-        return this.safeHttp.get(`${this.baseAddress}/${templateId}`, 'Failed to load template items', cancellation)
+        return this.safeHttp.get(`${this.baseAddress}/${templateId}`, 'Failed to load shopping template', cancellation)
             .pipe(map(response => plainToClass(ShoppingTemplateModel, response, { excludeExtraneousValues: true })));
     }
 

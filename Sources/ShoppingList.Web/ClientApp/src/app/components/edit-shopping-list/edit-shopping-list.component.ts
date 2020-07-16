@@ -17,6 +17,7 @@ export class EditShoppingListComponent implements AfterViewInit, OnDestroy {
 
     private readonly shoppingListService: ShoppingListService;
     private readonly route: ActivatedRoute;
+    private readonly titleService: Title;
 
     private shoppingListId: string | undefined;
 
@@ -29,15 +30,19 @@ export class EditShoppingListComponent implements AfterViewInit, OnDestroy {
         this.shoppingListService = shoppingListService;
         this.route = route;
 
-        titleService.setTitle('Edit Shopping List');
+        this.titleService = titleService;
+        this.setTitle();
     }
 
     ngAfterViewInit() {
-        this.loadItemsFromRouteOrServer()
+        this.loadShoppingListFromRouteOrServer()
             // Preventing error "Expression has changed after it was checked"
             .pipe(delay(0))
             .pipe(finalize(() => this.editItemsList.finishLoadingItems()))
-            .subscribe(items => this.editItemsList.items = items);
+            .subscribe(shoppingList => {
+                this.setTitle(shoppingList.title);
+                this.editItemsList.items = shoppingList.items;
+            });
     }
 
     ngOnDestroy() {
@@ -45,15 +50,21 @@ export class EditShoppingListComponent implements AfterViewInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    private loadItemsFromRouteOrServer(): Observable<ShoppingItemModel[]> {
+    private setTitle(shoppingListTitle: string | undefined = undefined) {
+        const listTitlePart = shoppingListTitle ? ` "${shoppingListTitle}"` : '';
+        const title = `Edit Shopping List${listTitlePart}`;
+        this.titleService.setTitle(title);
+    }
+
+    private loadShoppingListFromRouteOrServer(): Observable<ShoppingListModel> {
         return this.route.paramMap
             .pipe(take(1))
             .pipe(switchMap((params: ParamMap) => {
                 const shoppingListFromRouting: ShoppingListModel = window.history.state;
-                if (shoppingListFromRouting.items) {
-                    console.debug('Got list items from the routing state');
+                if (shoppingListFromRouting.id) {
+                    console.debug('Got shopping list from the routing state');
                     this.shoppingListId = shoppingListFromRouting.id;
-                    return from([shoppingListFromRouting.items]);
+                    return from([shoppingListFromRouting]);
                 }
 
                 this.shoppingListId = params.get('id') || undefined;
@@ -62,8 +73,8 @@ export class EditShoppingListComponent implements AfterViewInit, OnDestroy {
                     throw 'Shopping list id is unknown';
                 }
 
-                console.debug('Getting list items from the server ...');
-                return this.shoppingListService.getShoppingListItems(this.shoppingListId, this.unsubscribe$);
+                console.debug('Loading shopping list from the server ...');
+                return this.shoppingListService.getShoppingList(this.shoppingListId, this.unsubscribe$);
             }));
     }
 

@@ -48,5 +48,10 @@ namespace ShoppingList.Logic.Services
 		{
 			return shoppingListRepository.GetShoppingListsInfo(cancellationToken);
 		}
+
+		public Task<ShoppingListModel> GetShoppingList(IdModel shoppingListId, CancellationToken cancellationToken)
+		{
+			return shoppingListRepository.GetShoppingList(shoppingListId, cancellationToken);
+		}
 	}
 }

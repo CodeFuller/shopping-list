@@ -28,6 +28,7 @@ export class EditTemplateComponent implements OnInit, OnDestroy {
     constructor(templateService: TemplateService, route: ActivatedRoute, titleService: Title) {
         this.templateService = templateService;
         this.route = route;
+
         this.titleService = titleService;
         this.setTitle();
     }
@@ -46,7 +47,7 @@ export class EditTemplateComponent implements OnInit, OnDestroy {
 
     private setTitle(templateTitle: string | undefined = undefined) {
         const templateTitlePart = templateTitle ? ` "${templateTitle}"` : '';
-        const title = `Edite Shopping Template${templateTitlePart}`;
+        const title = `Edit Shopping Template${templateTitlePart}`;
         this.titleService.setTitle(title);
     }
 
@@ -59,9 +60,9 @@ export class EditTemplateComponent implements OnInit, OnDestroy {
         this.templateService
             .getTemplate(this.templateId, this.unsubscribe$)
             .pipe(finalize(() => this.editItemsList.finishLoadingItems()))
-            .subscribe(data => {
-                this.setTitle(data.title);
-                this.editItemsList.items = data.items;
+            .subscribe(shoppingTemplate => {
+                this.setTitle(shoppingTemplate.title);
+                this.editItemsList.items = shoppingTemplate.items;
             });
     }
 
