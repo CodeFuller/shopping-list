@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { finalize } from 'rxjs/operators';
@@ -26,10 +27,12 @@ export class TemplatesListComponent implements OnInit, OnDestroy {
 
     private unsubscribe$ = new Subject<void>();
 
-    constructor(templateService: TemplateService, shoppingListService: ShoppingListService, router: Router) {
+    constructor(templateService: TemplateService, shoppingListService: ShoppingListService, router: Router, titleService: Title) {
         this.templateService = templateService;
         this.shoppingListService = shoppingListService;
         this.router = router;
+
+        titleService.setTitle('All Shopping Templates');
     }
 
     ngOnInit() {

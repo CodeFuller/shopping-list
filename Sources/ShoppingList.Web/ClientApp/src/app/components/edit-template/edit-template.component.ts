@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Subject } from 'rxjs';
 import { finalize } from 'rxjs/operators';
@@ -23,9 +24,11 @@ export class EditTemplateComponent implements OnInit, OnDestroy {
     @ViewChild(EditItemsListComponent)
     private editItemsList!: EditItemsListComponent;
 
-    constructor(templateService: TemplateService, route: ActivatedRoute) {
+    constructor(templateService: TemplateService, route: ActivatedRoute, titleService: Title) {
         this.templateService = templateService;
         this.route = route;
+
+        titleService.setTitle('Edit Shopping Template');
     }
 
     ngOnInit() {

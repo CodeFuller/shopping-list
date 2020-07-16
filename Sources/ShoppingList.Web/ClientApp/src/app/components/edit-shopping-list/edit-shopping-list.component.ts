@@ -1,4 +1,5 @@
 import { Component, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, Subject, from } from 'rxjs';
 import { take, finalize, delay, switchMap } from 'rxjs/operators';
@@ -24,9 +25,11 @@ export class EditShoppingListComponent implements AfterViewInit, OnDestroy {
 
     private unsubscribe$ = new Subject<void>();
 
-    constructor(shoppingListService: ShoppingListService, route: ActivatedRoute) {
+    constructor(shoppingListService: ShoppingListService, route: ActivatedRoute, titleService: Title) {
         this.shoppingListService = shoppingListService;
         this.route = route;
+
+        titleService.setTitle('Edit Shopping List');
     }
 
     ngAfterViewInit() {

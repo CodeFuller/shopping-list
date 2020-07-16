@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { ShoppingListService } from '../../services/shopping-list.service';
@@ -18,8 +19,10 @@ export class ShoppingListsComponent implements OnInit, OnDestroy {
 
     private unsubscribe$ = new Subject<void>();
 
-    constructor(shoppingListService: ShoppingListService) {
+    constructor(shoppingListService: ShoppingListService, titleService: Title) {
         this.shoppingListService = shoppingListService;
+
+        titleService.setTitle('All Shopping Lists');
     }
 
     ngOnInit() {
