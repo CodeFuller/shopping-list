@@ -31,14 +31,14 @@
                 </tr>
                 <tr *ngIf="item.id !== updatingItemId && isItemUnderEdit(item)" class="d-flex list-item" [formGroup]="editItemFormGroup">
                     <td class="col-5 edited-property">
-                        <input class="form-control" type="text" required #editedItemTitle (keydown)="onEditKeyDown($event)" formControlName="title">
+                        <input class="form-control" type="text" placeholder="Type title here ..." required #editedItemTitle (keydown)="onEditKeyDown($event)" formControlName="title">
                     </td>
                     <td class="col-2 edited-property">
-                        <input class="form-control" type="text" #editedItemQuantity (keydown)="onEditKeyDown($event)" formControlName="quantity">
+                        <input class="form-control" type="text" placeholder="Type quantity here ..." #editedItemQuantity (keydown)="onEditKeyDown($event)" formControlName="quantity">
                     </td>
                     <td class="col-5 edited-property">
                         <div class="d-flex">
-                            <input class="form-control flex-grow-1" type="text" #editedItemComment (keydown)="onEditKeyDown($event)" formControlName="comment">
+                            <input class="form-control flex-grow-1" type="text" placeholder="Type comment here ..." #editedItemComment (keydown)="onEditKeyDown($event)" formControlName="comment">
                             <button class="item-action-button mdc-icon-button material-icons" [disabled]="editItemFormGroup.pristine || !editItemFormGroup.valid" (click)="saveEditChanges()">save</button>
                             <button class="item-action-button mdc-icon-button material-icons" (click)="cancelItemEditing()">cancel</button>
                         </div>
@@ -47,14 +47,14 @@
             </ng-container>
             <tr *ngIf="!addingNewItem" class="d-flex" [formGroup]="addItemFormGroup">
                 <td class="col-5">
-                    <input class="form-control" type="text" required (keydown)="onAddKeyDown($event)" formControlName="title">
+                    <input class="form-control" type="text" placeholder="Type title for new item ..." required (keydown)="onAddKeyDown($event)" formControlName="title">
                 </td>
                 <td class="col-2">
-                    <input class="form-control" type="text" (keydown)="onAddKeyDown($event)" formControlName="quantity">
+                    <input class="form-control" type="text" placeholder="Type quantity for new item ..." (keydown)="onAddKeyDown($event)" formControlName="quantity">
                 </td>
                 <td class="col-5">
                     <div class="d-flex">
-                        <input class="form-control flex-grow-1" type="text" (keydown)="onAddKeyDown($event)" formControlName="comment">
+                        <input class="form-control flex-grow-1" type="text" placeholder="Type comment for new item ..." (keydown)="onAddKeyDown($event)" formControlName="comment">
                         <button class="mdc-icon-button material-icons" [disabled]="!addItemFormGroup.valid" (click)="addItem()">add</button>
                         <button class="mdc-icon-button material-icons" (click)="cancelItemAdding()">clear</button>
                     </div>
