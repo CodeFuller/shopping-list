@@ -77,7 +77,6 @@ export class TemplatesListComponent implements OnInit, OnDestroy {
             .pipe(finalize(() => this.inProgressTemplateId = null))
             .subscribe(
                 () => {
-                    this.newTemplateTitle = null;
                     this.templates = this.templates.filter(x => x.id !== template.id);
                 });
     }
