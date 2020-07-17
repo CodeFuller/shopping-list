@@ -14,8 +14,9 @@ export class ShoppingListsComponent implements OnInit, OnDestroy {
 
     private readonly shoppingListService: ShoppingListService;
 
-    shoppingLists: ShoppingListModel[] | undefined;
+    shoppingLists: ShoppingListModel[] = [];
     loadingShoppingLists: boolean = false;
+    inProgressShoppingListId: string | null = null;
 
     private unsubscribe$ = new Subject<void>();
 
@@ -39,5 +40,15 @@ export class ShoppingListsComponent implements OnInit, OnDestroy {
         this.shoppingListService.getShoppingLists(this.unsubscribe$)
             .pipe(finalize(() => this.loadingShoppingLists = false))
             .subscribe(data => this.shoppingLists = data);
+    }
+
+    deleteShoppingList(shoppingList: ShoppingListModel) {
+        this.inProgressShoppingListId = shoppingList.id;
+        this.shoppingListService.deleteShoppingList(shoppingList.id, this.unsubscribe$)
+            .pipe(finalize(() => this.inProgressShoppingListId = null))
+            .subscribe(
+                () => {
+                    this.shoppingLists = this.shoppingLists.filter(x => x.id !== shoppingList.id);
+                });
     }
 }

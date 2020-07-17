@@ -12,5 +12,7 @@ namespace ShoppingList.Logic.Interfaces
 		Task<IReadOnlyCollection<ShoppingListInfo>> GetShoppingListsInfo(CancellationToken cancellationToken);
 
 		Task<ShoppingListModel> GetShoppingList(IdModel shoppingListId, CancellationToken cancellationToken);
+
+		Task DeleteShoppingList(IdModel shoppingListId, CancellationToken cancellationToken);
 	}
 }

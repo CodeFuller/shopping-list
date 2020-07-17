@@ -52,7 +52,22 @@ namespace ShoppingList.Web.Controllers
 			}
 			catch (NotFoundException e)
 			{
-				logger.LogError(e, "Failed to find shopping list {ShoppingListId}", shoppingListId);
+				logger.LogError(e, "Shopping list with id {ShoppingListId} does not exist", shoppingListId);
+				return NotFound();
+			}
+		}
+
+		[HttpDelete("{shoppingListId}")]
+		public async Task<ActionResult> DeleteShoppingList([FromRoute] string shoppingListId, CancellationToken cancellationToken)
+		{
+			try
+			{
+				await shoppingListService.DeleteShoppingList(shoppingListId.ToId(), cancellationToken);
+				return NoContent();
+			}
+			catch (NotFoundException e)
+			{
+				logger.LogError(e, "Shopping list with id {ShoppingListId} does not exist", shoppingListId);
 				return NotFound();
 			}
 		}

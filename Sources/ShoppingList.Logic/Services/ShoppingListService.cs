@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using ShoppingList.Logic.Interfaces;
 using ShoppingList.Logic.Models;
 
@@ -16,11 +17,15 @@ namespace ShoppingList.Logic.Services
 
 		private readonly ISystemClock clock;
 
-		public ShoppingListService(IShoppingTemplateRepository shoppingTemplateRepository, IShoppingListRepository shoppingListRepository, ISystemClock clock)
+		private readonly ILogger<ShoppingListService> logger;
+
+		public ShoppingListService(IShoppingTemplateRepository shoppingTemplateRepository, IShoppingListRepository shoppingListRepository,
+			ISystemClock clock, ILogger<ShoppingListService> logger)
 		{
 			this.shoppingTemplateRepository = shoppingTemplateRepository ?? throw new ArgumentNullException(nameof(shoppingTemplateRepository));
 			this.shoppingListRepository = shoppingListRepository ?? throw new ArgumentNullException(nameof(shoppingListRepository));
 			this.clock = clock ?? throw new ArgumentNullException(nameof(clock));
+			this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
 		public async Task<ShoppingListModel> CreateShoppingListFromTemplate(IdModel templateId, CancellationToken cancellationToken)
@@ -52,6 +57,13 @@ namespace ShoppingList.Logic.Services
 		public Task<ShoppingListModel> GetShoppingList(IdModel shoppingListId, CancellationToken cancellationToken)
 		{
 			return shoppingListRepository.GetShoppingList(shoppingListId, cancellationToken);
+		}
+
+		public Task DeleteShoppingList(IdModel shoppingListId, CancellationToken cancellationToken)
+		{
+			logger.LogInformation("Deleting shopping list {ShoppingListId} ...", shoppingListId);
+
+			return shoppingListRepository.DeleteShoppingList(shoppingListId, cancellationToken);
 		}
 	}
 }

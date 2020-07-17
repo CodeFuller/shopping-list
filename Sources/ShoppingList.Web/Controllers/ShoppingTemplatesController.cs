@@ -45,7 +45,7 @@ namespace ShoppingList.Web.Controllers
 			}
 			catch (NotFoundException e)
 			{
-				logger.LogError(e, "Failed to find template {TemplateId}", templateId);
+				logger.LogError(e, "Template with id {TemplateId} does not exist", templateId);
 				return NotFound();
 			}
 		}

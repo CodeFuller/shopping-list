@@ -1,14 +1,17 @@
 <div class="container w-25">
     <div *ngIf="!loadingShoppingLists" class="list-group">
-        <a *ngFor="let shoppingList of shoppingLists" class="list-group-item d-flex">
-            <span class="flex-grow-1" [routerLink]="['/shopping-lists', shoppingList.id]">{{shoppingList.title}}</span>
-            <span class="action-button mdc-icon-button material-icons text-primary" data-toggle="tooltip" title="Process shopping list"
-                  [routerLink]="['/shopping-lists', shoppingList.id]">shopping_cart</span>
-            <span class="action-button mdc-icon-button material-icons text-primary ml-1" data-toggle="tooltip" title="Edit shopping list"
-                  [routerLink]="['/shopping-lists', shoppingList.id]">edit</span>
-            <span class="action-button mdc-icon-button material-icons text-primary ml-1" data-toggle="tooltip" title="Delete shopping list"
-                  (click)="deleteShoppingList(shoppingList)">delete_forever</span>
-        </a>
+        <div *ngFor="let shoppingList of shoppingLists" class="list-group-item">
+            <a *ngIf="shoppingList.id !== inProgressShoppingListId" class="d-flex">
+                <span class="flex-grow-1" [routerLink]="['/shopping-lists', shoppingList.id]">{{shoppingList.title}}</span>
+                <span class="action-button mdc-icon-button material-icons text-primary" data-toggle="tooltip" title="Process shopping list"
+                      [routerLink]="['/shopping-lists', shoppingList.id]">shopping_cart</span>
+                <span class="action-button mdc-icon-button material-icons text-primary ml-1" data-toggle="tooltip" title="Edit shopping list"
+                      [routerLink]="['/shopping-lists', shoppingList.id]">edit</span>
+                <span class="action-button mdc-icon-button material-icons text-primary ml-1" data-toggle="tooltip" title="Delete shopping list"
+                      (click)="deleteShoppingList(shoppingList)">delete_forever</span>
+            </a>
+            <loading-indicator *ngIf="shoppingList.id === inProgressShoppingListId" [small]="true">Updating ...</loading-indicator>
+        </div>
     </div>
     <loading-indicator *ngIf="loadingShoppingLists">Loading ...</loading-indicator>
 </div>

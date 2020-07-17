@@ -8,6 +8,7 @@ using MongoDB.Driver;
 using ShoppingList.Dal.MongoDb.Documents;
 using ShoppingList.Dal.MongoDb.Extensions;
 using ShoppingList.Dal.MongoDb.Interfaces;
+using ShoppingList.Logic.Exceptions;
 using ShoppingList.Logic.Interfaces;
 using ShoppingList.Logic.Models;
 
@@ -52,6 +53,17 @@ namespace ShoppingList.Dal.MongoDb.Repositories
 		{
 			var shoppingList = await shoppingListCollection.FindDocument(shoppingListId.ToObjectId(), cancellationToken);
 			return shoppingList.ToShoppingListModel();
+		}
+
+		public async Task DeleteShoppingList(IdModel shoppingListId, CancellationToken cancellationToken)
+		{
+			var filter = shoppingListId.ToObjectId().BuildDocumentFilter<ShoppingListDocument>();
+			var deleteResult = await shoppingListCollection.DeleteOneAsync(filter, cancellationToken);
+
+			if (deleteResult.DeletedCount != 1)
+			{
+				throw new NotFoundException($"The shopping list with id {shoppingListId} was not found");
+			}
 		}
 
 		public async Task<IdModel> CreateItem(IdModel shoppingListId, ShoppingItemModel item, CancellationToken cancellationToken)

@@ -36,6 +36,10 @@ export class ShoppingListService {
             .pipe(map(response => plainToClass(ShoppingListModel, response, { excludeExtraneousValues: true })));
     }
 
+    deleteShoppingList(shoppingListId: string, cancellation: Subject<void>): Observable<object> {
+        return this.safeHttp.delete(`${this.baseAddress}/${shoppingListId}`, 'Failed to delete shopping list', cancellation);
+    }
+
     createShoppingListItem(shoppingListId: string, newItem: ShoppingItemModel, cancellation: Subject<void>): Observable<ShoppingItemModel> {
         return this.safeHttp.post(`${this.baseAddress}/${shoppingListId}/items`, newItem, 'Failed to create list item', cancellation)
             .pipe(map(response => plainToClass(ShoppingItemModel, response, { excludeExtraneousValues: true })));
