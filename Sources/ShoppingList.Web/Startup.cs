@@ -6,17 +6,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ShoppingList.Dal.MongoDb.Extensions;
 using ShoppingList.Logic.Extensions;
+using ShoppingList.Web.Internal;
 
 namespace ShoppingList.Web
 {
 	public class Startup
 	{
+		public IConfiguration Configuration { get; }
+
 		public Startup(IConfiguration configuration)
 		{
-			Configuration = configuration;
+			Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 		}
-
-		public IConfiguration Configuration { get; }
 
 		public void ConfigureServices(IServiceCollection services)
 		{
@@ -49,6 +50,11 @@ namespace ShoppingList.Web
 			if (!env.IsDevelopment())
 			{
 				app.UseSpaStaticFiles();
+			}
+
+			if (env.IsDevelopment())
+			{
+				app.UseTestRequestCircuit();
 			}
 
 			app.UseRouting();
