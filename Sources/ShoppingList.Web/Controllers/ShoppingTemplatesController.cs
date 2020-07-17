@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using ShoppingList.Logic.Exceptions;
 using ShoppingList.Logic.Extensions;
 using ShoppingList.Logic.Interfaces;
+using ShoppingList.Logic.Models;
 using ShoppingList.Web.Contracts.ShoppingTemplateContracts;
 
 namespace ShoppingList.Web.Controllers
@@ -56,7 +57,13 @@ namespace ShoppingList.Web.Controllers
 			var templateInfo = templateInfoData.ToModel();
 			var newTemplate = await templateService.CreateTemplate(templateInfo, cancellationToken);
 
-			return Ok(new OutputShoppingTemplateData(newTemplate));
+			return Created(GetTemplateUri(newTemplate.Id), new OutputShoppingTemplateData(newTemplate));
+		}
+
+		private Uri GetTemplateUri(IdModel templateId)
+		{
+			var actionUrl = Url.Action(nameof(GetTemplate), null, new { templateId = templateId.Value }, Request.Scheme, Request.Host.ToUriComponent());
+			return new Uri(actionUrl, UriKind.RelativeOrAbsolute);
 		}
 
 		[HttpDelete("{templateId}")]

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using ShoppingList.Logic.Exceptions;
 using ShoppingList.Logic.Extensions;
 using ShoppingList.Logic.Interfaces;
+using ShoppingList.Logic.Models;
 using ShoppingList.Web.Contracts.ShoppingListContracts;
 
 namespace ShoppingList.Web.Controllers
@@ -30,7 +31,13 @@ namespace ShoppingList.Web.Controllers
 		public async Task<ActionResult<OutputShoppingListData>> CreateShoppingList([FromBody] CreateShoppingListRequest request, CancellationToken cancellationToken)
 		{
 			var shoppingList = await shoppingListService.CreateShoppingListFromTemplate(request.TemplateId.ToId(), cancellationToken);
-			return Ok(new OutputShoppingListData(shoppingList));
+			return Created(GetShoppingListUri(shoppingList.Id), new OutputShoppingListData(shoppingList));
+		}
+
+		private Uri GetShoppingListUri(IdModel shoppingListId)
+		{
+			var actionUrl = Url.Action(nameof(GetShoppingList), null, new { shoppingListId = shoppingListId.Value }, Request.Scheme, Request.Host.ToUriComponent());
+			return new Uri(actionUrl, UriKind.RelativeOrAbsolute);
 		}
 
 		[HttpGet]
