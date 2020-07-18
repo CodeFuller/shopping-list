@@ -13,6 +13,7 @@ import { EditItemsListComponent } from './components/edit-items-list/edit-items-
 import { EditShoppingListComponent } from './components/edit-shopping-list/edit-shopping-list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingIndicatorComponent } from './components/loading-indicator/loading-indicator.component';
+import { PrintShoppingListComponent } from './components/print-shopping-list/print-shopping-list.component';
 
 @NgModule({
     declarations: [
@@ -22,7 +23,8 @@ import { LoadingIndicatorComponent } from './components/loading-indicator/loadin
         ShoppingListsComponent,
         EditItemsListComponent,
         EditShoppingListComponent,
-        LoadingIndicatorComponent
+        LoadingIndicatorComponent,
+        PrintShoppingListComponent
     ],
     imports: [
         BrowserModule,

@@ -67,7 +67,7 @@ export class TemplatesListComponent implements OnInit, OnDestroy {
         this.shoppingListService.createShoppingList(template, this.unsubscribe$)
             .pipe(finalize(() => this.inProgressTemplateId = null))
             .subscribe(shoppingList => {
-                this.router.navigate(['/shopping-lists', shoppingList.id], { state: shoppingList });
+                this.router.navigate(['/shopping-lists', shoppingList.id, 'edit'], { state: shoppingList });
             });
     }
 

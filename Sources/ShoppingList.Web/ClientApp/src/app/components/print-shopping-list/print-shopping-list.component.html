@@ -1,0 +1,15 @@
+<ng-template #ItemsList let-items="items">
+    <ul class="list-group col-sm-6">
+        <li *ngFor="let item of items" class="list-group-item py-1">{{getItemTitle(item)}}</li>
+    </ul>
+</ng-template>
+
+<div *ngIf="!loading" class="container">
+    <div class="row">
+        <ng-template [ngTemplateOutlet]="ItemsList" [ngTemplateOutletContext]="{items:items1}"></ng-template>
+        <ng-template [ngTemplateOutlet]="ItemsList" [ngTemplateOutletContext]="{items:items2}"></ng-template>
+    </div>
+
+    <button class="mt-3 btn btn-primary mdc-icon-button material-icons" data-toggle="tooltip" title="Print" (click)="print()">print</button>
+</div>
+<loading-indicator *ngIf="loading">Loading ...</loading-indicator>
