@@ -14,6 +14,7 @@ import { EditShoppingListComponent } from './components/edit-shopping-list/edit-
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingIndicatorComponent } from './components/loading-indicator/loading-indicator.component';
 import { PrintShoppingListComponent } from './components/print-shopping-list/print-shopping-list.component';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
     declarations: [
@@ -24,7 +25,8 @@ import { PrintShoppingListComponent } from './components/print-shopping-list/pri
         EditItemsListComponent,
         EditShoppingListComponent,
         LoadingIndicatorComponent,
-        PrintShoppingListComponent
+        PrintShoppingListComponent,
+        LoginComponent
     ],
     imports: [
         BrowserModule,

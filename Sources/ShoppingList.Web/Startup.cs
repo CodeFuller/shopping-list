@@ -1,4 +1,6 @@
 using System;
+using AspNetCore.Identity.Mongo;
+using AspNetCore.Identity.Mongo.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -33,6 +35,8 @@ namespace ShoppingList.Web
 
 			var connectionString = GetConnectionString();
 			services.AddMongoDbDal(connectionString);
+
+			services.AddIdentityMongoDbProvider<MongoUser>(mongoIdentityOptions => mongoIdentityOptions.ConnectionString = connectionString);
 		}
 
 		public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -58,6 +62,10 @@ namespace ShoppingList.Web
 			}
 
 			app.UseRouting();
+
+			app.UseAuthentication();
+			app.UseAuthorization();
+
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute(

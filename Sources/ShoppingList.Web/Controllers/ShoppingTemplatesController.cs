@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ShoppingList.Logic.Exceptions;
@@ -13,6 +14,7 @@ using ShoppingList.Web.Contracts.ShoppingTemplateContracts;
 
 namespace ShoppingList.Web.Controllers
 {
+	[Authorize]
 	[ApiController]
 	[Route("api/templates")]
 	public class ShoppingTemplatesController : ControllerBase

@@ -1,0 +1,15 @@
+<div class="container w-25">
+    <form novalidate>
+        <div class="form-group">
+            <label>User Name:</label>
+            <input class="form-control" type="text" name="userName" required [(ngModel)]="userName">
+        </div>
+        <div class="form-group">
+            <label>Password:</label>
+            <input class="form-control" type="password" name="password" aria-required [(ngModel)]="password" />
+        </div>
+        <div class="text-left">
+            <button class="btn btn-primary" (click)="doLogin()">Login</button>
+        </div>
+    </form>
+</div>

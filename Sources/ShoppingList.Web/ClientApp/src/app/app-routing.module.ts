@@ -5,9 +5,11 @@ import { EditTemplateComponent } from './components/edit-template/edit-template.
 import { ShoppingListsComponent } from './components/shopping-lists/shopping-lists.component';
 import { EditShoppingListComponent } from './components/edit-shopping-list/edit-shopping-list.component';
 import { PrintShoppingListComponent } from './components/print-shopping-list/print-shopping-list.component';
+import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
     { path: '', redirectTo: 'templates', pathMatch: 'full' },
+    { path: 'login', component: LoginComponent },
     { path: 'templates', component: TemplatesListComponent },
     { path: 'templates/:id', component: EditTemplateComponent },
     { path: 'shopping-lists', component: ShoppingListsComponent },
