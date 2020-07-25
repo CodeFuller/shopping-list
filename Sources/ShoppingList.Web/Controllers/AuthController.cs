@@ -19,11 +19,11 @@ namespace ShoppingList.Web.Controllers
 		}
 
 		[HttpGet]
-		public OkObjectResult IsSignedIn()
+		public OkObjectResult IsLoggedIn()
 		{
-			var response = new IsSignedInResponse
+			var response = new IsLoggedInResponse
 			{
-				IsSignedIn = signInManager.IsSignedIn(User),
+				IsLoggedIn = signInManager.IsSignedIn(User),
 			};
 
 			return Ok(response);

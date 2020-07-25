@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 import { plainToClass } from 'class-transformer';
 import { SafeHttpClientService } from './safe-http-client.service';
 import { LoginRequest } from '../contracts/login-request';
-import { IsSignedInResponse } from '../contracts/is-signed-in-response';
+import { IsLoggedInResponse } from '../contracts/is-logged-in-response';
 import { LoginResponse } from '../contracts/login-response';
 
 @Injectable()
@@ -13,24 +13,24 @@ export class AuthService {
     private readonly baseAddress: string = '/api/auth';
 
     private readonly safeHttp: SafeHttpClientService;
-    private authenticated: boolean | undefined;
+    private loggedIn: boolean | undefined;
 
     constructor(safeHttp: SafeHttpClientService) {
         this.safeHttp = safeHttp;
     }
 
-    isAuthenticated(cancellation: Subject<void>): Observable<boolean> {
+    isLoggedIn(cancellation: Subject<void>): Observable<boolean> {
 
-        if (this.authenticated) {
-            return of(this.authenticated);
+        if (this.loggedIn) {
+            return of(this.loggedIn);
         }
 
         return this.safeHttp
             .get(`${this.baseAddress}`, 'Failed to check sing-in status', cancellation)
-            .pipe(map(response => plainToClass(IsSignedInResponse, response, { excludeExtraneousValues: true })))
+            .pipe(map(response => plainToClass(IsLoggedInResponse, response, { excludeExtraneousValues: true })))
             .pipe(map(response => {
-                console.debug(`Result of isSignedIn request: ${response.isSignedIn}`);
-                return response.isSignedIn;
+                console.debug(`Result of isLoggedIn request: ${response.isLoggedIn}`);
+                return response.isLoggedIn;
             }));
     }
 
@@ -41,7 +41,7 @@ export class AuthService {
             .post<LoginResponse>(`${this.baseAddress}/login`, request, 'Login failed', cancellation)
             .pipe(map(response => {
                 console.debug(`Result of login request: ${response.succeeded}`);
-                this.authenticated = response.succeeded;
+                this.loggedIn = response.succeeded;
                 return response.succeeded;
             }));
     }
@@ -50,7 +50,7 @@ export class AuthService {
         return this.safeHttp
             .post(`${this.baseAddress}/logout`, {}, 'Logout failed', cancellation)
             .pipe(map(() => {
-                this.authenticated = false;
+                this.loggedIn = false;
             }));
     }
 }

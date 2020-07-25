@@ -3,9 +3,9 @@
 namespace ShoppingList.Web.Contracts.AuthContracts
 {
 	[DataContract]
-	public class IsSignedInResponse
+	public class IsLoggedInResponse
 	{
-		[DataMember(Name = "isSignedIn")]
-		public bool IsSignedIn { get; set; }
+		[DataMember(Name = "isLoggedIn")]
+		public bool IsLoggedIn { get; set; }
 	}
 }
