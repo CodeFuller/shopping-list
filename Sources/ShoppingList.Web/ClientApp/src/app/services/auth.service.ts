@@ -5,6 +5,7 @@ import { plainToClass } from 'class-transformer';
 import { SafeHttpClientService } from './safe-http-client.service';
 import { LoginRequest } from '../contracts/login-request';
 import { IsSignedInResponse } from '../contracts/is-signed-in-response';
+import { LoginResponse } from '../contracts/login-response';
 
 @Injectable()
 export class AuthService {
@@ -34,15 +35,16 @@ export class AuthService {
                 }));
     }
 
-    login(userName: string, password: string, cancellation: Subject<void>): Observable<void> {
+    login(userName: string, password: string, cancellation: Subject<void>): Observable<boolean> {
         const request = new LoginRequest(userName, password);
 
         return this.safeHttp
-            .post(`${this.baseAddress}`, request, 'Login failed', cancellation)
+            .post<LoginResponse>(`${this.baseAddress}`, request, 'Login failed', cancellation)
             .pipe(
-                map(() => {
-                    console.debug('The user was authenticated successfully');
-                    this.authenticated = true;
+                map(response => {
+                    console.debug(`Result of login request: ${response.succeeded}`);
+                    this.authenticated = response.succeeded;
+                    return response.succeeded;
                 }));
     }
 }

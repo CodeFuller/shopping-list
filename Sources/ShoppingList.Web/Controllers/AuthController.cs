@@ -33,12 +33,13 @@ namespace ShoppingList.Web.Controllers
 		public async Task<ActionResult> SignIn([FromBody] LoginRequest request)
 		{
 			var signInResult = await signInManager.PasswordSignInAsync(request.UserName, request.Password, isPersistent: true, lockoutOnFailure: false);
-			if (signInResult.Succeeded)
+			var response = new LoginResponse
 			{
-				return Ok();
-			}
+				Succeeded = signInResult.Succeeded,
+			};
 
-			return Unauthorized("Invalid user name or password");
+			// We return HTTP 200 also for failed login, to simplify error-handling on the client.
+			return Ok(response);
 		}
 	}
 }

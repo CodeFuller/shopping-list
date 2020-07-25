@@ -15,6 +15,7 @@ export class LoginComponent implements OnDestroy {
     password: string = '';
 
     loading: boolean = false;
+    loginFailed: boolean = false;
 
     private returnUrl: string = '/';
 
@@ -41,11 +42,15 @@ export class LoginComponent implements OnDestroy {
 
     doLogin(): void {
         this.loading = true;
+        this.loginFailed = false;
         this.authService
             .login(this.userName, this.password, this.unsubscribe$)
             .pipe(finalize(() => this.loading = false))
-            .subscribe(() => {
-                this.router.navigateByUrl(this.returnUrl);
+            .subscribe(loginSucceeded => {
+                this.loginFailed = !loginSucceeded;
+                if (loginSucceeded) {
+                    this.router.navigateByUrl(this.returnUrl);
+                }
             });
     }
 }

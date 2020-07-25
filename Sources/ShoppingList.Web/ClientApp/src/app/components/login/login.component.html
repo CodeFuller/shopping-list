@@ -1,4 +1,7 @@
 <div class="container w-25">
+    <div *ngIf="loginFailed" class="alert alert-danger" role="alert">
+        Invalid user name or password
+    </div>
     <form novalidate>
         <div class="form-group">
             <label>User Name:</label>
@@ -6,7 +9,7 @@
         </div>
         <div class="form-group">
             <label>Password:</label>
-            <input class="form-control" type="password" name="password" aria-required [(ngModel)]="password" />
+            <input class="form-control" type="password" name="password" aria-required [(ngModel)]="password">
         </div>
         <div class="text-left">
             <div>
