@@ -17,6 +17,7 @@ import { PrintShoppingListComponent } from './components/print-shopping-list/pri
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './auth/auth-guard';
 import { AuthService } from './services/auth.service';
+import { LogoutComponent } from './components/logout/logout.component';
 
 @NgModule({
     declarations: [
@@ -28,7 +29,8 @@ import { AuthService } from './services/auth.service';
         EditShoppingListComponent,
         LoadingIndicatorComponent,
         PrintShoppingListComponent,
-        LoginComponent
+        LoginComponent,
+        LogoutComponent
     ],
     imports: [
         BrowserModule,

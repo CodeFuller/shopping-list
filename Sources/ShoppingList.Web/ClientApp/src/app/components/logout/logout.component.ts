@@ -5,17 +5,13 @@ import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-    selector: 'login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css']
+    selector: 'logout',
+    templateUrl: './logout.component.html',
+    styleUrls: ['./logout.component.css']
 })
-export class LoginComponent implements OnInit, OnDestroy {
-
-    userName: string = '';
-    password: string = '';
+export class LogoutComponent implements OnInit, OnDestroy {
 
     loading: boolean = false;
-    loginFailed: boolean = false;
 
     private returnUrl: string = '/';
 
@@ -40,17 +36,17 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-    doLogin(): void {
+    doLogout(): void {
         this.loading = true;
-        this.loginFailed = false;
         this.authService
-            .login(this.userName, this.password, this.unsubscribe$)
+            .logout(this.unsubscribe$)
             .pipe(finalize(() => this.loading = false))
-            .subscribe(loginSucceeded => {
-                this.loginFailed = !loginSucceeded;
-                if (loginSucceeded) {
-                    this.router.navigateByUrl(this.returnUrl);
-                }
+            .subscribe(() => {
+                this.router.navigate(['login']);
             });
+    }
+
+    cancelLogout(): void {
+        this.router.navigateByUrl(this.returnUrl);
     }
 }

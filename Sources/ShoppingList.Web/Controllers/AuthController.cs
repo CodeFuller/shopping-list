@@ -7,8 +7,8 @@ using ShoppingList.Web.Contracts.AuthContracts;
 
 namespace ShoppingList.Web.Controllers
 {
-	[Route("api/[controller]")]
 	[ApiController]
+	[Route("api/[controller]")]
 	public class AuthController : ControllerBase
 	{
 		private readonly SignInManager<MongoUser> signInManager;
@@ -30,7 +30,8 @@ namespace ShoppingList.Web.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult> SignIn([FromBody] LoginRequest request)
+		[Route("login")]
+		public async Task<ActionResult> Login([FromBody] LoginRequest request)
 		{
 			var signInResult = await signInManager.PasswordSignInAsync(request.UserName, request.Password, isPersistent: true, lockoutOnFailure: false);
 			var response = new LoginResponse
@@ -40,6 +41,14 @@ namespace ShoppingList.Web.Controllers
 
 			// We return HTTP 200 also for failed login, to simplify error-handling on the client.
 			return Ok(response);
+		}
+
+		[HttpPost]
+		[Route("logout")]
+		public async Task<ActionResult> Logout()
+		{
+			await signInManager.SignOutAsync();
+			return Ok();
 		}
 	}
 }

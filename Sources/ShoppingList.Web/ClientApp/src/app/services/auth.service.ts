@@ -28,23 +28,29 @@ export class AuthService {
         return this.safeHttp
             .get(`${this.baseAddress}`, 'Failed to check sing-in status', cancellation)
             .pipe(map(response => plainToClass(IsSignedInResponse, response, { excludeExtraneousValues: true })))
-            .pipe(
-                map(response => {
-                    console.debug(`Result of isSignedIn request: ${response.isSignedIn}`);
-                    return response.isSignedIn;
-                }));
+            .pipe(map(response => {
+                console.debug(`Result of isSignedIn request: ${response.isSignedIn}`);
+                return response.isSignedIn;
+            }));
     }
 
     login(userName: string, password: string, cancellation: Subject<void>): Observable<boolean> {
         const request = new LoginRequest(userName, password);
 
         return this.safeHttp
-            .post<LoginResponse>(`${this.baseAddress}`, request, 'Login failed', cancellation)
-            .pipe(
-                map(response => {
-                    console.debug(`Result of login request: ${response.succeeded}`);
-                    this.authenticated = response.succeeded;
-                    return response.succeeded;
-                }));
+            .post<LoginResponse>(`${this.baseAddress}/login`, request, 'Login failed', cancellation)
+            .pipe(map(response => {
+                console.debug(`Result of login request: ${response.succeeded}`);
+                this.authenticated = response.succeeded;
+                return response.succeeded;
+            }));
+    }
+
+    logout(cancellation: Subject<void>): Observable<void> {
+        return this.safeHttp
+            .post(`${this.baseAddress}/logout`, {}, 'Logout failed', cancellation)
+            .pipe(map(() => {
+                this.authenticated = false;
+            }));
     }
 }

@@ -6,11 +6,13 @@ import { ShoppingListsComponent } from './components/shopping-lists/shopping-lis
 import { EditShoppingListComponent } from './components/edit-shopping-list/edit-shopping-list.component';
 import { PrintShoppingListComponent } from './components/print-shopping-list/print-shopping-list.component';
 import { LoginComponent } from './components/login/login.component';
+import { LogoutComponent } from './components/logout/logout.component';
 import { AuthGuard } from './auth/auth-guard';
 
 const routes: Routes = [
     { path: '', redirectTo: 'templates', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
+    { path: 'logout', component: LogoutComponent, canActivate: [AuthGuard] },
     { path: 'templates', component: TemplatesListComponent, canActivate: [AuthGuard] },
     { path: 'templates/:id', component: EditTemplateComponent, canActivate: [AuthGuard] },
     { path: 'shopping-lists', component: ShoppingListsComponent, canActivate: [AuthGuard] },
