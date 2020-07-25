@@ -15,6 +15,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingIndicatorComponent } from './components/loading-indicator/loading-indicator.component';
 import { PrintShoppingListComponent } from './components/print-shopping-list/print-shopping-list.component';
 import { LoginComponent } from './components/login/login.component';
+import { AuthGuard } from './auth/auth-guard';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
     declarations: [
@@ -37,7 +39,7 @@ import { LoginComponent } from './components/login/login.component';
         DragDropModule,
         NgbModule
     ],
-    providers: [],
+    providers: [AuthGuard, AuthService],
     bootstrap: [
         AppComponent
     ]

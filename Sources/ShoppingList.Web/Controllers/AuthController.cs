@@ -18,8 +18,19 @@ namespace ShoppingList.Web.Controllers
 			this.signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
 		}
 
+		[HttpGet]
+		public OkObjectResult IsSignedIn()
+		{
+			var response = new IsSignedInResponse
+			{
+				IsSignedIn = signInManager.IsSignedIn(User),
+			};
+
+			return Ok(response);
+		}
+
 		[HttpPost]
-		public async Task<ActionResult> Login([FromBody] LoginRequest request)
+		public async Task<ActionResult> SignIn([FromBody] LoginRequest request)
 		{
 			var signInResult = await signInManager.PasswordSignInAsync(request.UserName, request.Password, isPersistent: true, lockoutOnFailure: false);
 			if (signInResult.Succeeded)

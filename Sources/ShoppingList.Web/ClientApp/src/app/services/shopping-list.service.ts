@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 import { plainToClass } from 'class-transformer';
 import { ShoppingTemplateModel } from '../models/shopping-template.model';
 import { ShoppingListModel } from '../models/shopping-list.model';
-import { CreateShoppingListRequest } from '../contracts/create-shopping-list.request';
+import { CreateShoppingListRequest } from '../contracts/create-shopping-list-request';
 import { ShoppingItemModel } from '../models/shopping-item.model';
 import { SafeHttpClientService } from './safe-http-client.service';
 
