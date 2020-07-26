@@ -56,6 +56,11 @@ namespace ShoppingList.Web.Controllers
 		[HttpPost]
 		public async Task<ActionResult<OutputShoppingTemplateData>> CreateTemplate([FromBody] InputShoppingTemplateInfoData templateInfoData, CancellationToken cancellationToken)
 		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
 			var templateInfo = templateInfoData.ToModel();
 			var newTemplate = await templateService.CreateTemplate(templateInfo, cancellationToken);
 

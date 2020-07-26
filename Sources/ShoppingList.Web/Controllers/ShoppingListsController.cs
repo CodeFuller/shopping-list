@@ -32,6 +32,11 @@ namespace ShoppingList.Web.Controllers
 		[HttpPost]
 		public async Task<ActionResult<OutputShoppingListData>> CreateShoppingList([FromBody] CreateShoppingListRequest request, CancellationToken cancellationToken)
 		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
 			var shoppingList = await shoppingListService.CreateShoppingListFromTemplate(request.TemplateId.ToId(), cancellationToken);
 			return Created(GetShoppingListUri(shoppingList.Id), new OutputShoppingListData(shoppingList));
 		}

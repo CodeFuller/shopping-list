@@ -31,6 +31,11 @@ namespace ShoppingList.Web.Controllers
 		[HttpPost]
 		public async Task<ActionResult<OutputShoppingItemData>> CreateShoppingListItem([FromRoute] string shoppingListId, [FromBody] InputShoppingItemData itemData, CancellationToken cancellationToken)
 		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
 			try
 			{
 				var newItem = await shoppingListItemService.CreateShoppingListItem(shoppingListId.ToId(), itemData.ToModel(), cancellationToken);
@@ -47,6 +52,11 @@ namespace ShoppingList.Web.Controllers
 		[HttpPut("{itemId}")]
 		public async Task<ActionResult<OutputShoppingItemData>> UpdateShoppingListItem([FromRoute] string shoppingListId, [FromRoute] string itemId, [FromBody] InputShoppingItemData itemData, CancellationToken cancellationToken)
 		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
 			try
 			{
 				var item = itemData.ToModel();
