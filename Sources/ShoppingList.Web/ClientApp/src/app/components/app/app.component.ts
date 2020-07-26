@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { TemplateService } from './services/template.service';
-import { ShoppingListService } from './services/shopping-list.service';
+import { TemplateService } from '../../services/template.service';
+import { ShoppingListService } from '../../services/shopping-list.service';
 
 @Component({
     selector: 'app-root',

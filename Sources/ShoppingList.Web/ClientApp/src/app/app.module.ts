@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { AppComponent } from './components/app/app.component';
 import { TemplatesListComponent } from './components/templates-list/templates-list.component';
 import { EditTemplateComponent } from './components/edit-template/edit-template.component';
 import { ShoppingListsComponent } from './components/shopping-lists/shopping-lists.component';
