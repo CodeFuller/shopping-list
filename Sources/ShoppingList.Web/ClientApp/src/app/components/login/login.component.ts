@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
     selector: 'login',
@@ -25,10 +26,12 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     private unsubscribe$ = new Subject<void>();
 
-    constructor(authService: AuthService, route: ActivatedRoute, router: Router) {
+    constructor(authService: AuthService, route: ActivatedRoute, router: Router, titleService: Title) {
         this.authService = authService;
         this.route = route;
         this.router = router;
+
+        titleService.setTitle('Login');
     }
 
     ngOnInit() {
