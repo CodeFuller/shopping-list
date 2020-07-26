@@ -33,6 +33,11 @@ namespace ShoppingList.Web.Controllers
 		[Route("login")]
 		public async Task<ActionResult> Login([FromBody] LoginRequest request)
 		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
 			var signInResult = await signInManager.PasswordSignInAsync(request.UserName, request.Password, isPersistent: true, lockoutOnFailure: false);
 			var response = new LoginResponse
 			{
