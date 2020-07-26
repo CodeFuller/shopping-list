@@ -18,6 +18,7 @@ import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './auth/auth-guard';
 import { AuthService } from './services/auth.service';
 import { LogoutComponent } from './components/logout/logout.component';
+import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 
 @NgModule({
     declarations: [
@@ -30,7 +31,8 @@ import { LogoutComponent } from './components/logout/logout.component';
         LoadingIndicatorComponent,
         PrintShoppingListComponent,
         LoginComponent,
-        LogoutComponent
+        LogoutComponent,
+        NavigationBarComponent
     ],
     imports: [
         BrowserModule,

@@ -21,7 +21,7 @@ export class AuthService {
 
     isLoggedIn(cancellation: Subject<void>): Observable<boolean> {
 
-        if (this.loggedIn) {
+        if (this.loggedIn !== undefined) {
             return of(this.loggedIn);
         }
 
@@ -30,6 +30,7 @@ export class AuthService {
             .pipe(map(response => plainToClass(IsLoggedInResponse, response, { excludeExtraneousValues: true })))
             .pipe(map(response => {
                 console.debug(`Result of isLoggedIn request: ${response.isLoggedIn}`);
+                this.loggedIn = response.isLoggedIn;
                 return response.isLoggedIn;
             }));
     }
