@@ -1,0 +1,18 @@
+<div class="container w-25">
+    <div *ngIf="!loadingUsers">
+        <div class="list-group mb-3">
+            <div *ngFor="let user of users" class="list-group-item">
+                <a *ngIf="user.id !== inProgressUserId" class="d-flex">
+                    <span class="flex-grow-1" [routerLink]="['/users', user.id]">{{user.name}}</span>
+                    <span class="action-button mdc-icon-button material-icons text-primary ml-1" data-toggle="tooltip" title="Edit user"
+                          [routerLink]="['/users', user.id]">edit</span>
+                    <span class="action-button mdc-icon-button material-icons text-primary ml-1" data-toggle="tooltip" title="Delete user"
+                          (click)="deleteUser(user)">delete_forever</span>
+                </a>
+                <loading-indicator *ngIf="user.id === inProgressUserId" [small]="true">Updating ...</loading-indicator>
+            </div>
+        </div>
+        <a [routerLink]="['/add-user']">Add User</a>
+    </div>
+    <loading-indicator *ngIf="loadingUsers">Loading ...</loading-indicator>
+</div>

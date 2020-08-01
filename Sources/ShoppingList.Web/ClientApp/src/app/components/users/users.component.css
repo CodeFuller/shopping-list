@@ -1,0 +1,13 @@
+/* Action buttons for the item are shown only on hover */
+.action-button {
+    visibility: hidden;
+}
+
+/* Display action buttons on hover */
+.list-group-item:hover .action-button {
+    visibility: visible;
+}
+
+.list-group-item {
+    cursor: pointer;
+}

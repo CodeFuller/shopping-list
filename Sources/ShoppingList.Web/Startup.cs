@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ShoppingList.Dal.MongoDb.Extensions;
 using ShoppingList.Logic.Extensions;
+using ShoppingList.Logic.Interfaces;
 using ShoppingList.Web.Internal;
 
 namespace ShoppingList.Web
@@ -37,6 +38,8 @@ namespace ShoppingList.Web
 			services.AddMongoDbDal(connectionString);
 
 			services.AddIdentityMongoDbProvider<MongoUser>(mongoIdentityOptions => mongoIdentityOptions.ConnectionString = connectionString);
+
+			services.AddScoped<IUserService, UserService>();
 		}
 
 		public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -19,6 +19,7 @@ import { AuthGuard } from './auth/auth-guard';
 import { AuthService } from './services/auth.service';
 import { LogoutComponent } from './components/logout/logout.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
+import { UsersComponent } from './components/users/users.component';
 
 @NgModule({
     declarations: [
@@ -32,7 +33,8 @@ import { NavigationBarComponent } from './components/navigation-bar/navigation-b
         PrintShoppingListComponent,
         LoginComponent,
         LogoutComponent,
-        NavigationBarComponent
+        NavigationBarComponent,
+        UsersComponent
     ],
     imports: [
         BrowserModule,
