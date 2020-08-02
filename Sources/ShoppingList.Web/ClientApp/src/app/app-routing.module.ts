@@ -8,6 +8,7 @@ import { PrintShoppingListComponent } from './components/print-shopping-list/pri
 import { LoginComponent } from './components/login/login.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { UsersComponent } from './components/users/users.component';
+import { AddUserComponent } from './components/add-user/add-user.component';
 import { AuthGuard } from './auth/auth-guard';
 
 const routes: Routes = [
@@ -20,6 +21,7 @@ const routes: Routes = [
     { path: 'shopping-lists/:id/edit', component: EditShoppingListComponent, canActivate: [AuthGuard] },
     { path: 'shopping-lists/:id/print', component: PrintShoppingListComponent, canActivate: [AuthGuard] },
     { path: 'users', component: UsersComponent, canActivate: [AuthGuard] },
+    { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

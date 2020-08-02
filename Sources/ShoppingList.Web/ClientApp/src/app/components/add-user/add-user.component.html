@@ -1,0 +1,23 @@
+<div class="container w-25">
+    <form (ngSubmit)="createUser()" #form="ngForm">
+        <div class="form-group">
+            <label>User Name:</label>
+            <input class="form-control" type="text" name="userName" required [(ngModel)]="userName">
+        </div>
+        <div class="form-group">
+            <label>Password:</label>
+            <input class="form-control" type="password" name="password" required [(ngModel)]="password">
+        </div>
+        <div class="form-group">
+            <label>Confirm Password:</label>
+            <input class="form-control" type="password" name="confirmPassword" required [(ngModel)]="confirmPassword">
+        </div>
+        <div class="text-left">
+            <div *ngIf="!loading">
+                <button class="btn btn-primary" type="submit" [disabled]="!form.form.valid">Create</button>
+                <button class="btn btn-secondary ml-3" [routerLink]="['/users']">Cancel</button>
+            </div>
+            <loading-indicator *ngIf="loading">Loading ...</loading-indicator>
+        </div>
+    </form>
+</div>

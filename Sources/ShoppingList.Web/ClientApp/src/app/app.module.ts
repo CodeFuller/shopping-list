@@ -20,6 +20,7 @@ import { AuthService } from './services/auth.service';
 import { LogoutComponent } from './components/logout/logout.component';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { UsersComponent } from './components/users/users.component';
+import { AddUserComponent } from './components/add-user/add-user.component';
 
 @NgModule({
     declarations: [
@@ -34,7 +35,8 @@ import { UsersComponent } from './components/users/users.component';
         LoginComponent,
         LogoutComponent,
         NavigationBarComponent,
-        UsersComponent
+        UsersComponent,
+        AddUserComponent
     ],
     imports: [
         BrowserModule,

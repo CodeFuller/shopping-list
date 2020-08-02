@@ -32,5 +32,22 @@ namespace ShoppingList.Web.Internal
 
 			return Task.FromResult<IReadOnlyCollection<UserModel>>(models.ToList());
 		}
+
+		public async Task<UserModel> CreateUser(string userName, string password, CancellationToken cancellationToken)
+		{
+			var newUser = new MongoUser(userName);
+
+			var result = await userManager.CreateAsync(newUser, password);
+			if (!result.Succeeded)
+			{
+				throw new InvalidOperationException($"Failed to create the user. {result}");
+			}
+
+			return new UserModel
+			{
+				Id = new IdModel(newUser.Id.ToString()),
+				Name = userName,
+			};
+		}
 	}
 }

@@ -7,7 +7,7 @@ namespace ShoppingList.Web.Contracts.ShoppingListContracts
 	public class CreateShoppingListRequest
 	{
 		[Required]
-		[DataMember]
+		[DataMember(Name = "templateId")]
 		public string TemplateId { get; set; }
 	}
 }
